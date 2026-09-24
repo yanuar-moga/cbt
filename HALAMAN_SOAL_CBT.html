@@ -989,8 +989,6 @@ let securityWarningOpen = false;
 
 let securityInitialized = false;
 
-let ignoreNextBlur = false;
-
 let isLeavingPage = false;
 
 /*
@@ -1317,6 +1315,20 @@ function startTimer() {
 function registerViolation(reason) {
 
     if (sudahKirim) {
+        return;
+    }
+
+    /*
+     * PENTING:
+     * Pelanggaran fokus hanya boleh dicatat ketika browser
+     * benar-benar membuat dokumen menjadi hidden.
+     *
+     * Jangan menggunakan window.blur sebagai indikator tunggal,
+     * karena blur dapat terjadi saat klik/fokus elemen di halaman
+     * dan dapat menimbulkan false positive ketika pindah nomor soal
+     * atau memilih jawaban.
+     */
+    if (document.visibilityState !== "hidden") {
         return;
     }
 
@@ -1665,52 +1677,18 @@ document.addEventListener(
    DETEKSI WINDOW KEHILANGAN FOKUS
 ============================================================ */
 
-window.addEventListener(
-    "blur",
-    function() {
-
-        if (!examStarted || isLeavingPage) {
-            return;
-        }
-
-        if (sudahKirim) {
-            return;
-        }
-
-
-        /*
-         * blur bisa terjadi karena hal-hal tertentu
-         * di dalam browser. Kita hanya mencatat saat
-         * halaman memang sedang tidak terlihat.
-         */
-
-        setTimeout(
-            function() {
-
-                if (
-                    document.visibilityState === "hidden"
-                ) {
-
-                    return;
-                }
-
-
-                /*
-                 * Jika halaman masih visible tetapi
-                 * window kehilangan fokus, beri peringatan.
-                 */
-
-                registerViolation(
-                    "Fokus halaman ujian terdeteksi hilang. Pastikan Anda tetap berada pada halaman CBT."
-                );
-
-            },
-            150
-        );
-
-    },
-    true
-);
+/*
+ * JANGAN menggunakan window.blur untuk mencatat pelanggaran.
+ *
+ * Browser dapat memicu blur pada kondisi yang bukan perpindahan
+ * tab/keluar halaman, termasuk perubahan fokus dan interaksi
+ * tertentu dengan elemen halaman. Pada CBT hal ini dapat membuat
+ * siswa mendapat warning palsu setelah klik nomor soal atau opsi.
+ *
+ * Deteksi perpindahan tab/minimize tetap dilakukan oleh
+ * visibilitychange di atas karena event tersebut memeriksa
+ * document.visibilityState === "hidden".
+ */
 
 
 /* ============================================================
