@@ -876,7 +876,7 @@ let violationCount =
  * dari sesi ujian.
  */
 
-const examStarted =
+let examStarted =
     sessionStorage.getItem("cbtExamStarted") === "true";
 
 
@@ -1380,11 +1380,12 @@ window.onload = async function() {
 
 
     /*
-     * Jika index.html belum mengaktifkan
-     * cbtExamStarted, tetap izinkan berdasarkan
-     * user session agar tidak merusak alur lama.
+     * Perpindahan dari index.html -> HALAMAN_SOAL_CBT.html
+     * adalah bagian dari SESI YANG SAMA.
+     *
+     * Jangan membuat sesi baru dan jangan menganggap
+     * perpindahan halaman resmi sebagai pelanggaran.
      */
-
     if (
         sessionStorage.getItem("cbtExamStarted") !== "true"
     ) {
@@ -1395,6 +1396,13 @@ window.onload = async function() {
         );
 
     }
+
+    /*
+     * Aktifkan kembali state keamanan pada halaman soal.
+     * Variabel dibuat let agar event visibilitychange/blur
+     * benar-benar mengetahui bahwa ujian sudah dimulai.
+     */
+    examStarted = true;
 
 
     document.getElementById(
@@ -1436,6 +1444,15 @@ window.onload = async function() {
 
     await loadSoal();
 
+
+    /*
+     * Marker ini hanya diperlukan untuk proses masuk resmi.
+     * Setelah halaman soal berhasil aktif, hapus agar tidak
+     * dipakai ulang sebagai alasan mengabaikan pelanggaran.
+     */
+    sessionStorage.removeItem(
+        "cbtReturnFromDashboard"
+    );
 
     securityInitialized = true;
 
@@ -1931,6 +1948,243 @@ function lanjutKirim() {
 
 
 /* ============================================================
+   HITUNG SKOR
+============================================================ */
+
+/*
+ * Mencari kunci jawaban dari beberapa nama properti yang
+ * mungkin digunakan oleh endpoint GAS.
+ *
+ * Prioritas utama tetap "kunci", karena itu yang digunakan
+ * oleh versi kode sebelumnya.
+ */
+function ambilKunciSoal(soal) {
+
+    if (!soal || typeof soal !== "object") {
+        return "";
+    }
+
+    const kandidat = [
+        soal.kunci,
+        soal.jawabanBenar,
+        soal.jawaban_benar,
+        soal.correctAnswer,
+        soal.correct,
+        soal.answer
+    ];
+
+    for (const nilai of kandidat) {
+
+        if (
+            nilai !== undefined &&
+            nilai !== null &&
+            String(nilai).trim() !== ""
+        ) {
+
+            return String(nilai)
+                .trim()
+                .toUpperCase();
+
+        }
+
+    }
+
+    return "";
+}
+
+
+/*
+ * Hitung nilai 0-100 berdasarkan jumlah jawaban benar.
+ *
+ * Jika semua soal memiliki bobot "skor" dan total bobot
+ * valid, bobot tetap dihormati. Jika tidak, sistem memakai
+ * persentase jumlah benar dari seluruh soal.
+ */
+function hitungSkorLokal() {
+
+    if (
+        !Array.isArray(listSoal) ||
+        listSoal.length === 0
+    ) {
+
+        return null;
+
+    }
+
+    let jumlahKunci = 0;
+    let jumlahBenar = 0;
+
+    let totalBobot = 0;
+    let totalBobotBenar = 0;
+
+    let semuaMemilikiKunci = true;
+    let semuaMemilikiBobot = true;
+
+    listSoal.forEach(
+        function(soal) {
+
+            const kunci =
+                ambilKunciSoal(soal);
+
+            if (!kunci) {
+
+                semuaMemilikiKunci = false;
+                return;
+
+            }
+
+            jumlahKunci++;
+
+            const jawaban =
+                jawabanSiswa[soal.no] === undefined ||
+                jawabanSiswa[soal.no] === null
+                    ? ""
+                    : String(jawabanSiswa[soal.no])
+                        .trim()
+                        .toUpperCase();
+
+            const bobot =
+                Number(soal.skor);
+
+            if (
+                Number.isFinite(bobot) &&
+                bobot > 0
+            ) {
+
+                totalBobot += bobot;
+
+                if (jawaban === kunci) {
+                    totalBobotBenar += bobot;
+                }
+
+            } else {
+
+                semuaMemilikiBobot = false;
+
+            }
+
+            if (jawaban === kunci) {
+                jumlahBenar++;
+            }
+
+        }
+    );
+
+    /*
+     * Jika kunci tidak tersedia di data soal,
+     * browser tidak boleh menebak nilai.
+     */
+    if (
+        !semuaMemilikiKunci ||
+        jumlahKunci !== listSoal.length
+    ) {
+
+        return null;
+
+    }
+
+    /*
+     * Jika bobot valid, gunakan bobot.
+     * Jika tidak, gunakan persentase jawaban benar.
+     */
+    if (
+        semuaMemilikiBobot &&
+        totalBobot > 0
+    ) {
+
+        return Math.round(
+            (totalBobotBenar / totalBobot) * 100
+        );
+
+    }
+
+    return Math.round(
+        (jumlahBenar / listSoal.length) * 100
+    );
+
+}
+
+
+/*
+ * Ambil skor dari response server jika endpoint GAS
+ * mengembalikan JSON yang berisi nilai.
+ *
+ * Fungsi ini tidak memaksa format tertentu.
+ */
+function ambilSkorDariResponse(data) {
+
+    if (
+        data === null ||
+        data === undefined
+    ) {
+
+        return null;
+
+    }
+
+    if (
+        typeof data === "number" &&
+        Number.isFinite(data)
+    ) {
+
+        return Number(data);
+
+    }
+
+    if (
+        typeof data === "string"
+    ) {
+
+        const angka =
+            Number(
+                data.replace(",", ".").trim()
+            );
+
+        return Number.isFinite(angka)
+            ? angka
+            : null;
+
+    }
+
+    if (
+        typeof data === "object"
+    ) {
+
+        const kandidat = [
+            data.skor,
+            data.nilai,
+            data.score,
+            data.nilaiFinal,
+            data.nilaiAkhir,
+            data.hasil && data.hasil.skor,
+            data.hasil && data.hasil.nilai,
+            data.data && data.data.skor,
+            data.data && data.data.nilai
+        ];
+
+        for (const nilai of kandidat) {
+
+            const angka =
+                Number(nilai);
+
+            if (
+                Number.isFinite(angka)
+            ) {
+
+                return angka;
+
+            }
+
+        }
+
+    }
+
+    return null;
+
+}
+
+
+/* ============================================================
    PROSES KIRIM JAWABAN
 ============================================================ */
 
@@ -2021,67 +2275,14 @@ async function prosesKirimJawaban() {
          * kunci ke browser.
          */
 
-        let skorLokal = null;
-
-        let totalBobot = 0;
-
-        let totalBenar = 0;
-
-        let tersediaKunci = true;
-
-
-        listSoal.forEach(
-            function(s) {
-
-                if (
-                    !s.kunci
-                ) {
-
-                    tersediaKunci = false;
-
-                    return;
-                }
-
-
-                const bobot =
-                    s.skor
-                        ? Number(s.skor)
-                        : (100 / listSoal.length);
-
-
-                totalBobot +=
-                    bobot;
-
-
-                if (
-                    jawabanSiswa[s.no] ===
-                    String(s.kunci)
-                        .toUpperCase()
-                        .trim()
-                ) {
-
-                    totalBenar++;
-
-                }
-
-            }
-        );
-
-
-        if (
-            tersediaKunci &&
-            totalBobot > 0
-        ) {
-
-            skorLokal =
-                Math.round(
-                    totalBenar /
-                    listSoal.length *
-                    100
-                );
-
-        }
-
+        /*
+         * Hitung skor SEBELUM data jawaban lokal dihapus.
+         *
+         * Ini membuat layar hasil dapat langsung menampilkan
+         * nilai dari jumlah jawaban yang benar.
+         */
+        let skorLokal =
+            hitungSkorLokal();
 
         /*
          * Hapus data jawaban lokal
@@ -2133,24 +2334,27 @@ async function prosesKirimJawaban() {
                     "flex";
 
 
-                if (
-                    skorLokal !== null
-                ) {
-
+                const nilaiElement =
                     document.getElementById(
                         "nilaiFinal"
-                    ).innerText =
-                        skorLokal;
+                    );
+
+                if (
+                    skorLokal !== null &&
+                    Number.isFinite(Number(skorLokal))
+                ) {
+
+                    nilaiElement.innerText =
+                        Number(skorLokal);
 
                 } else {
 
                     /*
-                     * Jangan menampilkan nilai palsu.
+                     * Jika kunci tidak dikirim oleh API getSoal,
+                     * browser memang tidak memiliki informasi
+                     * yang cukup untuk menghitung nilai secara aman.
                      */
-
-                    document.getElementById(
-                        "nilaiFinal"
-                    ).innerText =
+                    nilaiElement.innerText =
                         "Terkirim";
 
                 }
