@@ -1138,6 +1138,25 @@ document.addEventListener(
   "visibilitychange",
   function(){
 
+    /*
+     * Perpindahan dari dashboard ke HALAMAN_SOAL_CBT.html
+     * adalah perpindahan resmi dalam SATU sesi ujian.
+     * Browser dapat memicu visibilitychange saat navigasi,
+     * sehingga event tersebut WAJIB diabaikan ketika
+     * isLeavingPage = true.
+     */
+    if(
+      isLeavingPage
+    ){
+      return;
+    }
+
+    if(
+      !examStarted
+    ){
+      return;
+    }
+
     if(
       document.hidden
     ){
@@ -1165,6 +1184,22 @@ window.addEventListener(
      * Jangan menghitung blur kecil yang terjadi
      * ketika siswa masih berada di halaman.
      */
+
+    /*
+     * Jangan anggap perpindahan resmi dashboard ->
+     * HALAMAN_SOAL_CBT.html sebagai pelanggaran.
+     */
+    if(
+      isLeavingPage
+    ){
+      return;
+    }
+
+    if(
+      !examStarted
+    ){
+      return;
+    }
 
     if(
       examStarted
