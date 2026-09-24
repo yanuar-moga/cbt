@@ -427,6 +427,91 @@
         }
 
         /* =====================================================
+           VERIFIKASI PIN ADMIN
+        ===================================================== */
+
+        #adminPinModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.70);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 30000;
+        }
+
+        .admin-pin-card {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.40);
+        }
+
+        .admin-pin-card h2 {
+            margin: 0 0 10px;
+            color: var(--primary-blue);
+        }
+
+        .admin-pin-card p {
+            color: #555;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        #adminPinInput {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0 8px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 8px;
+            outline: none;
+        }
+
+        #adminPinInput:focus {
+            border-color: var(--primary-blue);
+        }
+
+        #adminPinError {
+            min-height: 20px;
+            color: var(--btn-red);
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .admin-pin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .admin-pin-buttons button {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-pin-cancel {
+            background: #ddd;
+            color: #333;
+        }
+
+        .admin-pin-ok {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* =====================================================
            MOBILE
         ===================================================== */
 
@@ -805,6 +890,56 @@
 </div>
 
 
+<!-- =========================================================
+     VERIFIKASI PIN ADMIN SETELAH PELANGGARAN
+========================================================= -->
+
+<div id="adminPinModal">
+
+    <div class="admin-pin-card">
+
+        <h2>Verifikasi Admin</h2>
+
+        <p>
+            Untuk melanjutkan ujian setelah peringatan,
+            masukkan PIN admin.
+        </p>
+
+        <input
+            type="password"
+            id="adminPinInput"
+            inputmode="numeric"
+            maxlength="4"
+            autocomplete="off"
+            placeholder="••••"
+            onkeydown="handleAdminPinKey(event)"
+        >
+
+        <div id="adminPinError"></div>
+
+        <div class="admin-pin-buttons">
+
+            <button
+                class="admin-pin-cancel"
+                onclick="batalVerifikasiPIN()"
+            >
+                Batal
+            </button>
+
+            <button
+                class="admin-pin-ok"
+                onclick="verifikasiPIN()"
+            >
+                Lanjut Ujian
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
 /* ============================================================
@@ -857,6 +992,28 @@ let securityInitialized = false;
 let ignoreNextBlur = false;
 
 let isLeavingPage = false;
+
+/*
+ * Saat popup PIN admin aktif, sistem keamanan fokus
+ * tidak boleh membuat popup pelanggaran baru.
+ */
+let adminPinOpen = false;
+
+/*
+ * Setelah PIN benar, beri jeda singkat agar event
+ * blur/focus akibat interaksi popup tidak dihitung
+ * sebagai pelanggaran baru.
+ */
+let securityResumeGraceUntil = 0;
+
+/*
+ * PIN admin.
+ *
+ * Catatan: karena ini HTML client-side, PIN ini bukan
+ * rahasia kriptografis. Untuk kebutuhan operasional CBT
+ * digunakan sebagai verifikasi tambahan setelah warning.
+ */
+const ADMIN_PIN = "1212";
 
 
 /*
@@ -1163,6 +1320,21 @@ function registerViolation(reason) {
         return;
     }
 
+    /*
+     * Jangan munculkan peringatan baru saat PIN admin
+     * sedang diminta.
+     */
+    if (adminPinOpen) {
+        return;
+    }
+
+    /*
+     * Masa toleransi setelah verifikasi PIN.
+     */
+    if (Date.now() < securityResumeGraceUntil) {
+        return;
+    }
+
 
     /*
      * Hindari pencatatan berulang
@@ -1231,23 +1403,207 @@ function showSecurityWarning(reason) {
 
 function tutupSecurityWarning() {
 
+    /*
+     * Tutup warning terlebih dahulu.
+     * Jangan langsung menganggap siswa sudah kembali,
+     * karena siswa masih harus memasukkan PIN admin.
+     */
     document.getElementById(
         "securityWarning"
     ).style.display = "none";
 
     securityWarningOpen = false;
 
+    /*
+     * Buka verifikasi PIN admin.
+     */
+    bukaVerifikasiPIN();
+
+}
+
+
+/* ============================================================
+   VERIFIKASI PIN ADMIN
+============================================================ */
+
+function bukaVerifikasiPIN() {
+
+    if (sudahKirim) {
+        return;
+    }
+
+    adminPinOpen = true;
+
+    document.getElementById(
+        "adminPinError"
+    ).innerText = "";
+
+    const input =
+        document.getElementById(
+            "adminPinInput"
+        );
+
+    input.value = "";
+
+    document.getElementById(
+        "adminPinModal"
+    ).style.display = "flex";
 
     /*
-     * Setelah kembali ke halaman,
-     * fokuskan kembali jendela browser.
+     * Beri sedikit waktu agar modal selesai tampil
+     * sebelum input difokuskan.
      */
+    setTimeout(
+        function() {
+            try {
+                input.focus();
+            } catch (e) {}
+        },
+        100
+    );
 
-    try {
+}
 
-        window.focus();
 
-    } catch (e) {}
+function verifikasiPIN() {
+
+    if (!adminPinOpen) {
+        return;
+    }
+
+    const input =
+        document.getElementById(
+            "adminPinInput"
+        );
+
+    const pin =
+        String(input.value || "").trim();
+
+    if (pin !== ADMIN_PIN) {
+
+        document.getElementById(
+            "adminPinError"
+        ).innerText =
+            "PIN salah. Silakan masukkan PIN admin.";
+
+        input.value = "";
+
+        setTimeout(
+            function() {
+                try {
+                    input.focus();
+                } catch (e) {}
+            },
+            50
+        );
+
+        return;
+    }
+
+    /*
+     * PIN benar.
+     */
+    adminPinOpen = false;
+
+    document.getElementById(
+        "adminPinModal"
+    ).style.display = "none";
+
+    document.getElementById(
+        "adminPinError"
+    ).innerText = "";
+
+    input.value = "";
+
+    /*
+     * Reset fokus keamanan agar siswa benar-benar
+     * dapat melanjutkan ujian.
+     */
+    securityWarningOpen = false;
+
+    securityResumeGraceUntil =
+        Date.now() + 1500;
+
+    /*
+     * Pastikan status ujian tetap aktif.
+     */
+    sessionStorage.setItem(
+        "cbtExamStarted",
+        "true"
+    );
+
+    examStarted = true;
+
+    /*
+     * Kembalikan fokus ke halaman CBT.
+     */
+    setTimeout(
+        function() {
+            try {
+                window.focus();
+            } catch (e) {}
+
+            /*
+             * Tidak membuka warning lagi.
+             * Siswa langsung kembali mengerjakan soal.
+             */
+        },
+        50
+    );
+
+}
+
+
+function batalVerifikasiPIN() {
+
+    if (!adminPinOpen) {
+        return;
+    }
+
+    adminPinOpen = false;
+
+    document.getElementById(
+        "adminPinModal"
+    ).style.display = "none";
+
+    document.getElementById(
+        "adminPinError"
+    ).innerText = "";
+
+    document.getElementById(
+        "adminPinInput"
+    ).value = "";
+
+    /*
+     * Warning sudah ditutup. Jika siswa batal,
+     * jangan langsung membuat popup berulang.
+     * Ujian tetap berada pada halaman CBT.
+     */
+    securityResumeGraceUntil =
+        Date.now() + 1000;
+
+}
+
+
+function handleAdminPinKey(event) {
+
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        verifikasiPIN();
+
+        return;
+    }
+
+    if (event.key === "Escape") {
+
+        event.preventDefault();
+
+        batalVerifikasiPIN();
+
+        return;
+    }
 
 }
 
@@ -1346,7 +1702,8 @@ window.addEventListener(
 
         if (
             examStarted &&
-            !sudahKirim
+            !sudahKirim &&
+            !adminPinOpen
         ) {
 
             event.preventDefault();
