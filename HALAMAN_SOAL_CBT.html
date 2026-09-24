@@ -1560,6 +1560,10 @@ function batalVerifikasiPIN() {
         return;
     }
 
+    /*
+     * BATAL TIDAK BOLEH MEMBUKA KEMBALI SOAL.
+     * Siswa harus tetap terkunci sampai PIN admin benar.
+     */
     adminPinOpen = false;
 
     document.getElementById(
@@ -1575,12 +1579,29 @@ function batalVerifikasiPIN() {
     ).value = "";
 
     /*
-     * Warning sudah ditutup. Jika siswa batal,
-     * jangan langsung membuat popup berulang.
-     * Ujian tetap berada pada halaman CBT.
+     * Kembalikan POPUP PELANGGARAN dan biarkan tetap terkunci.
+     * Tidak ada masa toleransi di sini karena siswa belum
+     * mendapat izin admin untuk melanjutkan ujian.
      */
-    securityResumeGraceUntil =
-        Date.now() + 1000;
+    securityResumeGraceUntil = 0;
+    securityWarningOpen = true;
+
+    const warning =
+        document.getElementById("securityWarning");
+
+    warning.style.display = "flex";
+
+    /*
+     * Pastikan fokus tetap pada popup peringatan.
+     */
+    setTimeout(
+        function() {
+            try {
+                warning.querySelector(".security-ok").focus();
+            } catch (e) {}
+        },
+        50
+    );
 
 }
 
