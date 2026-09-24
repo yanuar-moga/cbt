@@ -856,6 +856,8 @@ let securityInitialized = false;
 
 let ignoreNextBlur = false;
 
+let isLeavingPage = false;
+
 
 /*
  * Pelanggaran disimpan di sessionStorage.
@@ -1258,7 +1260,7 @@ document.addEventListener(
     "visibilitychange",
     function() {
 
-        if (!examStarted) {
+        if (!examStarted || isLeavingPage) {
             return;
         }
 
@@ -1290,7 +1292,7 @@ window.addEventListener(
     "blur",
     function() {
 
-        if (!examStarted) {
+        if (!examStarted || isLeavingPage) {
             return;
         }
 
@@ -1366,6 +1368,19 @@ window.addEventListener(
 window.onload = async function() {
 
     /*
+     * Perpindahan index/dashboard -> halaman CBT adalah
+     * perpindahan resmi dalam satu sesi, bukan pelanggaran.
+     */
+    const officialEntry =
+        sessionStorage.getItem("cbtReturnFromDashboard") === "true";
+
+    if (officialEntry) {
+        sessionStorage.removeItem("cbtReturnFromDashboard");
+        sessionStorage.setItem("cbtExamStarted", "true");
+        examStarted = true;
+    }
+
+    /*
      * Tidak boleh masuk langsung ke halaman soal
      * tanpa session siswa.
      */
@@ -1380,12 +1395,11 @@ window.onload = async function() {
 
 
     /*
-     * Perpindahan dari index.html -> HALAMAN_SOAL_CBT.html
-     * adalah bagian dari SESI YANG SAMA.
-     *
-     * Jangan membuat sesi baru dan jangan menganggap
-     * perpindahan halaman resmi sebagai pelanggaran.
+     * Jika index.html belum mengaktifkan
+     * cbtExamStarted, tetap izinkan berdasarkan
+     * user session agar tidak merusak alur lama.
      */
+
     if (
         sessionStorage.getItem("cbtExamStarted") !== "true"
     ) {
@@ -1395,14 +1409,9 @@ window.onload = async function() {
             "true"
         );
 
-    }
+        examStarted = true;
 
-    /*
-     * Aktifkan kembali state keamanan pada halaman soal.
-     * Variabel dibuat let agar event visibilitychange/blur
-     * benar-benar mengetahui bahwa ujian sudah dimulai.
-     */
-    examStarted = true;
+    }
 
 
     document.getElementById(
@@ -1444,15 +1453,6 @@ window.onload = async function() {
 
     await loadSoal();
 
-
-    /*
-     * Marker ini hanya diperlukan untuk proses masuk resmi.
-     * Setelah halaman soal berhasil aktif, hapus agar tidak
-     * dipakai ulang sebagai alasan mengabaikan pelanggaran.
-     */
-    sessionStorage.removeItem(
-        "cbtReturnFromDashboard"
-    );
 
     securityInitialized = true;
 
@@ -1948,243 +1948,6 @@ function lanjutKirim() {
 
 
 /* ============================================================
-   HITUNG SKOR
-============================================================ */
-
-/*
- * Mencari kunci jawaban dari beberapa nama properti yang
- * mungkin digunakan oleh endpoint GAS.
- *
- * Prioritas utama tetap "kunci", karena itu yang digunakan
- * oleh versi kode sebelumnya.
- */
-function ambilKunciSoal(soal) {
-
-    if (!soal || typeof soal !== "object") {
-        return "";
-    }
-
-    const kandidat = [
-        soal.kunci,
-        soal.jawabanBenar,
-        soal.jawaban_benar,
-        soal.correctAnswer,
-        soal.correct,
-        soal.answer
-    ];
-
-    for (const nilai of kandidat) {
-
-        if (
-            nilai !== undefined &&
-            nilai !== null &&
-            String(nilai).trim() !== ""
-        ) {
-
-            return String(nilai)
-                .trim()
-                .toUpperCase();
-
-        }
-
-    }
-
-    return "";
-}
-
-
-/*
- * Hitung nilai 0-100 berdasarkan jumlah jawaban benar.
- *
- * Jika semua soal memiliki bobot "skor" dan total bobot
- * valid, bobot tetap dihormati. Jika tidak, sistem memakai
- * persentase jumlah benar dari seluruh soal.
- */
-function hitungSkorLokal() {
-
-    if (
-        !Array.isArray(listSoal) ||
-        listSoal.length === 0
-    ) {
-
-        return null;
-
-    }
-
-    let jumlahKunci = 0;
-    let jumlahBenar = 0;
-
-    let totalBobot = 0;
-    let totalBobotBenar = 0;
-
-    let semuaMemilikiKunci = true;
-    let semuaMemilikiBobot = true;
-
-    listSoal.forEach(
-        function(soal) {
-
-            const kunci =
-                ambilKunciSoal(soal);
-
-            if (!kunci) {
-
-                semuaMemilikiKunci = false;
-                return;
-
-            }
-
-            jumlahKunci++;
-
-            const jawaban =
-                jawabanSiswa[soal.no] === undefined ||
-                jawabanSiswa[soal.no] === null
-                    ? ""
-                    : String(jawabanSiswa[soal.no])
-                        .trim()
-                        .toUpperCase();
-
-            const bobot =
-                Number(soal.skor);
-
-            if (
-                Number.isFinite(bobot) &&
-                bobot > 0
-            ) {
-
-                totalBobot += bobot;
-
-                if (jawaban === kunci) {
-                    totalBobotBenar += bobot;
-                }
-
-            } else {
-
-                semuaMemilikiBobot = false;
-
-            }
-
-            if (jawaban === kunci) {
-                jumlahBenar++;
-            }
-
-        }
-    );
-
-    /*
-     * Jika kunci tidak tersedia di data soal,
-     * browser tidak boleh menebak nilai.
-     */
-    if (
-        !semuaMemilikiKunci ||
-        jumlahKunci !== listSoal.length
-    ) {
-
-        return null;
-
-    }
-
-    /*
-     * Jika bobot valid, gunakan bobot.
-     * Jika tidak, gunakan persentase jawaban benar.
-     */
-    if (
-        semuaMemilikiBobot &&
-        totalBobot > 0
-    ) {
-
-        return Math.round(
-            (totalBobotBenar / totalBobot) * 100
-        );
-
-    }
-
-    return Math.round(
-        (jumlahBenar / listSoal.length) * 100
-    );
-
-}
-
-
-/*
- * Ambil skor dari response server jika endpoint GAS
- * mengembalikan JSON yang berisi nilai.
- *
- * Fungsi ini tidak memaksa format tertentu.
- */
-function ambilSkorDariResponse(data) {
-
-    if (
-        data === null ||
-        data === undefined
-    ) {
-
-        return null;
-
-    }
-
-    if (
-        typeof data === "number" &&
-        Number.isFinite(data)
-    ) {
-
-        return Number(data);
-
-    }
-
-    if (
-        typeof data === "string"
-    ) {
-
-        const angka =
-            Number(
-                data.replace(",", ".").trim()
-            );
-
-        return Number.isFinite(angka)
-            ? angka
-            : null;
-
-    }
-
-    if (
-        typeof data === "object"
-    ) {
-
-        const kandidat = [
-            data.skor,
-            data.nilai,
-            data.score,
-            data.nilaiFinal,
-            data.nilaiAkhir,
-            data.hasil && data.hasil.skor,
-            data.hasil && data.hasil.nilai,
-            data.data && data.data.skor,
-            data.data && data.data.nilai
-        ];
-
-        for (const nilai of kandidat) {
-
-            const angka =
-                Number(nilai);
-
-            if (
-                Number.isFinite(angka)
-            ) {
-
-                return angka;
-
-            }
-
-        }
-
-    }
-
-    return null;
-
-}
-
-
-/* ============================================================
    PROSES KIRIM JAWABAN
 ============================================================ */
 
@@ -2194,67 +1957,40 @@ async function prosesKirimJawaban() {
      * Proteksi pengiriman ganda.
      */
 
-    if (
-        sudahKirim &&
-        arguments.length > 0
-    ) {
-
+    if (sudahKirim && arguments.length > 0) {
         return;
     }
 
-
-    sudahKirim =
-        true;
-
-
-    /*
-     * Matikan status pelanggaran baru.
-     */
+    sudahKirim = true;
 
     sessionStorage.setItem(
         "cbtExamFinished",
         "true"
     );
 
-
     document.getElementById(
         "loading"
-    ).style.display =
-        "flex";
-
+    ).style.display = "flex";
 
     document.getElementById(
         "loadingText"
-    ).innerText =
-        "Menyimpan & Menghitung Skor...";
-
+    ).innerText = "Menyimpan & Menghitung Skor...";
 
     const payload = {
-
-        action:
-            "kirimJawaban",
-
-        idLogin:
-            userSession.idLogin,
-
-        nama:
-            userSession.nama,
-
-        kelas:
-            userSession.kelas,
-
-        jawaban:
-            jawabanSiswa
-
+        action: "kirimJawaban",
+        idLogin: userSession.idLogin,
+        nama: userSession.nama,
+        kelas: userSession.kelas,
+        jawaban: jawabanSiswa
     };
-
 
     try {
 
         /*
-         * Kirim data ke GAS.
+         * Kirim jawaban ke GAS.
+         * no-cors tetap dipakai agar kompatibel dengan deployment
+         * Apps Script yang digunakan saat ini.
          */
-
         await fetch(
             API_SOAL,
             {
@@ -2264,136 +2000,253 @@ async function prosesKirimJawaban() {
             }
         );
 
-
         /*
-         * Karena mode no-cors tidak mengizinkan
-         * JavaScript membaca response GAS,
-         * skor lokal hanya dapat dihitung jika
-         * server mengirimkan kunci soal.
-         *
-         * Versi GAS yang lebih aman tidak mengirim
-         * kunci ke browser.
+         * Response POST tidak dapat dibaca browser karena no-cors.
+         * Oleh sebab itu nilai resmi dibaca kembali melalui GET
+         * mode=getHasil dari sheet HASIL kolom E.
          */
-
-        /*
-         * Hitung skor SEBELUM data jawaban lokal dihapus.
-         *
-         * Ini membuat layar hasil dapat langsung menampilkan
-         * nilai dari jumlah jawaban yang benar.
-         */
-        let skorLokal =
-            hitungSkorLokal();
-
-        /*
-         * Hapus data jawaban lokal
-         * setelah berhasil dikirim.
-         */
-
-        localStorage.removeItem(
-            "endTime"
+        const hasil = await tungguHasilServer(
+            userSession.idLogin,
+            10,
+            700
         );
 
-        localStorage.removeItem(
-            "jawabanSiswa"
-        );
-
-
         /*
-         * Tandai ujian selesai.
+         * Hapus data lokal setelah pengiriman selesai.
          */
+        localStorage.removeItem("endTime");
+        localStorage.removeItem("jawabanSiswa");
 
         sessionStorage.setItem(
             "cbtExamFinished",
             "true"
         );
 
-
         sessionStorage.removeItem(
             "cbtExamStarted"
         );
 
-
-        setTimeout(
-            function() {
-
-                document.getElementById(
-                    "loading"
-                ).style.display =
-                    "none";
-
-
-                document.getElementById(
-                    "app-content"
-                ).style.display =
-                    "none";
-
-
-                document.getElementById(
-                    "layarHasil"
-                ).style.display =
-                    "flex";
-
-
-                const nilaiElement =
-                    document.getElementById(
-                        "nilaiFinal"
-                    );
-
-                if (
-                    skorLokal !== null &&
-                    Number.isFinite(Number(skorLokal))
-                ) {
-
-                    nilaiElement.innerText =
-                        Number(skorLokal);
-
-                } else {
-
-                    /*
-                     * Jika kunci tidak dikirim oleh API getSoal,
-                     * browser memang tidak memiliki informasi
-                     * yang cukup untuk menghitung nilai secara aman.
-                     */
-                    nilaiElement.innerText =
-                        "Terkirim";
-
-                }
-
-            },
-            1200
-        );
-
-
-    } catch (error) {
-
-        console.error(error);
-
-
         document.getElementById(
             "loading"
-        ).style.display =
-            "none";
-
+        ).style.display = "none";
 
         document.getElementById(
             "app-content"
-        ).style.display =
-            "none";
-
+        ).style.display = "none";
 
         document.getElementById(
             "layarHasil"
-        ).style.display =
-            "flex";
+        ).style.display = "flex";
 
+        if (
+            hasil &&
+            hasil.status === "success" &&
+            hasil.nilai !== null &&
+            hasil.nilai !== undefined &&
+            hasil.nilai !== ""
+        ) {
+
+            /*
+             * INI NILAI RESMI DARI HASIL!E.
+             */
+            document.getElementById(
+                "nilaiFinal"
+            ).innerText = formatNilai(hasil.nilai);
+
+        } else {
+
+            /*
+             * Jika server belum mengembalikan nilai setelah polling,
+             * jangan menghitung nilai sendiri karena kunci tidak
+             * pernah dikirim ke browser.
+             */
+            document.getElementById(
+                "nilaiFinal"
+            ).innerText = "Menunggu...";
+
+            /*
+             * Satu kali polling lanjutan di background. Ini berguna
+             * jika Spreadsheet sedang terlambat menulis/menghitung.
+             */
+            pollingNilaiLanjutan(
+                userSession.idLogin
+            );
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Pengiriman / pengambilan nilai gagal:",
+            error
+        );
+
+        document.getElementById(
+            "loading"
+        ).style.display = "none";
+
+        document.getElementById(
+            "app-content"
+        ).style.display = "none";
+
+        document.getElementById(
+            "layarHasil"
+        ).style.display = "flex";
 
         document.getElementById(
             "nilaiFinal"
-        ).innerText =
-            "Terkirim";
+        ).innerText = "Menunggu...";
 
+        pollingNilaiLanjutan(
+            userSession.idLogin
+        );
+    }
+}
+
+
+/* ============================================================
+   AMBIL NILAI RESMI DARI HASIL!E
+============================================================ */
+async function ambilHasilServer(idLogin) {
+
+    const url =
+        API_SOAL +
+        "?mode=getHasil" +
+        "&idLogin=" +
+        encodeURIComponent(idLogin) +
+        "&t=" +
+        Date.now();
+
+    const response = await fetch(
+        url,
+        {
+            method: "GET",
+            cache: "no-store"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error(
+            "Server hasil tidak merespons."
+        );
     }
 
+    const data = await response.json();
+
+    return data;
+}
+
+
+/* ============================================================
+   POLLING HASIL SETELAH SUBMIT
+============================================================ */
+async function tungguHasilServer(
+    idLogin,
+    jumlahPercobaan,
+    jedaMs
+) {
+
+    for (
+        let percobaan = 1;
+        percobaan <= jumlahPercobaan;
+        percobaan++
+    ) {
+
+        try {
+
+            const hasil =
+                await ambilHasilServer(idLogin);
+
+            if (
+                hasil &&
+                hasil.status === "success" &&
+                hasil.nilai !== null &&
+                hasil.nilai !== undefined &&
+                hasil.nilai !== ""
+            ) {
+                return hasil;
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Percobaan mengambil nilai " +
+                percobaan +
+                " gagal:",
+                error
+            );
+
+        }
+
+        if (
+            percobaan < jumlahPercobaan
+        ) {
+            await delay(jedaMs);
+        }
+    }
+
+    return null;
+}
+
+
+/* ============================================================
+   POLLING LANJUTAN JIKA SHEET TERLAMBAT
+============================================================ */
+async function pollingNilaiLanjutan(idLogin) {
+
+    const hasil =
+        await tungguHasilServer(
+            idLogin,
+            15,
+            1000
+        );
+
+    if (
+        hasil &&
+        hasil.status === "success" &&
+        hasil.nilai !== null &&
+        hasil.nilai !== undefined &&
+        hasil.nilai !== ""
+    ) {
+
+        const nilaiElement =
+            document.getElementById(
+                "nilaiFinal"
+            );
+
+        if (nilaiElement) {
+            nilaiElement.innerText =
+                formatNilai(hasil.nilai);
+        }
+    }
+}
+
+
+/* ============================================================
+   FORMAT NILAI
+============================================================ */
+function formatNilai(nilai) {
+
+    const n = Number(nilai);
+
+    if (!Number.isFinite(n)) {
+        return String(nilai);
+    }
+
+    return Number.isInteger(n)
+        ? String(n)
+        : String(n);
+}
+
+
+/* ============================================================
+   DELAY
+============================================================ */
+function delay(ms) {
+    return new Promise(
+        function(resolve) {
+            setTimeout(resolve, ms);
+        }
+    );
 }
 
 
