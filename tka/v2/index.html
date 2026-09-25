@@ -380,7 +380,54 @@ th{background:#edf2ff;color:#153ba8}tr:last-child td{border-bottom:0}
         <li>Tutup semua aplikasi lain sebelum memulai</li>
         <li>Jangan berpindah tab selama ujian</li>
       </ul>
-      <button class="btn-start" onclick="openConfirm()">Kerjakan Ujian</button>
+<!-- Sisipkan bagian ini di posisi tengah baris HTML Anda -->
+<div id="dashboard">
+    <div class="box">
+        <!-- Letakkan elemen lain di dalam box jika ada, lalu sisipkan tombol ini -->
+        <button class="btn-start" onclick="openConfirm()">Kerjakan Ujian</button>
+    </div>
+</div>
+
+<style>
+    /* Styling CSS khusus untuk tombol di dalam box */
+    #dashboard .box .btn-start {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100% !important;
+        min-height: 58px !important;
+        margin: 25px 0 0 !important;
+        padding: 15px 24px !important;
+        border-radius: 15px !important;
+        border: 1px solid rgba(159,204,0,.5) !important;
+        background: linear-gradient(100deg,#b9ef00 0%,#d9ff42 55%,#c8ff00 100%) !important;
+        color: #07132f !important;
+        font-size: 15px !important;
+        font-weight: 950 !important;
+        letter-spacing: .2px;
+        box-shadow: 0 12px 28px rgba(145,190,0,.25), inset 0 1px 0 rgba(255,255,255,.65) !important;
+        cursor: pointer;
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease !important;
+        box-sizing: border-box;
+    }
+
+    #dashboard .box .btn-start::after {
+        content: "→";
+        margin-left: 12px;
+        font-size: 21px;
+        line-height: 1;
+    }
+
+    #dashboard .box .btn-start:hover {
+        transform: translateY(-3px) !important;
+        filter: brightness(1.02);
+        box-shadow: 0 17px 34px rgba(145,190,0,.30), inset 0 1px 0 rgba(255,255,255,.65) !important;
+    }
+
+    #dashboard .box .btn-start:active {
+        transform: translateY(0) scale(.99) !important;
+    }
+</style>
     </div>
   </div>
 </div>
