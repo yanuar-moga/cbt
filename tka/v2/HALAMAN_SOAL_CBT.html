@@ -7,448 +7,587 @@
     <title>Computer Based Test</title>
 
     <style>
-/* =========================================================
-   GURU WALI CBT — MODERN TKA-STYLE EXAM UI
-========================================================= */
-
-:root{
-  --navy:#07132f;
-  --navy-2:#0c1d4d;
-  --blue:#1749f5;
-  --blue-2:#1038c9;
-  --blue-3:#2866ff;
-  --cyan:#47d8ff;
-  --lime:#c8ff00;
-  --lime-2:#b2f300;
-  --white:#fff;
-  --text:#15203a;
-  --muted:#71809b;
-  --soft:#f3f6ff;
-  --line:#dce4f4;
-  --success:#18a957;
-  --warning:#f2a900;
-  --danger:#e5484d;
-  --shadow:0 16px 45px rgba(10,27,75,.11);
-
-  /* compatibility with existing inline styles */
-  --primary-blue:var(--blue);
-  --btn-red:var(--danger);
-}
-
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  padding:0;
-  width:100%;
-  min-height:100%;
-}
-
-body{
-  font-family:"Segoe UI",Inter,Arial,sans-serif;
-  color:var(--text);
-  background:
-    radial-gradient(circle at 10% 0%,rgba(40,102,255,.10),transparent 28%),
-    #f1f4fb;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-  user-select:none;
-  -webkit-user-select:none;
-}
-
-button,input{font-family:inherit}
-img{user-drag:none;-webkit-user-drag:none}
-
-/* ===== LOADING ===== */
-
-#loading{
-  background:
-    radial-gradient(circle at 50% 28%,rgba(40,102,255,.24),transparent 28%),
-    linear-gradient(145deg,#050c20,#0d2670 70%,#1749f5);
-}
-
-#loading img{
-  width:105px !important;
-  filter:drop-shadow(0 15px 28px rgba(0,0,0,.28));
-}
-
-#loadingText{
-  color:#dfe8ff !important;
-}
-
-/* ===== HEADER ===== */
-
-.header{
-  position:sticky;
-  top:0;
-  z-index:800;
-  min-height:76px;
-  padding:12px 32px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:#fff;
-  background:linear-gradient(105deg,#07132f,#1234aa 64%,#1749f5);
-  border-bottom:4px solid var(--lime);
-  box-shadow:0 6px 22px rgba(7,19,47,.18);
-}
-
-#displayNama{
-  font-size:1.08em !important;
-  font-weight:950;
-}
-
-#displayKelas{
-  color:#dce6ff;
-  font-size:.88em;
-}
-
-.timer{
-  min-width:150px;
-  padding:10px 18px;
-  border-radius:12px;
-  background:var(--lime);
-  color:#07132f;
-  font-weight:950;
-  text-align:center;
-  box-shadow:0 7px 22px rgba(200,255,0,.22);
-  font-variant-numeric:tabular-nums;
-}
-
-/* ===== DESKTOP LAYOUT ===== */
-
-.main-layout{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 315px;
-  gap:24px;
-  align-items:start;
-  width:min(1280px,100%);
-  margin:24px auto;
-  padding:0 22px 155px;
-}
-
-.quiz-container{min-width:0}
-
-.sidebar{
-  min-width:0;
-  position:sticky;
-  top:98px;
-}
-
-/* ===== QUESTION CARD ===== */
-
-.soal-card{
-  background:#fff;
-  border:1px solid #e0e6f2;
-  border-left:6px solid var(--blue);
-  border-radius:22px;
-  padding:30px;
-  box-shadow:var(--shadow);
-}
-
-.soal-card h3,
-.soal-card h4{
-  color:var(--navy);
-}
-
-.opsi{
-  position:relative;
-  padding:15px 17px;
-  margin-top:11px;
-  border:1.5px solid var(--line);
-  border-radius:13px;
-  background:#fff;
-  cursor:pointer;
-  transition:.18s ease;
-}
-
-.opsi:hover{
-  background:#f5f8ff;
-  border-color:#aabcf4;
-  transform:translateX(2px);
-}
-
-.opsi.selected{
-  background:#f1ffd0;
-  border-color:var(--lime-2);
-  color:#13213d;
-  font-weight:850;
-  box-shadow:0 6px 15px rgba(178,243,0,.14);
-}
-
-/* ===== QUESTION NAVIGATION ===== */
-
-.sidebar > div{
-  background:#fff !important;
-  border:1px solid #e0e6f2 !important;
-  border-radius:22px !important;
-  padding:22px !important;
-  box-shadow:var(--shadow) !important;
-}
-
-.sidebar h4{
-  color:var(--navy);
-  border-bottom:2px solid #edf1f7 !important;
-  padding-bottom:12px !important;
-}
-
-.grid-nomor{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:9px;
-  margin-top:15px;
-}
-
-.kotak-nomor{
-  aspect-ratio:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:10px;
-  background:#edf0f6;
-  color:#56627a;
-  font-weight:950;
-  cursor:pointer;
-  transition:.18s ease;
-}
-
-.kotak-nomor:hover{background:#dfe6fb}
-
-.kotak-nomor.sudah{
-  background:var(--success);
-  color:#fff;
-}
-
-.kotak-nomor.aktif{
-  background:var(--blue);
-  color:#fff;
-  border:3px solid var(--lime);
-  transform:scale(1.06);
-  box-shadow:0 6px 16px rgba(23,73,245,.25);
-}
-
-/* Existing inline success button gets modern lime */
-.sidebar button[onclick="kirimJawaban()"]{
-  background:var(--lime) !important;
-  color:#07132f !important;
-  border-radius:12px !important;
-  font-weight:950 !important;
-}
-
-/* ===== BOTTOM NAV ===== */
-
-.nav-bottom{
-  position:fixed;
-  z-index:900;
-  left:50%;
-  bottom:39px;
-  transform:translateX(-50%);
-  width:min(1280px,100%);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:15px;
-  padding:11px 22px;
-  background:rgba(255,255,255,.97);
-  border:1px solid #dce4f0;
-  border-radius:16px 16px 0 0;
-  box-shadow:0 -9px 30px rgba(10,27,75,.10);
-  backdrop-filter:blur(10px);
-}
-
-.btn{
-  border:0;
-  border-radius:10px;
-  padding:11px 20px;
-  cursor:pointer;
-  font-weight:950;
-}
-
-.btn-nav{
-  background:var(--blue) !important;
-  color:#fff !important;
-}
-
-.btn-nav:hover{background:var(--blue-2) !important}
-
-#infoHalaman{
-  color:var(--navy) !important;
-  padding-top:0 !important;
-}
-
-/* ===== FOOTER ===== */
-
-.footer-info{
-  position:fixed;
-  z-index:1000;
-  left:0;
-  bottom:0;
-  width:100%;
-  padding:8px 0;
-  background:var(--navy);
-  color:#cbd5eb;
-  border-top:2px solid var(--lime);
-  text-align:center;
-  font-size:.78em;
-}
-
-/* ===== RESULT SCREEN ===== */
-
-#layarHasil{
-  background:
-    radial-gradient(circle at 50% 10%,rgba(40,102,255,.10),transparent 30%),
-    #f6f8ff;
-}
-
-#layarHasil img{width:110px !important}
-
-#layarHasil h2{
-  color:var(--blue) !important;
-}
-
-#layarHasil [style*="background:#f0f7ff"]{
-  background:#fff !important;
-  border:1px solid #dce5f5;
-  box-shadow:var(--shadow);
-}
-
-.skor-box{
-  color:var(--blue);
-  font-size:4em;
-  font-weight:950;
-}
-
-/* ===== CUSTOM POPUP ===== */
-
-.custom-alert-overlay,
-#securityWarning,
-#adminPinModal{
-  background:rgba(4,10,28,.70);
-  backdrop-filter:blur(7px);
-}
-
-.custom-alert,
-.security-card,
-.admin-pin-card{
-  background:#fff;
-  border:1px solid #e0e6f2;
-  border-radius:22px;
-  box-shadow:0 28px 80px rgba(0,0,0,.30);
-}
-
-.custom-alert{
-  position:relative;
-  overflow:hidden;
-}
-
-.custom-alert::before,
-.security-card::before,
-.admin-pin-card::before{
-  content:"";
-  display:block;
-  height:6px;
-  margin:-28px -28px 22px;
-  background:linear-gradient(90deg,var(--blue),var(--cyan),var(--lime));
-}
-
-.custom-alert h3,
-.security-card h2,
-.admin-pin-card h2{
-  color:var(--navy);
-  font-weight:950;
-}
-
-.custom-alert p,
-.security-card p,
-.admin-pin-card p{
-  color:#5f6c84;
-}
-
-.alert-buttons,
-.admin-pin-buttons{
-  gap:10px;
-}
-
-.alert-btn,
-.admin-pin-buttons button{
-  border-radius:10px !important;
-  font-weight:950 !important;
-}
-
-.btn-batal,
-.admin-pin-cancel{
-  background:#e9edf4 !important;
-  color:#3f4a61 !important;
-}
-
-.btn-kirim,
-.admin-pin-ok{
-  background:var(--blue) !important;
-  color:#fff !important;
-}
-
-.security-icon{
-  background:#eef3ff !important;
-  color:var(--blue) !important;
-}
-
-.security-card h2{
-  color:var(--danger) !important;
-}
-
-.security-count{
-  background:#fff0f0 !important;
-  color:#b32d32 !important;
-}
-
-.security-ok{
-  background:var(--lime) !important;
-  color:#07132f !important;
-}
-
-#adminPinInput{
-  border:2px solid #dce4f3 !important;
-  background:#f8faff;
-}
-
-#adminPinInput:focus{
-  border-color:var(--blue) !important;
-  box-shadow:0 0 0 4px rgba(23,73,245,.10) !important;
-}
-
-/* ===== DESKTOP FIRST ===== */
-
-@media(min-width:901px){
-  body{min-width:1000px}
-}
-
-@media(max-width:900px){
-  .header{padding:10px 14px}
-  .main-layout{
-    display:flex;
-    flex-direction:column;
-    width:100%;
-    margin:14px auto;
-    padding:0 12px 160px;
-  }
-  .sidebar{
-    width:100%;
-    position:static;
-  }
-  .soal-card{padding:20px}
-  .nav-bottom{
-    width:100%;
-    bottom:40px;
-    border-radius:0;
-    padding:9px 10px;
-  }
-  .nav-bottom .btn{
-    padding:9px 12px;
-    font-size:12px;
-  }
-  #infoHalaman{font-size:12px;white-space:nowrap}
-}
+        :root {
+            --primary-blue: #1f4e94;
+            --btn-blue: #007bff;
+            --btn-red: #ed1c24;
+            --gold: #d4af37;
+            --light-bg: #f4f7fa;
+            --success: #28a745;
+            --warning: #ff9800;
+            --dark: #222;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--light-bg);
+            color: #222;
+
+            /* Proteksi dasar */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid var(--gold);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 800;
+        }
+
+        .timer {
+            background: white;
+            color: var(--primary-blue);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            min-width: 105px;
+            text-align: center;
+        }
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .main-layout {
+            display: flex;
+            flex-direction: column;
+            max-width: 1100px;
+            width: 100%;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 15px 160px;
+        }
+
+        @media (min-width: 768px) {
+            .main-layout {
+                flex-direction: row;
+            }
+        }
+
+        .quiz-container {
+            flex: 3;
+            min-width: 0;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* =====================================================
+           SOAL
+        ===================================================== */
+
+        .soal-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .opsi {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+        }
+
+        .opsi:hover {
+            background: #f0f4f8;
+        }
+
+        .opsi.selected {
+            background: #e1ecff;
+            border-color: var(--btn-blue);
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        /* =====================================================
+           NAVIGASI NOMOR
+        ===================================================== */
+
+        .grid-nomor {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .kotak-nomor {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .kotak-nomor.sudah {
+            background: var(--success);
+            color: white;
+        }
+
+        .kotak-nomor.aktif {
+            border: 3px solid var(--gold);
+            transform: scale(1.1);
+        }
+
+        /* =====================================================
+           NAVIGASI BAWAH
+        ===================================================== */
+
+        .nav-bottom {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 20px;
+            border-top: 1px solid #eee;
+            box-sizing: border-box;
+            z-index: 900;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer-info {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #222;
+            color: #ccc;
+            text-align: center;
+            padding: 8px 0;
+            font-size: 0.85em;
+            border-top: 2px solid var(--gold);
+            z-index: 1000;
+        }
+
+        /* =====================================================
+           BUTTON
+        ===================================================== */
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-nav {
+            background: var(--btn-blue);
+            color: white;
+        }
+
+        /* =====================================================
+           HASIL
+        ===================================================== */
+
+        #layarHasil {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .skor-box {
+            font-size: 4em;
+            color: var(--primary-blue);
+            font-weight: 900;
+            margin: 15px 0;
+        }
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        /* =====================================================
+           CUSTOM ALERT
+        ===================================================== */
+
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10002;
+            padding: 20px;
+        }
+
+        .custom-alert {
+            background: #fff;
+            width: 100%;
+            max-width: 380px;
+            border-radius: 16px;
+            padding: 22px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            animation: zoomIn 0.2s ease;
+        }
+
+        .custom-alert h3 {
+            margin: 0 0 10px;
+            color: var(--primary-blue);
+        }
+
+        .custom-alert p {
+            margin: 0 0 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .alert-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .alert-btn {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-batal {
+            background: #ccc;
+            color: #333;
+        }
+
+        .btn-kirim {
+            background: var(--btn-red);
+            color: white;
+        }
+
+        /* =====================================================
+           SECURITY WARNING
+        ===================================================== */
+
+        #securityWarning {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 20000;
+        }
+
+        .security-card {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+            animation: zoomIn 0.2s ease;
+        }
+
+        .security-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #fff3cd;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .security-card h2 {
+            margin: 0 0 10px;
+            color: var(--btn-red);
+            font-size: 22px;
+        }
+
+        .security-card p {
+            color: #555;
+            line-height: 1.55;
+            font-size: 14px;
+        }
+
+        .security-count {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #f8d7da;
+            color: #721c24;
+            font-weight: bold;
+        }
+
+        .security-ok {
+            width: 100%;
+            margin-top: 10px;
+            border: none;
+            padding: 13px;
+            border-radius: 10px;
+            background: var(--primary-blue);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* =====================================================
+           VERIFIKASI PIN ADMIN
+        ===================================================== */
+
+        #adminPinModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.70);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 30000;
+        }
+
+        .admin-pin-card {
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.40);
+        }
+
+        .admin-pin-card h2 {
+            margin: 0 0 10px;
+            color: var(--primary-blue);
+        }
+
+        .admin-pin-card p {
+            color: #555;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        #adminPinInput {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0 8px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            letter-spacing: 8px;
+            outline: none;
+        }
+
+        #adminPinInput:focus {
+            border-color: var(--primary-blue);
+        }
+
+        #adminPinError {
+            min-height: 20px;
+            color: var(--btn-red);
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .admin-pin-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .admin-pin-buttons button {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-pin-cancel {
+            background: #ddd;
+            color: #333;
+        }
+
+        .admin-pin-ok {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 10px 12px;
+            }
+
+            #displayNama {
+                font-size: 0.95em !important;
+            }
+
+            .timer {
+                min-width: 90px;
+                padding: 5px 8px;
+                font-size: 0.9em;
+            }
+
+            .main-layout {
+                margin: 12px auto;
+                padding: 0 10px 160px;
+            }
+
+            .soal-card {
+                padding: 18px;
+            }
+
+            .opsi {
+                padding: 13px;
+            }
+
+            .nav-bottom {
+                padding: 8px 10px;
+            }
+
+            .nav-bottom .btn {
+                padding: 9px 12px;
+                font-size: 12px;
+            }
+
+            #infoHalaman {
+                font-size: 12px;
+                white-space: nowrap;
+            }
+
+            .grid-nomor {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 7px;
+            }
+        }
+    
+/* ===== PROFESSIONAL EXAM UI ===== */
+.header{background:linear-gradient(135deg,#173f8f,#2563c7)!important;border-bottom:3px solid #f4c542!important;padding:11px 18px!important}
+.header-user{display:flex;align-items:center;gap:10px}
+.header-avatar{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:18px}
+.header-actions{display:flex;align-items:center;gap:9px}
+.exam-logout{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;padding:8px 13px;border-radius:10px;font-weight:800;cursor:pointer}
+.exam-logout:hover{background:rgba(255,255,255,.2)}
+.footer-info{cursor:pointer!important;background:#172033!important;transition:.2s}
+.footer-info:hover{background:#101827!important;color:#fff!important}
+.soal-card{border:1px solid #e5ebf3!important;border-left:5px solid #2563c7!important;box-shadow:0 12px 30px rgba(15,23,42,.07)!important}
+.opsi{border:1.5px solid #e1e8f0!important}
+.opsi:hover{border-color:#3777d6!important;transform:translateY(-1px)}
+.sidebar>div{border:1px solid #e5ebf3}
+.exam-about-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;z-index:50000;padding:18px}
+.exam-about-card{width:min(460px,100%);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.28)}
+.exam-about-head{background:linear-gradient(135deg,#173f8f,#2563c7);color:#fff;padding:25px;display:flex;gap:14px;align-items:center}
+.exam-about-head img{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:16px;padding:6px}
+.exam-about-head h3{margin:0 0 4px;font-size:20px}
+.exam-about-body{padding:22px}
+.exam-about-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1f5;font-size:13px}
+.exam-about-row span{color:#64748b}.exam-about-row strong{text-align:right;color:#172554}
+.exam-about-close{width:100%;border:0;border-radius:11px;padding:11px;background:#173f8f;color:#fff;font-weight:800;margin-top:16px;cursor:pointer}
+@media(max-width:600px){.header-actions{gap:5px}.exam-logout{padding:7px 9px;font-size:11px}.header-avatar{display:none}}
+
 </style>
 </head>
 
@@ -561,31 +700,17 @@ img{user-drag:none;-webkit-user-drag:none}
 <div id="app-content">
 
     <div class="header">
-
+      <div class="header-user">
+        <div class="header-avatar">👤</div>
         <div>
-
-            <b
-                id="displayNama"
-                style="font-size:1.1em;"
-            >
-                -
-            </b>
-
-            <br>
-
-            <small id="displayKelas">
-                -
-            </small>
-
+          <b id="displayNama" style="font-size:1.05em;">-</b><br>
+          <small id="displayKelas">-</small>
         </div>
-
-        <div
-            class="timer"
-            id="timerDisplay"
-        >
-            00:00:00
-        </div>
-
+      </div>
+      <div class="header-actions">
+        <div class="timer" id="timerDisplay">00:00:00</div>
+        <button class="exam-logout" onclick="konfirmasiKeluarUjian()">⎋ Keluar</button>
+      </div>
     </div>
 
 
@@ -682,7 +807,7 @@ img{user-drag:none;-webkit-user-drag:none}
     </div>
 
 
-    <div class="footer-info">
+    <div class="footer-info" onclick="openExamAbout()">
         Computer Based Test Ver 1.0 | Dev by MB © 2026
     </div>
 
@@ -824,7 +949,6 @@ img{user-drag:none;-webkit-user-drag:none}
     </div>
 
 </div>
-
 
 <script>
 
@@ -2491,6 +2615,13 @@ function delay(ms) {
     );
 }
 
+
+
+function openExamAbout(){document.getElementById("examAboutModal").style.display="flex";}
+function closeExamAbout(){document.getElementById("examAboutModal").style.display="none";}
+function konfirmasiKeluarUjian(){
+  showAlert("Keluar dari Ujian","Apakah Anda yakin ingin keluar? Jawaban yang belum dikirim dapat hilang.","confirm",function(){logOutSiswa();});
+}
 
 /* ============================================================
    LOGOUT SISWA
