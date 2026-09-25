@@ -895,6 +895,163 @@
             }
         }
 
+
+/* =========================================================
+   FIX TAMPILAN CBT / OVERLAY STATE
+   Memastikan layar soal, hasil, dan popup tidak tampil
+   bersamaan serta mencegah overflow horizontal.
+========================================================= */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+#app-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.main-layout {
+    width: min(1100px, 100%);
+    max-width: 1100px;
+    min-width: 0;
+}
+
+.quiz-container,
+.sidebar {
+    min-width: 0;
+    max-width: 100%;
+}
+
+#quizArea {
+    width: 100%;
+    min-width: 0;
+}
+
+.soal-card {
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+/* Modal harus benar-benar berada di tengah dan tidak melebar */
+.custom-alert-overlay,
+#securityWarning,
+#adminPinModal {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    box-sizing: border-box !important;
+    overflow: auto !important;
+}
+
+.custom-alert-overlay {
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+#securityWarning,
+#adminPinModal {
+    display: none;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.custom-alert,
+.security-card,
+.admin-pin-card {
+    position: relative !important;
+    display: block !important;
+    width: min(92vw, 420px) !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    max-height: calc(100vh - 40px) !important;
+    margin: auto !important;
+    box-sizing: border-box !important;
+    overflow: auto !important;
+    flex: 0 1 auto !important;
+}
+
+.custom-alert h3,
+.custom-alert p,
+.security-card h2,
+.security-card p,
+.admin-pin-card h2,
+.admin-pin-card p {
+    overflow-wrap: anywhere;
+}
+
+.alert-buttons,
+.admin-pin-buttons {
+    width: 100%;
+    min-width: 0;
+}
+
+.alert-buttons button,
+.admin-pin-buttons button,
+.security-ok {
+    min-width: 0;
+    white-space: normal;
+}
+
+/* Layar hasil selalu memenuhi layar dan tersusun vertikal */
+#layarHasil {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    display: none;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: auto !important;
+    padding: 20px !important;
+}
+
+#layarHasil > * {
+    flex: 0 0 auto;
+}
+
+#layarHasil > div {
+    max-width: min(280px, 90vw) !important;
+}
+
+#layarHasil .skor-box {
+    line-height: 1;
+}
+
+@media (max-width: 600px) {
+    .main-layout {
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .custom-alert,
+    .security-card,
+    .admin-pin-card {
+        width: min(92vw, 380px) !important;
+        max-width: 380px !important;
+        padding: 20px !important;
+    }
+}
+
     </style>
 </head>
 
@@ -2053,7 +2210,45 @@ window.addEventListener(
    WINDOW LOAD
 ============================================================ */
 
+
+/* ============================================================
+   NORMALISASI TAMPILAN SAAT HALAMAN CBT DIBUKA
+============================================================ */
+function resetOverlayVisualState() {
+    const loading = document.getElementById("loading");
+    const hasil = document.getElementById("layarHasil");
+    const app = document.getElementById("app-content");
+    const alertBox = document.getElementById("alertBox");
+    const warning = document.getElementById("securityWarning");
+    const pinModal = document.getElementById("adminPinModal");
+
+    /* Jangan biarkan state visual lama membuat beberapa layar tampil sekaligus. */
+    if (hasil) hasil.style.display = "none";
+    if (alertBox) alertBox.style.display = "none";
+    if (warning) warning.style.display = "none";
+    if (pinModal) pinModal.style.display = "none";
+
+    /* Halaman soal adalah tampilan utama selama ujian. */
+    if (app) app.style.display = "block";
+    if (loading) loading.style.display = "flex";
+}
+
+function closeAllExamOverlays() {
+    const alertBox = document.getElementById("alertBox");
+    const warning = document.getElementById("securityWarning");
+    const pinModal = document.getElementById("adminPinModal");
+
+    if (alertBox) alertBox.style.display = "none";
+    if (warning) warning.style.display = "none";
+    if (pinModal) pinModal.style.display = "none";
+
+    securityWarningOpen = false;
+    adminPinOpen = false;
+}
+
 window.onload = async function() {
+
+    resetOverlayVisualState();
 
     /*
      * Perpindahan index/dashboard -> halaman CBT adalah
@@ -2651,6 +2846,10 @@ async function prosesKirimJawaban() {
 
     sudahKirim = true;
 
+    /* Setelah pengiriman dimulai, tidak boleh ada popup keamanan
+       atau konfirmasi yang menumpuk di atas layar hasil. */
+    closeAllExamOverlays();
+
     sessionStorage.setItem(
         "cbtExamFinished",
         "true"
@@ -2718,6 +2917,9 @@ async function prosesKirimJawaban() {
             "loading"
         ).style.display = "none";
 
+        /* Tutup seluruh popup sebelum menampilkan hasil. */
+        closeAllExamOverlays();
+
         document.getElementById(
             "app-content"
         ).style.display = "none";
@@ -2771,6 +2973,9 @@ async function prosesKirimJawaban() {
         document.getElementById(
             "loading"
         ).style.display = "none";
+
+        /* Tutup seluruh popup sebelum menampilkan hasil. */
+        closeAllExamOverlays();
 
         document.getElementById(
             "app-content"
