@@ -168,6 +168,138 @@ th{background:#edf2ff;color:#153ba8}tr:last-child td{border-bottom:0}
   .card input,.card select,.card button{width:100%}.brand-copy{position:static;max-width:none;margin:8px 0 24px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#07132f,#1749f5);text-align:center}
   .brand-copy h1{font-size:20px}.brand-copy p{font-size:11px}.about-meta{grid-template-columns:1fr}
 }
+
+
+/* ===== FINAL LOGIN SPACING & CONTRAST ===== */
+.card #token{margin-bottom:12px !important;}
+.card .btn-reset{
+  background:#d5dceb !important;
+  color:#263653 !important;
+  border:1px solid #bcc7dc !important;
+  box-shadow:0 6px 14px rgba(7,19,47,.10) !important;
+}
+.card .btn-reset:hover{background:#c5cfdf !important;color:#07132f !important;}
+
+/* ===== FINAL RESPONSIVE POLISH ===== */
+/* Logo selalu benar-benar berada di tengah pada tablet & HP */
+@media (max-width:900px){
+  .card .logo{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    display:block !important;
+    width:92px !important;
+    height:92px !important;
+    margin:0 auto 14px !important;
+    transform:none !important;
+    animation:none !important;
+  }
+
+  /* Beri ruang yang jelas antara token dan tombol Masuk */
+  .card #token{
+    margin-bottom:12px !important;
+  }
+
+  .card .btn-login{
+    margin-top:0 !important;
+  }
+
+  /* Reset dibuat lebih pekat agar kontras dengan halaman */
+  .card .btn-reset{
+    background:#d5dceb !important;
+    color:#263653 !important;
+    border:1px solid #bcc7dc !important;
+    box-shadow:0 6px 14px rgba(7,19,47,.10) !important;
+  }
+
+  .card .btn-reset:hover{
+    background:#c5cfdf !important;
+    color:#07132f !important;
+  }
+
+  /* About: jangan sampai tombol Tutup terpotong di layar HP */
+  #aboutModal{
+    padding:12px !important;
+    overflow-y:auto !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+  #aboutModal .about-card{
+    width:min(100%,500px) !important;
+    max-height:calc(100dvh - 24px) !important;
+    margin:auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  #aboutModal .about-hero{
+    padding:22px 20px 18px !important;
+  }
+
+  #aboutModal .about-logo{
+    width:68px !important;
+    height:68px !important;
+    margin:0 auto 12px !important;
+  }
+
+  #aboutModal .about-kicker,
+  #aboutModal .about-hero h3,
+  #aboutModal .about-hero p{
+    text-align:center;
+  }
+
+  #aboutModal .about-hero h3{
+    font-size:21px !important;
+  }
+
+  #aboutModal .about-body{
+    padding:18px 20px 20px !important;
+  }
+
+  #aboutModal .about-body p{
+    font-size:12px;
+    line-height:1.55;
+  }
+
+  #aboutModal .about-meta{
+    gap:8px !important;
+    margin:14px 0 16px !important;
+  }
+
+  #aboutModal .meta-item{
+    padding:10px !important;
+  }
+
+  #aboutModal .about-close{
+    display:block !important;
+    width:100% !important;
+    min-height:44px !important;
+    margin:0 !important;
+    padding:11px 14px !important;
+  }
+}
+
+@media (max-width:480px){
+  .center{padding:10px !important;}
+  .card{padding:22px 18px 18px !important;border-radius:22px !important;}
+  .card .logo{width:82px !important;height:82px !important;margin-bottom:10px !important;}
+
+  .brand-copy{margin-top:6px !important;margin-bottom:20px !important;}
+
+  #aboutModal{padding:8px !important;}
+  #aboutModal .about-card{
+    max-height:calc(100dvh - 16px) !important;
+    border-radius:20px !important;
+  }
+  #aboutModal .about-body{padding:16px 16px 18px !important;}
+}
+
+@media (max-height:650px) and (max-width:900px){
+  #aboutModal{align-items:flex-start !important;}
+}
+
 </style>
 
 </head>
