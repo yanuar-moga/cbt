@@ -95,6 +95,195 @@ button,input{font-family:inherit}img{user-drag:none;-webkit-user-drag:none}
  .sidebar{width:100%;position:static}.soal-card{padding:20px!important}.nav-bottom{width:100%;bottom:40px;border-radius:0;padding:9px 10px}
  .nav-bottom .btn{padding:9px 12px;font-size:12px}#infoHalaman{font-size:12px;white-space:nowrap}.timer{min-width:125px;padding:9px 12px}
 }
+
+/* ============================================================
+   FINAL UI REFINEMENT — CBT SOAL
+   Fokus: layout rapi, responsif, tidak bertumpuk di HP/tablet
+============================================================ */
+
+html{scroll-behavior:smooth}
+body{background:#eef3fb!important;padding-bottom:0!important}
+
+/* HEADER */
+.header{
+  position:sticky!important;top:0!important;z-index:800!important;
+  min-height:74px!important;padding:12px clamp(14px,3vw,36px)!important;
+  gap:18px!important;
+}
+.header>div:first-child{min-width:0;overflow:hidden}
+#displayNama{
+  display:block;max-width:min(65vw,520px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  letter-spacing:.1px
+}
+#displayKelas{display:block;margin-top:2px}
+.timer{flex:0 0 auto;min-width:150px!important;padding:10px 15px!important;border-radius:12px!important;font-size:15px!important}
+
+/* MAIN */
+.main-layout{
+  display:grid!important;grid-template-columns:minmax(0,1fr) 300px!important;
+  gap:22px!important;align-items:start!important;
+  width:min(1240px,100%)!important;margin:22px auto!important;
+  padding:0 22px 135px!important;
+}
+.quiz-container{width:100%;min-width:0}
+
+/* QUESTION CARD */
+.soal-card{
+  width:100%!important;min-width:0!important;padding:28px 30px 30px!important;
+  border:1px solid #dbe4f2!important;border-left:5px solid var(--blue)!important;
+  border-radius:20px!important;background:#fff!important;
+  box-shadow:0 12px 35px rgba(16,48,110,.09)!important;
+}
+.soal-card>div:first-child{
+  display:block!important;
+  margin:0 0 22px!important;padding:0 0 17px!important;
+  border-bottom:1px solid #edf1f7!important;
+  color:#14213d!important;font-size:clamp(16px,1.8vw,20px)!important;
+  line-height:1.7!important;font-weight:600!important;
+}
+.soal-card>div:first-child b{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:38px;height:30px;margin-right:8px;padding:0 10px;
+  border-radius:9px;background:var(--blue);color:#fff;
+  font-size:13px;line-height:1;font-weight:950;vertical-align:middle;
+}
+.soal-card img{
+  display:block!important;max-width:100%!important;width:auto!important;
+  max-height:390px!important;margin:18px auto 24px!important;
+  border-radius:13px!important;box-shadow:0 7px 22px rgba(16,48,110,.10)!important;
+}
+.daftar-opsi{display:flex;flex-direction:column;gap:10px}
+.opsi{
+  display:flex!important;align-items:flex-start!important;gap:12px!important;
+  width:100%!important;min-height:54px!important;margin:0!important;padding:14px 16px!important;
+  border:1px solid #dbe3f0!important;border-radius:13px!important;background:#fff!important;
+  color:#27344d!important;font-size:14px!important;line-height:1.55!important;
+  transform:none!important;box-shadow:none!important;
+}
+.opsi strong{
+  flex:0 0 30px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;background:#eef2f8;color:#56647d;font-size:12px;font-weight:950;
+}
+.opsi:hover{background:#f6f9ff!important;border-color:#9fb6ec!important;transform:translateY(-1px)!important;box-shadow:0 5px 14px rgba(23,73,245,.07)!important}
+.opsi.selected{
+  background:linear-gradient(90deg,#f3ffd9,#fbffef)!important;
+  border-color:#a9d900!important;color:#17233b!important;
+  box-shadow:0 6px 18px rgba(178,243,0,.12)!important;
+}
+.opsi.selected strong{background:var(--lime);color:#07132f}
+
+/* SIDEBAR */
+.sidebar{width:100%;min-width:0;position:sticky!important;top:96px!important}
+.sidebar>div{
+  width:100%!important;padding:19px!important;border:1px solid #dbe4f2!important;
+  border-radius:18px!important;background:#fff!important;
+  box-shadow:0 12px 35px rgba(16,48,110,.08)!important;
+}
+.sidebar h4{
+  display:flex;align-items:center;gap:9px;margin:0!important;padding:0 0 13px!important;
+  border-bottom:1px solid #e9eef6!important;font-size:15px!important;
+}
+.sidebar h4::before{content:"";width:7px;height:22px;border-radius:99px;background:var(--lime);display:block}
+.grid-nomor{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important;margin-top:15px!important}
+.kotak-nomor{min-width:0;border-radius:9px!important;font-size:12px!important;aspect-ratio:1!important}
+.kotak-nomor.aktif{border:2px solid var(--lime)!important}
+.sidebar hr{margin:17px 0!important;border-top-color:#e9eef6!important}
+.sidebar button[onclick="kirimJawaban()"]{
+  height:46px!important;width:100%!important;border-radius:11px!important;font-size:13px!important;
+}
+
+/* BOTTOM NAV */
+.nav-bottom{
+  position:fixed!important;z-index:1001!important;left:50%!important;bottom:30px!important;
+  transform:translateX(-50%)!important;width:min(1240px,calc(100% - 30px))!important;
+  min-height:66px!important;padding:10px 16px!important;gap:16px!important;
+  background:rgba(255,255,255,.97)!important;border:1px solid #d8e1ef!important;
+  border-radius:16px!important;box-shadow:0 10px 32px rgba(10,27,75,.14)!important;
+  backdrop-filter:blur(12px)!important;
+}
+.nav-bottom .btn{min-width:125px;height:42px!important;padding:9px 16px!important}
+#infoHalaman{flex:1;text-align:center!important;padding:0!important;font-size:13px!important;line-height:42px!important}
+
+/* FOOTER */
+.footer-info{z-index:1002!important;height:30px!important;padding:7px 10px!important;font-size:10px!important;line-height:16px!important}
+
+/* POPUPS: jangan melebihi viewport */
+.custom-alert-overlay,#securityWarning,#adminPinModal{
+  padding:16px!important;overflow:auto!important;
+}
+.custom-alert,.security-card,.admin-pin-card{width:min(94vw,460px)!important;max-height:calc(100vh - 32px)!important;overflow:auto!important}
+
+/* TABLET */
+@media (min-width:601px) and (max-width:1000px){
+  .main-layout{grid-template-columns:minmax(0,1fr) 255px!important;gap:15px!important;padding-left:16px!important;padding-right:16px!important}
+  .soal-card{padding:23px!important}
+  .sidebar>div{padding:15px!important}
+  .grid-nomor{gap:6px!important}
+  .nav-bottom{width:calc(100% - 24px)!important}
+}
+
+/* HP */
+@media (max-width:600px){
+  body{font-size:14px!important}
+  .header{
+    min-height:68px!important;padding:9px 12px!important;gap:10px!important;
+    border-bottom-width:3px!important;
+  }
+  #displayNama{max-width:58vw!important;font-size:13px!important}
+  #displayKelas{font-size:11px!important}
+  .timer{min-width:112px!important;padding:9px 9px!important;font-size:13px!important;border-radius:10px!important}
+
+  .main-layout{
+    display:flex!important;flex-direction:column!important;gap:14px!important;
+    width:100%!important;margin:12px auto!important;padding:0 10px 122px!important;
+  }
+  .quiz-container{order:1}
+  .sidebar{order:2;position:static!important}
+  .soal-card{padding:18px 15px 20px!important;border-left-width:4px!important;border-radius:16px!important}
+  .soal-card>div:first-child{
+    margin-bottom:17px!important;padding-bottom:14px!important;
+    font-size:15px!important;line-height:1.65!important;
+  }
+  .soal-card>div:first-child b{min-width:32px;height:27px;margin-right:5px;padding:0 8px;font-size:11px}
+  .soal-card img{max-height:260px!important;margin:14px auto 18px!important}
+  .opsi{min-height:50px!important;padding:11px 12px!important;font-size:13px!important;gap:9px!important}
+  .opsi strong{flex-basis:27px;width:27px;height:27px;font-size:11px}
+
+  .sidebar>div{padding:15px!important;border-radius:16px!important}
+  .sidebar h4{font-size:14px!important}
+  .grid-nomor{grid-template-columns:repeat(8,minmax(0,1fr))!important;gap:6px!important;margin-top:13px!important}
+  .kotak-nomor{border-radius:8px!important;font-size:11px!important}
+  .sidebar button[onclick="kirimJawaban()"]{height:44px!important}
+
+  .nav-bottom{
+    bottom:30px!important;left:0!important;transform:none!important;
+    width:100%!important;min-height:62px!important;height:62px!important;
+    padding:8px 9px!important;gap:7px!important;border-radius:13px 13px 0 0!important;
+  }
+  .nav-bottom .btn{min-width:0!important;flex:1 1 0!important;height:42px!important;padding:8px 7px!important;font-size:11px!important}
+  #infoHalaman{flex:0 0 94px!important;font-size:11px!important;line-height:42px!important;white-space:nowrap!important}
+  .footer-info{height:30px!important;font-size:9px!important}
+}
+
+/* HP SANGAT KECIL */
+@media (max-width:380px){
+  .header{padding-left:9px!important;padding-right:9px!important}
+  #displayNama{max-width:54vw!important;font-size:12px!important}
+  .timer{min-width:103px!important;font-size:12px!important}
+  .main-layout{padding-left:7px!important;padding-right:7px!important}
+  .soal-card{padding:15px 12px 17px!important}
+  .opsi{font-size:12px!important}
+  .grid-nomor{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+  .nav-bottom{padding-left:6px!important;padding-right:6px!important}
+  #infoHalaman{flex-basis:82px!important;font-size:10px!important}
+}
+
+/* LAYAR PENDEK: cegah popup/nav tertutup */
+@media (max-height:650px){
+  .nav-bottom{bottom:30px!important}
+  .custom-alert,.security-card,.admin-pin-card{max-height:calc(100vh - 24px)!important}
+}
+
 </style>
 
 </head>
