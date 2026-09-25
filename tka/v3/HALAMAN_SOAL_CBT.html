@@ -950,39 +950,6 @@
 
 </div>
 
-/* =========================================================
-   BLOKIR OPEN VIEW SOURCE
-========================================================= */
-
-document.addEventListener(
-  "keydown",
-  function(e){
-
-    if(
-      e.ctrlKey &&
-      e.key.toLowerCase() === "u"
-    ){
-
-      e.preventDefault();
-
-    }
-
-  },
-  true
-);
-
-
-
-function openAbout(){
-  document.getElementById("aboutModal").style.display="flex";
-}
-function closeAbout(){
-  document.getElementById("aboutModal").style.display="none";
-}
-
-/* =========================================================
-   END SECURITY
-========================================================= */
 <script>
 
 /* ============================================================
