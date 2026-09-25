@@ -14,82 +14,95 @@
 
 <style>
 /* =========================================================
-   GURU WALI CBT — DESKTOP THEME
-   Palet mengikuti referensi: navy gelap + biru elektrik +
-   putih + lime/neon green.
+   GURU WALI CBT — MODERN TKA-STYLE LOGIN / DESKTOP
+   Visual direction: royal blue + navy + white + neon lime
 ========================================================= */
 
 :root{
-  --navy:#0b1020;
-  --navy-2:#101a38;
-  --blue:#1748f5;
-  --blue-2:#0f39d6;
-  --blue-soft:#edf2ff;
+  --navy:#07132f;
+  --navy-2:#0c1d4d;
+  --blue:#1749f5;
+  --blue-2:#1038c9;
+  --blue-3:#2866ff;
+  --cyan:#47d8ff;
   --lime:#c8ff00;
-  --lime-2:#aef000;
-  --white:#ffffff;
-  --text:#172033;
-  --muted:#68738a;
-  --line:#dbe2f0;
-  --danger:#e53935;
-  --shadow:0 24px 70px rgba(7,18,50,.20);
+  --lime-2:#b2f300;
+  --white:#fff;
+  --text:#15203a;
+  --muted:#71809b;
+  --soft:#f4f7ff;
+  --line:#dce4f4;
+  --danger:#e5484d;
+  --warning:#f2a900;
+  --success:#18a957;
+  --shadow:0 30px 90px rgba(5,20,65,.28);
+  --radius:28px;
+
+  /* compatibility with existing inline styles */
+  --primary-blue:var(--blue);
+  --btn-red:var(--danger);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
-html,
-body{
+html,body{
   margin:0;
-  padding:0;
   min-height:100%;
 }
 
 body{
-  font-family:"Segoe UI",Arial,sans-serif;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(23,72,245,.20), transparent 32%),
-    linear-gradient(135deg,#070b16 0%,#101a38 55%,#0b1020 100%);
+  font-family:"Segoe UI",Inter,Arial,sans-serif;
   color:var(--text);
+  background:
+    radial-gradient(circle at 12% 8%,rgba(40,102,255,.30),transparent 27%),
+    radial-gradient(circle at 90% 85%,rgba(71,216,255,.12),transparent 25%),
+    linear-gradient(135deg,#050b1c 0%,#0a1739 52%,#07132f 100%);
   user-select:none;
   -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
 }
 
-/* =========================================================
-   LOGIN DESKTOP
-========================================================= */
+button,input,select{font-family:inherit}
+input,select{user-select:text;-webkit-user-select:text}
 
 .center{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:36px;
+  padding:42px;
 }
+
+/* ===== LOGIN CARD ===== */
 
 .card{
   position:relative;
   overflow:hidden;
-  width:min(100%,1040px);
-  min-height:650px;
-  padding:54px 70px 38px 500px;
-  background:var(--white);
+  width:min(1120px,100%);
+  min-height:690px;
+  padding:0;
+  display:grid;
+  grid-template-columns:43% 57%;
+  background:#fff;
+  border:1px solid rgba(255,255,255,.5);
   border-radius:32px;
-  text-align:left;
   box-shadow:var(--shadow);
+  text-align:left;
 }
 
+/* Branding panel */
 .card::before{
   content:"";
   position:absolute;
-  inset:0 auto 0 0;
+  z-index:0;
+  left:0;
+  top:0;
+  bottom:0;
   width:43%;
   background:
-    radial-gradient(circle at 25% 18%, rgba(200,255,0,.20), transparent 25%),
-    linear-gradient(160deg,#0a1229 0%,#1233b8 58%,#1748f5 100%);
+    radial-gradient(circle at 22% 18%,rgba(200,255,0,.25),transparent 17%),
+    radial-gradient(circle at 80% 72%,rgba(71,216,255,.18),transparent 25%),
+    linear-gradient(155deg,#07112b 0%,#1032a5 48%,#1749f5 100%);
+  clip-path:polygon(0 0,100% 0,92% 46%,100% 100%,0 100%);
 }
 
 .card::after{
@@ -98,279 +111,345 @@ body{
   left:0;
   bottom:0;
   width:43%;
-  height:9px;
+  height:8px;
   background:var(--lime);
+  z-index:4;
 }
 
 .logo{
-  width:150px;
-  height:150px;
-  object-fit:contain;
-  margin:0;
   position:absolute;
-  left:calc(21.5% - 75px);
-  top:175px;
-  z-index:2;
-  filter:drop-shadow(0 12px 18px rgba(0,0,0,.25));
+  z-index:3;
+  left:21.5%;
+  top:50%;
+  transform:translate(-50%,-55%);
+  width:175px;
+  height:175px;
+  object-fit:contain;
+  filter:drop-shadow(0 18px 22px rgba(0,0,0,.28));
 }
 
 .card h2{
-  margin:0 0 34px;
+  position:relative;
+  z-index:2;
+  grid-column:2;
+  margin:0;
+  padding:82px 78px 12px;
   color:var(--navy);
   font-size:32px;
-  line-height:1.1;
+  line-height:1.08;
+  font-weight:950;
+  letter-spacing:-.6px;
+}
+
+.card h2::before{
+  content:"GURU WALI • CBT";
+  display:block;
+  margin-bottom:11px;
+  color:var(--blue);
+  font-size:11px;
   font-weight:900;
-  letter-spacing:.3px;
+  letter-spacing:2.2px;
 }
 
 .card h2::after{
   content:"";
   display:block;
-  width:72px;
+  width:62px;
   height:6px;
   margin-top:14px;
-  border-radius:10px;
+  border-radius:99px;
   background:var(--lime);
 }
 
-label{
-  display:block;
-  text-align:left;
-  margin-top:14px;
-  font-size:13px;
-  font-weight:800;
-  color:#44506a;
-  letter-spacing:.2px;
+/* Put form content in right column without changing existing HTML */
+.card label,
+.card input,
+.card select,
+.card .checkbox-container,
+.card button,
+.card #msg,
+.card .security-notice,
+.card .footer{
+  position:relative;
+  z-index:2;
+  grid-column:2;
+  margin-left:78px;
+  margin-right:78px;
+  width:auto;
 }
 
-input,
-select{
-  width:100%;
-  padding:14px 15px;
-  margin-top:7px;
+.card label{
+  margin-top:9px;
+  color:#4c5a76;
+  font-size:12px;
+  font-weight:850;
+}
+
+.card input,
+.card select{
+  width:calc(100% - 156px);
+  padding:13px 15px;
+  margin-top:6px;
   border:1.5px solid var(--line);
   border-radius:13px;
-  background:#f8faff;
+  outline:none;
+  background:var(--soft);
   color:var(--text);
   font-size:14px;
-  outline:none;
-  user-select:text;
-  -webkit-user-select:text;
   transition:.2s ease;
 }
 
-input:focus,
-select:focus{
+.card input:focus,
+.card select:focus{
   border-color:var(--blue);
-  box-shadow:0 0 0 4px rgba(23,72,245,.10);
   background:#fff;
-}
-
-input[type="password"],
-input[type="text"]{
-  user-select:text;
-  -webkit-user-select:text;
+  box-shadow:0 0 0 4px rgba(23,73,245,.10);
 }
 
 .checkbox-container{
   display:flex;
   align-items:center;
   gap:9px;
-  margin-top:12px;
+  margin-top:10px !important;
+  margin-bottom:3px;
   cursor:pointer;
-  user-select:none;
 }
 
-.checkbox-container input{
+.card .checkbox-container input{
   width:17px;
   height:17px;
   margin:0;
   accent-color:var(--lime-2);
-  cursor:pointer;
 }
 
-.checkbox-container label{
+.card .checkbox-container label{
+  width:auto;
   margin:0;
-  font-size:13px;
-  font-weight:600;
   color:var(--muted);
-  cursor:pointer;
+  font-size:12px;
+  font-weight:600;
 }
 
-button{
-  width:100%;
-  margin-top:15px;
-  padding:13px 16px;
-  border:none;
+.card button{
+  width:calc(100% - 156px);
+  border:0;
   border-radius:13px;
-  font-weight:900;
+  padding:13px 18px;
+  font-weight:950;
   cursor:pointer;
   transition:.2s ease;
-  font-size:14px;
-}
-
-button:active{
-  transform:scale(.985);
 }
 
 .btn-login{
-  background:var(--lime);
-  color:#0b1020;
-  box-shadow:0 8px 20px rgba(174,240,0,.25);
+  background:linear-gradient(90deg,var(--lime),#d8ff2f) !important;
+  color:#07132f !important;
+  box-shadow:0 10px 24px rgba(200,255,0,.25);
 }
 
 .btn-login:hover{
-  background:var(--lime-2);
   transform:translateY(-1px);
+  box-shadow:0 13px 28px rgba(200,255,0,.30);
 }
 
 .btn-jadwal{
-  background:var(--blue);
-  color:#fff;
+  background:var(--blue) !important;
+  color:#fff !important;
 }
 
 .btn-jadwal:hover{
-  background:var(--blue-2);
+  background:var(--blue-2) !important;
 }
 
 .btn-reset{
-  background:#eef1f7;
-  color:#5c667b;
-  margin-top:9px;
+  background:#edf1f7 !important;
+  color:#66718a !important;
+  padding:9px !important;
+  font-size:11px !important;
+}
+
+.card #msg{
+  min-height:18px;
+  color:var(--danger);
   font-size:12px;
-  padding:9px;
+  font-weight:750;
 }
 
-.btn-reset:hover{
-  background:#e2e7f0;
+.security-notice{
+  display:none;
+  padding:11px 13px;
+  margin-top:8px !important;
+  border:1px solid #cbd8ff;
+  border-radius:12px;
+  background:#f2f5ff;
+  color:#42506a;
+  font-size:11px;
+  line-height:1.5;
 }
 
-.btn-start{
-  background:var(--lime);
-  color:#0b1020;
-  padding:14px;
-  font-size:16px;
-  margin-top:20px;
+.security-notice strong{
+  display:block;
+  color:var(--blue);
+  margin-bottom:3px;
 }
 
-.btn-start:hover{
-  background:var(--lime-2);
+.footer{
+  margin-top:7px !important;
+  padding-bottom:27px;
+  color:#9aa5ba;
+  font-size:10px;
+  line-height:1.55;
 }
 
-.logout-btn{
-  width:auto;
-  margin-top:5px;
-  background:var(--lime);
-  color:#0b1020;
-  padding:7px 14px;
-  border-radius:8px;
+/* Decorative text in branding panel */
+.card .logo::after{display:none}
+
+.center::before{
+  content:"ASSESMEN DIGITAL";
+  position:fixed;
+  left:calc(50% - 530px);
+  top:calc(50% - 250px);
+  z-index:5;
+  color:rgba(255,255,255,.68);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:2.6px;
+  pointer-events:none;
 }
 
-/* =========================================================
-   DASHBOARD DESKTOP
-========================================================= */
+/* ===== DASHBOARD ===== */
 
 #dashboard{
   display:none;
   min-height:100vh;
   background:
-    radial-gradient(circle at 80% 0%, rgba(23,72,245,.10), transparent 30%),
-    #eef2ff;
+    radial-gradient(circle at 80% 0%,rgba(40,102,255,.12),transparent 30%),
+    #f2f5ff;
 }
 
-.header{
-  min-height:76px;
-  background:linear-gradient(100deg,#0b1020,#1233b8 65%,#1748f5);
-  color:#fff;
-  padding:14px 42px;
+#dashboard .header{
+  min-height:78px;
+  padding:13px 44px;
   display:flex;
   justify-content:flex-end;
   align-items:center;
+  color:#fff;
+  background:linear-gradient(105deg,#07132f,#1234aa 65%,#1749f5);
   border-bottom:4px solid var(--lime);
-  box-shadow:0 5px 18px rgba(0,0,0,.15);
+  box-shadow:0 7px 24px rgba(7,19,47,.16);
 }
 
 .user-box{
   text-align:right;
-  line-height:1.45;
+  line-height:1.35;
+}
+
+.logout-btn{
+  width:auto !important;
+  margin:5px 0 0 !important;
+  padding:7px 14px !important;
+  border-radius:8px !important;
+  background:var(--lime) !important;
+  color:#07132f !important;
 }
 
 .content{
-  width:min(100%,1180px);
-  margin:0 auto;
+  width:min(1180px,100%);
+  margin:auto;
+  padding:42px 30px 70px;
   text-align:center;
-  padding:48px 30px 70px;
 }
 
 .logo-center{
   width:105px;
-  filter:drop-shadow(0 8px 16px rgba(23,72,245,.20));
+  filter:drop-shadow(0 10px 18px rgba(23,73,245,.18));
 }
 
 .title{
-  font-size:32px;
   color:var(--navy);
-  font-weight:900;
-  margin-top:12px;
+  font-size:32px;
+  font-weight:950;
+  letter-spacing:-.5px;
+  margin-top:10px;
 }
 
 .box{
-  background:#fff;
-  padding:34px 40px;
-  border-radius:24px;
-  max-width:900px;
-  margin:28px auto;
+  max-width:920px;
+  margin:25px auto;
+  padding:32px 38px;
   text-align:left;
-  box-shadow:0 14px 45px rgba(13,35,95,.10);
-  border:1px solid #e0e6f4;
+  background:#fff;
+  border:1px solid #e0e6f3;
+  border-radius:24px;
+  box-shadow:0 18px 55px rgba(13,35,95,.10);
 }
 
 .box hr{
   border:0;
-  border-top:1px solid #e6eaf3;
-  margin:24px 0;
+  border-top:1px solid #e5eaf3;
+  margin:22px 0;
 }
 
-.box ul{
-  line-height:1.8;
+.box ul{line-height:1.8}
+
+.btn-start{
+  background:linear-gradient(90deg,var(--lime),#d8ff2f) !important;
+  color:#07132f !important;
+  border:0;
+  border-radius:13px;
+  font-weight:950;
+  box-shadow:0 10px 24px rgba(200,255,0,.22);
 }
 
-.box strong,
-.box b{
-  color:#172033;
-}
+.btn-start:hover{transform:translateY(-1px)}
 
-/* =========================================================
-   MODAL
-========================================================= */
+/* ===== MODALS ===== */
 
 .modal{
   display:none;
   position:fixed;
-  z-index:9999;
   inset:0;
-  background:rgba(5,10,25,.72);
-  justify-content:center;
+  z-index:9999;
   align-items:center;
-  padding:25px;
-  backdrop-filter:blur(5px);
+  justify-content:center;
+  padding:24px;
+  background:rgba(4,10,28,.70);
+  backdrop-filter:blur(7px);
 }
 
 .modal-box{
-  background:#fff;
-  padding:30px;
-  border-radius:22px;
-  width:min(92%,520px);
-  max-height:85vh;
+  position:relative;
+  width:min(94%,560px);
+  max-height:88vh;
   overflow:auto;
+  padding:30px;
+  background:#fff;
+  border:1px solid rgba(255,255,255,.7);
+  border-radius:22px;
   text-align:center;
-  animation:fadeIn .2s ease;
-  box-shadow:0 20px 60px rgba(0,0,0,.28);
+  box-shadow:0 28px 80px rgba(0,0,0,.30);
+}
+
+.modal-box::before{
+  content:"";
+  display:block;
+  width:64px;
+  height:6px;
+  margin:0 auto 17px;
+  border-radius:99px;
+  background:var(--lime);
 }
 
 .modal-box h3{
+  margin:0 0 10px;
   color:var(--navy);
-  margin-top:0;
+  font-size:20px;
+  font-weight:950;
+}
+
+.modal-box p{
+  color:#5f6c84;
+  line-height:1.55;
+  font-size:13px;
 }
 
 .btn-group{
@@ -381,73 +460,22 @@ button:active{
 }
 
 .btn-blue{
-  background:var(--blue);
-  color:#fff;
-  padding:11px 20px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
+  background:var(--blue) !important;
+  color:#fff !important;
+  padding:11px 20px !important;
+  border-radius:10px !important;
 }
 
 .btn-red{
-  background:var(--danger);
-  color:#fff;
-  padding:11px 20px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
+  background:var(--danger) !important;
+  color:#fff !important;
+  padding:11px 20px !important;
+  border-radius:10px !important;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-bottom:15px;
-}
-
-th,
-td{
-  border:1px solid #dce2ee;
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-}
-
-th{
-  background:#edf2ff;
-  color:#17379d;
-}
-
-.footer{
-  margin-top:24px;
-  font-size:11px;
-  color:#8993a8;
-  line-height:1.6;
-}
-
-#msg{
-  color:var(--danger);
-  font-size:13px;
-  margin-top:10px;
-  min-height:18px;
-}
-
-.security-notice{
-  display:none;
-  margin:15px 0;
-  padding:12px;
-  border-radius:10px;
-  background:#f5f8ff;
-  border:1px solid #ccd8ff;
-  color:#31405e;
-  font-size:12px;
-  line-height:1.5;
-  text-align:left;
-}
-
-.security-notice strong{
-  display:block;
-  margin-bottom:4px;
-}
+table{width:100%;border-collapse:collapse;margin-bottom:15px}
+th,td{border:1px solid #dce3ef;padding:10px;text-align:center;font-size:12px}
+th{background:#edf2ff;color:#153ba8}
 
 .violation-badge{
   display:none;
@@ -455,92 +483,52 @@ th{
   left:18px;
   bottom:18px;
   z-index:8000;
-  background:var(--danger);
-  color:#fff;
   padding:8px 12px;
   border-radius:20px;
+  background:var(--danger);
+  color:#fff;
   font-size:11px;
-  font-weight:bold;
-  box-shadow:0 5px 15px rgba(0,0,0,.2);
+  font-weight:900;
+  box-shadow:0 8px 20px rgba(229,72,77,.25);
 }
 
-@keyframes fadeIn{
-  from{
-    opacity:0;
-    transform:translateY(-12px) scale(.98);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
-/* =========================================================
-   LAPTOP / DESKTOP UTAMA
-========================================================= */
-
-@media (min-width:901px){
-  #loginPage{
-    min-width:1000px;
-  }
-}
-
-/* =========================================================
-   LAYAR KECIL — tetap tersedia sebagai fallback
-========================================================= */
-
-@media (max-width:900px){
-  .center{
-    padding:18px;
-  }
-
+@media(max-width:900px){
+  .center{padding:16px}
   .card{
+    display:block;
     width:100%;
-    max-width:560px;
     min-height:0;
-    padding:34px 28px;
+    padding:28px 24px 22px;
     border-radius:24px;
-    text-align:left;
   }
-
-  .card::before{
-    display:none;
-  }
-
-  .card::after{
-    width:100%;
-    height:6px;
-  }
-
+  .card::before{display:none}
+  .card::after{width:100%}
   .logo{
     position:static;
     display:block;
-    width:82px;
-    height:82px;
+    width:90px;
+    height:90px;
     margin:0 auto 12px;
+    transform:none;
   }
-
   .card h2{
+    padding:0;
     text-align:center;
-    font-size:25px;
   }
-
-  .card h2::after{
-    margin-left:auto;
-    margin-right:auto;
+  .card h2::before{display:none}
+  .card label,
+  .card input,
+  .card select,
+  .card .checkbox-container,
+  .card button,
+  .card #msg,
+  .card .security-notice,
+  .card .footer{
+    margin-left:0;
+    margin-right:0;
   }
-
-  .header{
-    padding:12px 18px;
-  }
-
-  .content{
-    padding:30px 15px 50px;
-  }
-
-  .box{
-    padding:24px;
-  }
+  .card input,.card select,.card button{width:100%}
+  .center::before{display:none}
 }
 </style>
 
