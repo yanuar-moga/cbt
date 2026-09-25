@@ -808,7 +808,7 @@
 
 
     <div class="footer-info" onclick="openExamAbout()">
-        Computer Based Test Ver 1.0 | Dev by MB © 2026 • Klik untuk About
+        Computer Based Test Ver 1.0 | Dev by MB © 2026
     </div>
 
 </div>
@@ -950,7 +950,39 @@
 
 </div>
 
+/* =========================================================
+   BLOKIR OPEN VIEW SOURCE
+========================================================= */
 
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      e.ctrlKey &&
+      e.key.toLowerCase() === "u"
+    ){
+
+      e.preventDefault();
+
+    }
+
+  },
+  true
+);
+
+
+
+function openAbout(){
+  document.getElementById("aboutModal").style.display="flex";
+}
+function closeAbout(){
+  document.getElementById("aboutModal").style.display="none";
+}
+
+/* =========================================================
+   END SECURITY
+========================================================= */
 <script>
 
 /* ============================================================
