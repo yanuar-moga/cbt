@@ -564,495 +564,31 @@
             }
         }
     
-        /* =====================================================
-           ANIMASI UI - FOOTER & POPUP
-        ===================================================== */
+/* ===== PROFESSIONAL EXAM UI ===== */
+.header{background:linear-gradient(135deg,#173f8f,#2563c7)!important;border-bottom:3px solid #f4c542!important;padding:11px 18px!important}
+.header-user{display:flex;align-items:center;gap:10px}
+.header-avatar{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.15);display:grid;place-items:center;font-size:18px}
+.header-actions{display:flex;align-items:center;gap:9px}
+.exam-logout{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;padding:8px 13px;border-radius:10px;font-weight:800;cursor:pointer}
+.exam-logout:hover{background:rgba(255,255,255,.2)}
+.footer-info{cursor:pointer!important;background:#172033!important;transition:.2s}
+.footer-info:hover{background:#101827!important;color:#fff!important}
+.soal-card{border:1px solid #e5ebf3!important;border-left:5px solid #2563c7!important;box-shadow:0 12px 30px rgba(15,23,42,.07)!important}
+.opsi{border:1.5px solid #e1e8f0!important}
+.opsi:hover{border-color:#3777d6!important;transform:translateY(-1px)}
+.sidebar>div{border:1px solid #e5ebf3}
+.exam-about-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;z-index:50000;padding:18px}
+.exam-about-card{width:min(460px,100%);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 25px 70px rgba(0,0,0,.28)}
+.exam-about-head{background:linear-gradient(135deg,#173f8f,#2563c7);color:#fff;padding:25px;display:flex;gap:14px;align-items:center}
+.exam-about-head img{width:64px;height:64px;object-fit:contain;background:#fff;border-radius:16px;padding:6px}
+.exam-about-head h3{margin:0 0 4px;font-size:20px}
+.exam-about-body{padding:22px}
+.exam-about-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid #edf1f5;font-size:13px}
+.exam-about-row span{color:#64748b}.exam-about-row strong{text-align:right;color:#172554}
+.exam-about-close{width:100%;border:0;border-radius:11px;padding:11px;background:#173f8f;color:#fff;font-weight:800;margin-top:16px;cursor:pointer}
+@media(max-width:600px){.header-actions{gap:5px}.exam-logout{padding:7px 9px;font-size:11px}.header-avatar{display:none}}
 
-        /* Footer bergerak lembut tanpa mengubah layout asli */
-        .footer-info {
-            overflow: hidden;
-            isolation: isolate;
-            background:
-                linear-gradient(
-                    110deg,
-                    #222 0%,
-                    #292929 25%,
-                    #222 50%,
-                    #292929 75%,
-                    #222 100%
-                );
-            background-size: 250% 100%;
-            animation: footerGradient 7s ease-in-out infinite;
-            box-shadow: 0 -2px 14px rgba(0,0,0,0.16);
-        }
-
-        .footer-info::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -35%;
-            width: 35%;
-            height: 2px;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,0.9),
-                transparent
-            );
-            animation: footerLight 3.8s linear infinite;
-            pointer-events: none;
-        }
-
-        .footer-info::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                120deg,
-                transparent 0%,
-                rgba(255,255,255,0.045) 45%,
-                rgba(255,255,255,0.09) 50%,
-                rgba(255,255,255,0.045) 55%,
-                transparent 100%
-            );
-            background-size: 220% 100%;
-            animation: footerShine 5s linear infinite;
-            pointer-events: none;
-        }
-
-        /* Semua popup mendapat efek masuk yang halus */
-        .custom-alert-overlay,
-        #securityWarning,
-        #adminPinModal {
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-        }
-
-        .custom-alert,
-        .security-card,
-        .admin-pin-card {
-            transform-origin: center center;
-            animation: popupIn 0.34s cubic-bezier(.22,1,.36,1) both;
-        }
-
-        .custom-alert::before,
-        .security-card::before,
-        .admin-pin-card::before {
-            content: "";
-            display: block;
-            height: 4px;
-            width: 54px;
-            margin: -22px auto 18px;
-            border-radius: 0 0 8px 8px;
-            background: linear-gradient(
-                90deg,
-                var(--primary-blue),
-                var(--btn-blue),
-                var(--gold)
-            );
-            animation: popupBar 1.8s ease-in-out infinite;
-        }
-
-        .custom-alert h3 {
-            animation: popupTitle 0.45s ease both 0.08s;
-        }
-
-        .custom-alert p,
-        .security-card p,
-        .admin-pin-card p {
-            animation: popupText 0.45s ease both 0.14s;
-        }
-
-        .alert-buttons,
-        .admin-pin-buttons,
-        .security-ok {
-            animation: popupButtons 0.45s ease both 0.2s;
-        }
-
-        .security-icon {
-            animation:
-                securityPulse 1.8s ease-in-out infinite,
-                popupIconIn 0.5s cubic-bezier(.22,1,.36,1) both;
-        }
-
-        #adminPinInput {
-            transition:
-                border-color 0.2s ease,
-                box-shadow 0.2s ease,
-                transform 0.2s ease;
-        }
-
-        #adminPinInput:focus {
-            transform: translateY(-1px);
-            box-shadow: 0 0 0 4px rgba(31,78,148,0.10);
-        }
-
-        .alert-btn,
-        .security-ok,
-        .admin-pin-buttons button {
-            transition:
-                transform 0.18s ease,
-                box-shadow 0.18s ease,
-                filter 0.18s ease;
-        }
-
-        .alert-btn:hover,
-        .security-ok:hover,
-        .admin-pin-buttons button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 7px 16px rgba(0,0,0,0.14);
-            filter: brightness(1.03);
-        }
-
-        .alert-btn:active,
-        .security-ok:active,
-        .admin-pin-buttons button:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        /* Animasi layar hasil dan loading */
-        #layarHasil img {
-            animation: resultLogoIn 0.65s cubic-bezier(.22,1,.36,1) both;
-        }
-
-        #layarHasil h2,
-        #layarHasil p,
-        #layarHasil .skor-box,
-        #layarHasil button {
-            animation: resultContentIn 0.55s cubic-bezier(.22,1,.36,1) both;
-        }
-
-        #layarHasil .skor-box {
-            animation-delay: 0.12s;
-        }
-
-        #layarHasil button {
-            animation-delay: 0.2s;
-        }
-
-        #loading img {
-            animation: loadingFloat 1.8s ease-in-out infinite;
-        }
-
-        #loading::after {
-            content: "";
-            width: 42px;
-            height: 4px;
-            margin-top: 4px;
-            border-radius: 10px;
-            background: #dce7f5;
-            box-shadow: 0 0 0 0 rgba(31,78,148,0.12);
-            animation: loadingShadow 1.8s ease-in-out infinite;
-        }
-
-        @keyframes footerGradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        @keyframes footerLight {
-            0% { left: -35%; opacity: 0; }
-            12% { opacity: 1; }
-            48% { opacity: 1; }
-            62%, 100% { left: 100%; opacity: 0; }
-        }
-
-        @keyframes footerShine {
-            0% { background-position: 180% 0; }
-            100% { background-position: -80% 0; }
-        }
-
-        @keyframes popupIn {
-            0% {
-                opacity: 0;
-                transform: translateY(22px) scale(0.92);
-                filter: blur(2px);
-            }
-            65% {
-                opacity: 1;
-                transform: translateY(-2px) scale(1.015);
-                filter: blur(0);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
-        @keyframes popupBar {
-            0%, 100% { width: 48px; opacity: 0.65; }
-            50% { width: 76px; opacity: 1; }
-        }
-
-        @keyframes popupTitle {
-            from {
-                opacity: 0;
-                transform: translateY(7px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes popupText {
-            from {
-                opacity: 0;
-                transform: translateY(6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes popupButtons {
-            from {
-                opacity: 0;
-                transform: translateY(9px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes popupIconIn {
-            from {
-                opacity: 0;
-                transform: scale(0.65);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes securityPulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(255,152,0,0.12);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(255,152,0,0.08);
-            }
-        }
-
-        @keyframes resultLogoIn {
-            from {
-                opacity: 0;
-                transform: translateY(-18px) scale(0.88);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes resultContentIn {
-            from {
-                opacity: 0;
-                transform: translateY(14px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes loadingFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-7px) scale(1.03); }
-        }
-
-        @keyframes loadingShadow {
-            0%, 100% {
-                transform: scaleX(0.7);
-                opacity: 0.45;
-            }
-            50% {
-                transform: scaleX(1.15);
-                opacity: 1;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .footer-info,
-            .footer-info::before,
-            .footer-info::after,
-            .custom-alert,
-            .security-card,
-            .admin-pin-card,
-            .security-icon,
-            #layarHasil img,
-            #layarHasil h2,
-            #layarHasil p,
-            #layarHasil .skor-box,
-            #layarHasil button,
-            #loading img,
-            #loading::after {
-                animation: none !important;
-            }
-        }
-
-
-/* =========================================================
-   FIX TAMPILAN CBT / OVERLAY STATE
-   Memastikan layar soal, hasil, dan popup tidak tampil
-   bersamaan serta mencegah overflow horizontal.
-========================================================= */
-html,
-body {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-#app-content {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-}
-
-.main-layout {
-    width: min(1100px, 100%);
-    max-width: 1100px;
-    min-width: 0;
-}
-
-.quiz-container,
-.sidebar {
-    min-width: 0;
-    max-width: 100%;
-}
-
-#quizArea {
-    width: 100%;
-    min-width: 0;
-}
-
-.soal-card {
-    width: 100%;
-    max-width: 100%;
-    overflow-wrap: anywhere;
-    word-break: normal;
-}
-
-/* Modal harus benar-benar berada di tengah dan tidak melebar */
-.custom-alert-overlay,
-#securityWarning,
-#adminPinModal {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: none !important;
-    max-height: none !important;
-    margin: 0 !important;
-    padding: 20px !important;
-    box-sizing: border-box !important;
-    overflow: auto !important;
-}
-
-.custom-alert-overlay {
-    display: none;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-#securityWarning,
-#adminPinModal {
-    display: none;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-.custom-alert,
-.security-card,
-.admin-pin-card {
-    position: relative !important;
-    display: block !important;
-    width: min(92vw, 420px) !important;
-    max-width: 420px !important;
-    min-width: 0 !important;
-    max-height: calc(100vh - 40px) !important;
-    margin: auto !important;
-    box-sizing: border-box !important;
-    overflow: auto !important;
-    flex: 0 1 auto !important;
-}
-
-.custom-alert h3,
-.custom-alert p,
-.security-card h2,
-.security-card p,
-.admin-pin-card h2,
-.admin-pin-card p {
-    overflow-wrap: anywhere;
-}
-
-.alert-buttons,
-.admin-pin-buttons {
-    width: 100%;
-    min-width: 0;
-}
-
-.alert-buttons button,
-.admin-pin-buttons button,
-.security-ok {
-    min-width: 0;
-    white-space: normal;
-}
-
-/* Layar hasil selalu memenuhi layar dan tersusun vertikal */
-#layarHasil {
-    position: fixed !important;
-    inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    max-width: none !important;
-    box-sizing: border-box !important;
-    display: none;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    overflow: auto !important;
-    padding: 20px !important;
-}
-
-#layarHasil > * {
-    flex: 0 0 auto;
-}
-
-#layarHasil > div {
-    max-width: min(280px, 90vw) !important;
-}
-
-#layarHasil .skor-box {
-    line-height: 1;
-}
-
-@media (max-width: 600px) {
-    .main-layout {
-        width: 100%;
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
-    .sidebar {
-        width: 100%;
-    }
-
-    .custom-alert,
-    .security-card,
-    .admin-pin-card {
-        width: min(92vw, 380px) !important;
-        max-width: 380px !important;
-        padding: 20px !important;
-    }
-}
-
-    </style>
+</style>
 </head>
 
 <body>
@@ -1164,31 +700,145 @@ body {
 <div id="app-content">
 
     <div class="header">
-
+      <div class="header-user">
+        <div class="header-avatar">👤</div>
         <div>
-
-            <b
-                id="displayNama"
-                style="font-size:1.1em;"
-            >
-                -
-            </b>
-
-            <br>
-
-            <small id="displayKelas">
-                -
-            </small>
-
+          <b id="displayNama" style="font-size:1.05em;">-</b><br>
+          <small id="displayKelas">-</small>
         </div>
+      </div>
+      <div class="header-actions">
+        <div class="timer" id="timerDisplay">00:00:00</div>
+  <!-- Tombol Keluar Ujian -->
+<button class="exam-logout" id="btnKeluarUjian" onclick="event.stopImmediatePropagation();" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; padding: 10px 18px !important; border-radius: 10px !important; border: 1px solid rgba(255,255,255,0.2) !important; background: #ef4444 !important; color: #ffffff !important; font-size: 14px !important; font-weight: 700 !important; cursor: pointer !important;">⎋ Keluar</button>
 
-        <div
-            class="timer"
-            id="timerDisplay"
-        >
-            00:00:00
+<!-- Elemen Pop-up Modal Kustom -->
+<div id="modalKeluarUjian" style="visibility: hidden; opacity: 0; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 19, 47, 0.75); backdrop-filter: blur(4px); z-index: 999999; display: flex; justify-content: center; align-items: center; transition: opacity 0.25s ease, visibility 0.25s ease;">
+    <div style="background: #ffffff; width: min(90%, 380px); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">⚠️</div>
+        <h3 style="color: #07132f; margin: 0 0 8px; font-size: 18px; font-weight: 800;">Keluar dari Ujian?</h3>
+        <p style="color: #475569; margin: 0 0 24px; font-size: 13px; line-height: 1.5;">Pastikan jawaban Anda sudah selesai. Tindakan ini akan mengakhiri sesi ujian Anda.</p>
+        <div style="display: flex; gap: 10px;">
+            <button id="btnBatalKeluar" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font-weight: 700; cursor: pointer;">Batal</button>
+            <button id="btnYaKeluar" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: #ef4444; color: #ffffff; font-weight: 700; cursor: pointer;">Ya, Keluar</button>
         </div>
+    </div>
+</div>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const btnKeluar = document.getElementById('btnKeluarUjian');
+    const modalKeluar = document.getElementById('modalKeluarUjian');
+    const btnBatal = document.getElementById('btnBatalKeluar');
+    const btnYa = document.getElementById('btnYaKeluar');
+
+    if (btnKeluar && modalKeluar) {
+        // Gunakan capture phase (true) untuk mencegat klik sebelum event lain berjalan
+        btnKeluar.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            modalKeluar.style.visibility = 'visible';
+            modalKeluar.style.opacity = '1';
+        }, true);
+    }
+
+    if (btnBatal && modalKeluar) {
+        btnBatal.addEventListener('click', function() {
+            modalKeluar.style.opacity = '0';
+            modalKeluar.style.visibility = 'hidden';
+        });
+    }
+
+    if (btnYa) {
+        btnYa.addEventListener('click', function() {
+            localStorage.removeItem('cbt_session');
+            window.location.href = 'index.html';
+        });
+    }
+});
+</script>
+
+<!-- Elemen Pop-up Modal Kustom -->
+<div id="modalKeluarUjian" style="visibility: hidden; opacity: 0; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 19, 47, 0.75); backdrop-filter: blur(4px); z-index: 99999; display: flex; justify-content: center; align-items: center; transition: opacity 0.25s ease, visibility 0.25s ease;">
+    <div style="background: #ffffff; width: min(90%, 380px); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">⚠️</div>
+        <h3 style="color: #07132f; margin: 0 0 8px; font-size: 18px; font-weight: 800;">Keluar dari Ujian?</h3>
+        <p style="color: #475569; margin: 0 0 24px; font-size: 13px; line-height: 1.5;">Pastikan jawaban Anda sudah selesai. Tindakan ini akan mengakhiri sesi ujian Anda.</p>
+        <div style="display: flex; gap: 10px;">
+            <button id="btnBatalKeluar" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font-weight: 700; cursor: pointer;">Batal</button>
+            <button id="btnYaKeluar" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: #ef4444; color: #ffffff; font-weight: 700; cursor: pointer;">Ya, Keluar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const btnKeluar = document.getElementById('btnKeluarUjian');
+    const modalKeluar = document.getElementById('modalKeluarUjian');
+    const btnBatal = document.getElementById('btnBatalKeluar');
+    const btnYa = document.getElementById('btnYaKeluar');
+
+    if (btnKeluar && modalKeluar) {
+        btnKeluar.addEventListener('click', function(e) {
+            e.preventDefault();
+            modalKeluar.style.visibility = 'visible';
+            modalKeluar.style.opacity = '1';
+        });
+    }
+
+    if (btnBatal && modalKeluar) {
+        btnBatal.addEventListener('click', function() {
+            modalKeluar.style.opacity = '0';
+            modalKeluar.style.visibility = 'hidden';
+        });
+    }
+
+    if (btnYa) {
+        btnYa.addEventListener('click', function() {
+            localStorage.removeItem('cbt_session');
+            window.location.href = 'index.html';
+        });
+    }
+});
+</script>
+
+<!-- Elemen Pop-up Modal Kustom -->
+<div id="modalKeluarUjian" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 19, 47, 0.75); backdrop-filter: blur(4px); z-index: 99999; justify-content: center; align-items: center;">
+    <div style="background: #ffffff; width: min(90%, 380px); padding: 28px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <div style="width: 50px; height: 50px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px;">⚠️</div>
+        <h3 style="color: #07132f; margin: 0 0 8px; font-size: 18px; font-weight: 800;">Keluar dari Ujian?</h3>
+        <p style="color: #475569; margin: 0 0 24px; font-size: 13px; line-height: 1.5;">Pastikan jawaban Anda sudah selesai. Tindakan ini akan mengakhiri sesi ujian Anda.</p>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="tutupModalKeluar()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #cbd5e1; background: #f8fafc; color: #334155; font-weight: 700; cursor: pointer; transition: 0.2s;">Batal</button>
+            <button onclick="eksekusiKeluar()" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: #ef4444; color: #ffffff; font-weight: 700; cursor: pointer; transition: 0.2s;">Ya, Keluar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+
+<script>
+function bukaModalKeluar() {
+    const modal = document.getElementById('modalKeluarUjian');
+    if (modal) modal.style.display = 'flex';
+}
+
+function tutupModalKeluar() {
+    const modal = document.getElementById('modalKeluarUjian');
+    if (modal) modal.style.display = 'none';
+}
+
+function eksekusiKeluar() {
+    localStorage.removeItem('cbt_session');
+    window.location.href = 'index.html';
+}
+</script>
+      </div>
     </div>
 
 
@@ -1285,7 +935,7 @@ body {
     </div>
 
 
-    <div class="footer-info" aria-label="Informasi aplikasi">
+    <div class="footer-info" onclick="openExamAbout()">
         Computer Based Test Ver 1.0 | Dev by MB © 2026
     </div>
 
@@ -1338,7 +988,7 @@ body {
      SECURITY WARNING
 ========================================================= -->
 
-<div id="securityWarning" role="alertdialog" aria-modal="true">
+<div id="securityWarning">
 
     <div class="security-card">
 
@@ -1383,7 +1033,7 @@ body {
      VERIFIKASI PIN ADMIN SETELAH PELANGGARAN
 ========================================================= -->
 
-<div id="adminPinModal" role="dialog" aria-modal="true">
+<div id="adminPinModal">
 
     <div class="admin-pin-card">
 
@@ -1427,7 +1077,6 @@ body {
     </div>
 
 </div>
-
 
 <script>
 
@@ -2210,45 +1859,7 @@ window.addEventListener(
    WINDOW LOAD
 ============================================================ */
 
-
-/* ============================================================
-   NORMALISASI TAMPILAN SAAT HALAMAN CBT DIBUKA
-============================================================ */
-function resetOverlayVisualState() {
-    const loading = document.getElementById("loading");
-    const hasil = document.getElementById("layarHasil");
-    const app = document.getElementById("app-content");
-    const alertBox = document.getElementById("alertBox");
-    const warning = document.getElementById("securityWarning");
-    const pinModal = document.getElementById("adminPinModal");
-
-    /* Jangan biarkan state visual lama membuat beberapa layar tampil sekaligus. */
-    if (hasil) hasil.style.display = "none";
-    if (alertBox) alertBox.style.display = "none";
-    if (warning) warning.style.display = "none";
-    if (pinModal) pinModal.style.display = "none";
-
-    /* Halaman soal adalah tampilan utama selama ujian. */
-    if (app) app.style.display = "block";
-    if (loading) loading.style.display = "flex";
-}
-
-function closeAllExamOverlays() {
-    const alertBox = document.getElementById("alertBox");
-    const warning = document.getElementById("securityWarning");
-    const pinModal = document.getElementById("adminPinModal");
-
-    if (alertBox) alertBox.style.display = "none";
-    if (warning) warning.style.display = "none";
-    if (pinModal) pinModal.style.display = "none";
-
-    securityWarningOpen = false;
-    adminPinOpen = false;
-}
-
 window.onload = async function() {
-
-    resetOverlayVisualState();
 
     /*
      * Perpindahan index/dashboard -> halaman CBT adalah
@@ -2846,10 +2457,6 @@ async function prosesKirimJawaban() {
 
     sudahKirim = true;
 
-    /* Setelah pengiriman dimulai, tidak boleh ada popup keamanan
-       atau konfirmasi yang menumpuk di atas layar hasil. */
-    closeAllExamOverlays();
-
     sessionStorage.setItem(
         "cbtExamFinished",
         "true"
@@ -2917,9 +2524,6 @@ async function prosesKirimJawaban() {
             "loading"
         ).style.display = "none";
 
-        /* Tutup seluruh popup sebelum menampilkan hasil. */
-        closeAllExamOverlays();
-
         document.getElementById(
             "app-content"
         ).style.display = "none";
@@ -2973,9 +2577,6 @@ async function prosesKirimJawaban() {
         document.getElementById(
             "loading"
         ).style.display = "none";
-
-        /* Tutup seluruh popup sebelum menampilkan hasil. */
-        closeAllExamOverlays();
 
         document.getElementById(
             "app-content"
@@ -3142,6 +2743,13 @@ function delay(ms) {
     );
 }
 
+
+
+function openExamAbout(){document.getElementById("examAboutModal").style.display="flex";}
+function closeExamAbout(){document.getElementById("examAboutModal").style.display="none";}
+function konfirmasiKeluarUjian(){
+  showAlert("Keluar dari Ujian","Apakah Anda yakin ingin keluar? Jawaban yang belum dikirim dapat hilang.","confirm",function(){logOutSiswa();});
+}
 
 /* ============================================================
    LOGOUT SISWA
