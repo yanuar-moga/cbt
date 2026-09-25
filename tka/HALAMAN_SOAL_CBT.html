@@ -563,6 +563,338 @@
                 gap: 7px;
             }
         }
+    
+        /* =====================================================
+           ANIMASI UI - FOOTER & POPUP
+        ===================================================== */
+
+        /* Footer bergerak lembut tanpa mengubah layout asli */
+        .footer-info {
+            overflow: hidden;
+            isolation: isolate;
+            background:
+                linear-gradient(
+                    110deg,
+                    #222 0%,
+                    #292929 25%,
+                    #222 50%,
+                    #292929 75%,
+                    #222 100%
+                );
+            background-size: 250% 100%;
+            animation: footerGradient 7s ease-in-out infinite;
+            box-shadow: 0 -2px 14px rgba(0,0,0,0.16);
+        }
+
+        .footer-info::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -35%;
+            width: 35%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.9),
+                transparent
+            );
+            animation: footerLight 3.8s linear infinite;
+            pointer-events: none;
+        }
+
+        .footer-info::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                120deg,
+                transparent 0%,
+                rgba(255,255,255,0.045) 45%,
+                rgba(255,255,255,0.09) 50%,
+                rgba(255,255,255,0.045) 55%,
+                transparent 100%
+            );
+            background-size: 220% 100%;
+            animation: footerShine 5s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Semua popup mendapat efek masuk yang halus */
+        .custom-alert-overlay,
+        #securityWarning,
+        #adminPinModal {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .custom-alert,
+        .security-card,
+        .admin-pin-card {
+            transform-origin: center center;
+            animation: popupIn 0.34s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        .custom-alert::before,
+        .security-card::before,
+        .admin-pin-card::before {
+            content: "";
+            display: block;
+            height: 4px;
+            width: 54px;
+            margin: -22px auto 18px;
+            border-radius: 0 0 8px 8px;
+            background: linear-gradient(
+                90deg,
+                var(--primary-blue),
+                var(--btn-blue),
+                var(--gold)
+            );
+            animation: popupBar 1.8s ease-in-out infinite;
+        }
+
+        .custom-alert h3 {
+            animation: popupTitle 0.45s ease both 0.08s;
+        }
+
+        .custom-alert p,
+        .security-card p,
+        .admin-pin-card p {
+            animation: popupText 0.45s ease both 0.14s;
+        }
+
+        .alert-buttons,
+        .admin-pin-buttons,
+        .security-ok {
+            animation: popupButtons 0.45s ease both 0.2s;
+        }
+
+        .security-icon {
+            animation:
+                securityPulse 1.8s ease-in-out infinite,
+                popupIconIn 0.5s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        #adminPinInput {
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        #adminPinInput:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 0 0 4px rgba(31,78,148,0.10);
+        }
+
+        .alert-btn,
+        .security-ok,
+        .admin-pin-buttons button {
+            transition:
+                transform 0.18s ease,
+                box-shadow 0.18s ease,
+                filter 0.18s ease;
+        }
+
+        .alert-btn:hover,
+        .security-ok:hover,
+        .admin-pin-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 16px rgba(0,0,0,0.14);
+            filter: brightness(1.03);
+        }
+
+        .alert-btn:active,
+        .security-ok:active,
+        .admin-pin-buttons button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* Animasi layar hasil dan loading */
+        #layarHasil img {
+            animation: resultLogoIn 0.65s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        #layarHasil h2,
+        #layarHasil p,
+        #layarHasil .skor-box,
+        #layarHasil button {
+            animation: resultContentIn 0.55s cubic-bezier(.22,1,.36,1) both;
+        }
+
+        #layarHasil .skor-box {
+            animation-delay: 0.12s;
+        }
+
+        #layarHasil button {
+            animation-delay: 0.2s;
+        }
+
+        #loading img {
+            animation: loadingFloat 1.8s ease-in-out infinite;
+        }
+
+        #loading::after {
+            content: "";
+            width: 42px;
+            height: 4px;
+            margin-top: 4px;
+            border-radius: 10px;
+            background: #dce7f5;
+            box-shadow: 0 0 0 0 rgba(31,78,148,0.12);
+            animation: loadingShadow 1.8s ease-in-out infinite;
+        }
+
+        @keyframes footerGradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes footerLight {
+            0% { left: -35%; opacity: 0; }
+            12% { opacity: 1; }
+            48% { opacity: 1; }
+            62%, 100% { left: 100%; opacity: 0; }
+        }
+
+        @keyframes footerShine {
+            0% { background-position: 180% 0; }
+            100% { background-position: -80% 0; }
+        }
+
+        @keyframes popupIn {
+            0% {
+                opacity: 0;
+                transform: translateY(22px) scale(0.92);
+                filter: blur(2px);
+            }
+            65% {
+                opacity: 1;
+                transform: translateY(-2px) scale(1.015);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes popupBar {
+            0%, 100% { width: 48px; opacity: 0.65; }
+            50% { width: 76px; opacity: 1; }
+        }
+
+        @keyframes popupTitle {
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popupText {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popupButtons {
+            from {
+                opacity: 0;
+                transform: translateY(9px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popupIconIn {
+            from {
+                opacity: 0;
+                transform: scale(0.65);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes securityPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255,152,0,0.12);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255,152,0,0.08);
+            }
+        }
+
+        @keyframes resultLogoIn {
+            from {
+                opacity: 0;
+                transform: translateY(-18px) scale(0.88);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes resultContentIn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes loadingFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-7px) scale(1.03); }
+        }
+
+        @keyframes loadingShadow {
+            0%, 100% {
+                transform: scaleX(0.7);
+                opacity: 0.45;
+            }
+            50% {
+                transform: scaleX(1.15);
+                opacity: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .footer-info,
+            .footer-info::before,
+            .footer-info::after,
+            .custom-alert,
+            .security-card,
+            .admin-pin-card,
+            .security-icon,
+            #layarHasil img,
+            #layarHasil h2,
+            #layarHasil p,
+            #layarHasil .skor-box,
+            #layarHasil button,
+            #loading img,
+            #loading::after {
+                animation: none !important;
+            }
+        }
+
     </style>
 </head>
 
@@ -796,7 +1128,7 @@
     </div>
 
 
-    <div class="footer-info">
+    <div class="footer-info" aria-label="Informasi aplikasi">
         Computer Based Test Ver 1.0 | Dev by MB © 2026
     </div>
 
@@ -849,7 +1181,7 @@
      SECURITY WARNING
 ========================================================= -->
 
-<div id="securityWarning">
+<div id="securityWarning" role="alertdialog" aria-modal="true">
 
     <div class="security-card">
 
@@ -894,7 +1226,7 @@
      VERIFIKASI PIN ADMIN SETELAH PELANGGARAN
 ========================================================= -->
 
-<div id="adminPinModal">
+<div id="adminPinModal" role="dialog" aria-modal="true">
 
     <div class="admin-pin-card">
 
