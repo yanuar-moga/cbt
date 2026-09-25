@@ -1,974 +1,442 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
-
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Computer Based Test</title>
 
-
 <style>
-/* =========================================================
-   GURU WALI CBT — MODERN TKA-STYLE LOGIN / DESKTOP
-   Visual direction: royal blue + navy + white + neon lime
-========================================================= */
-
 :root{
-  --navy:#07132f;
-  --navy-2:#0c1d4d;
-  --blue:#1749f5;
-  --blue-2:#1038c9;
-  --blue-3:#2866ff;
-  --cyan:#47d8ff;
-  --lime:#c8ff00;
-  --lime-2:#b2f300;
-  --white:#fff;
-  --text:#15203a;
-  --muted:#71809b;
-  --soft:#f4f7ff;
-  --line:#dce4f4;
-  --danger:#e5484d;
-  --warning:#f2a900;
-  --success:#18a957;
-  --shadow:0 30px 90px rgba(5,20,65,.28);
-  --radius:28px;
-
-  /* compatibility with existing inline styles */
-  --primary-blue:var(--blue);
-  --btn-red:var(--danger);
+  --navy:#07132f;--navy-2:#0c1d4d;--blue:#1749f5;--blue-2:#1038c9;
+  --blue-3:#2866ff;--cyan:#47d8ff;--lime:#c8ff00;--lime-2:#b2f300;
+  --white:#fff;--text:#15203a;--muted:#71809b;--soft:#f4f7ff;
+  --line:#dce4f4;--danger:#e5484d;--warning:#f2a900;--success:#18a957;
+  --shadow:0 30px 90px rgba(5,20,65,.28);--radius:28px;
+  --primary-blue:var(--blue);--btn-red:var(--danger);
 }
-
 *{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  min-height:100%;
-}
-
+html,body{margin:0;min-height:100%;font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text)}
 body{
-  font-family:"Segoe UI",Inter,Arial,sans-serif;
-  color:var(--text);
   background:
-    radial-gradient(circle at 12% 8%,rgba(40,102,255,.30),transparent 27%),
-    radial-gradient(circle at 90% 85%,rgba(71,216,255,.12),transparent 25%),
-    linear-gradient(135deg,#050b1c 0%,#0a1739 52%,#07132f 100%);
-  user-select:none;
-  -webkit-user-select:none;
+    radial-gradient(circle at 8% 10%,rgba(40,102,255,.34),transparent 28%),
+    radial-gradient(circle at 90% 90%,rgba(71,216,255,.14),transparent 24%),
+    linear-gradient(135deg,#040a1c,#0a1739 52%,#07132f);
+  user-select:none;-webkit-user-select:none;overflow-x:hidden;
 }
-
 button,input,select{font-family:inherit}
 input,select{user-select:text;-webkit-user-select:text}
 
-.center{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:42px;
+/* ===== LOGIN ===== */
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:34px;position:relative;overflow:hidden}
+.center::before,.center::after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(1px);
 }
-
-/* ===== LOGIN CARD ===== */
-
+.center::before{width:420px;height:420px;right:-170px;top:-160px;background:radial-gradient(circle,rgba(200,255,0,.14),transparent 68%);animation:floatOrb 8s ease-in-out infinite}
+.center::after{width:500px;height:500px;left:-240px;bottom:-260px;background:radial-gradient(circle,rgba(71,216,255,.14),transparent 68%);animation:floatOrb 10s ease-in-out infinite reverse}
 .card{
-  position:relative;
-  overflow:hidden;
-  width:min(1120px,100%);
-  min-height:690px;
-  padding:0;
-  display:grid;
-  grid-template-columns:43% 57%;
-  background:#fff;
-  border:1px solid rgba(255,255,255,.5);
-  border-radius:32px;
-  box-shadow:var(--shadow);
-  text-align:left;
+  position:relative;overflow:hidden;width:min(1120px,100%);min-height:680px;
+  display:grid;grid-template-columns:43% 57%;background:rgba(255,255,255,.98);
+  border:1px solid rgba(255,255,255,.7);border-radius:34px;box-shadow:var(--shadow);
+  text-align:left;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) both;
 }
-
-/* Branding panel */
 .card::before{
-  content:"";
-  position:absolute;
-  z-index:0;
-  left:0;
-  top:0;
-  bottom:0;
-  width:43%;
+  content:"";position:absolute;inset:0 auto 0 0;width:43%;z-index:0;
   background:
-    radial-gradient(circle at 22% 18%,rgba(200,255,0,.25),transparent 17%),
-    radial-gradient(circle at 80% 72%,rgba(71,216,255,.18),transparent 25%),
+    radial-gradient(circle at 18% 16%,rgba(200,255,0,.25),transparent 18%),
+    radial-gradient(circle at 82% 76%,rgba(71,216,255,.18),transparent 27%),
     linear-gradient(155deg,#07112b 0%,#1032a5 48%,#1749f5 100%);
-  clip-path:polygon(0 0,100% 0,92% 46%,100% 100%,0 100%);
+  clip-path:polygon(0 0,100% 0,92% 45%,100% 100%,0 100%);
 }
-
-.card::after{
-  content:"";
-  position:absolute;
-  left:0;
-  bottom:0;
-  width:43%;
-  height:8px;
-  background:var(--lime);
-  z-index:4;
-}
-
+.card::after{content:"";position:absolute;left:0;bottom:0;width:43%;height:8px;background:var(--lime);z-index:4}
+.brand-copy{position:absolute;z-index:2;left:55px;bottom:62px;color:#fff;max-width:310px;animation:fadeUp .9s .15s both}
+.brand-copy .eyebrow{font-size:11px;font-weight:900;letter-spacing:2.5px;color:var(--lime);margin-bottom:10px}
+.brand-copy h1{font-size:28px;line-height:1.12;margin:0 0 10px;font-weight:950;letter-spacing:-.7px}
+.brand-copy p{margin:0;color:#d9e5ff;font-size:13px;line-height:1.6}
 .logo{
-  position:absolute;
-  z-index:3;
-  left:21.5%;
-  top:50%;
-  transform:translate(-50%,-55%);
-  width:175px;
-  height:175px;
-  object-fit:contain;
-  filter:drop-shadow(0 18px 22px rgba(0,0,0,.28));
+  position:absolute;z-index:3;left:21.5%;top:39%;transform:translate(-50%,-50%);
+  width:170px;height:170px;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(0,0,0,.30));
+  animation:logoFloat 5s ease-in-out infinite;
 }
-
 .card h2{
-  position:relative;
-  z-index:2;
-  grid-column:2;
-  margin:0;
-  padding:82px 78px 12px;
-  color:var(--navy);
-  font-size:32px;
-  line-height:1.08;
-  font-weight:950;
-  letter-spacing:-.6px;
+  position:relative;z-index:2;grid-column:2;margin:0;padding:72px 78px 10px;color:var(--navy);
+  font-size:32px;line-height:1.08;font-weight:950;letter-spacing:-.7px;
 }
-
-.card h2::before{
-  content:"GURU WALI • CBT";
-  display:block;
-  margin-bottom:11px;
-  color:var(--blue);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:2.2px;
+.card h2::before{content:"ASESMEN DIGITAL • 2026";display:block;margin-bottom:10px;color:var(--blue);font-size:11px;font-weight:900;letter-spacing:2.2px}
+.card h2::after{content:"";display:block;width:58px;height:5px;margin-top:13px;border-radius:99px;background:var(--lime)}
+.card label,.card input,.card select,.card .checkbox-container,.card button,.card #msg,.card .security-notice,.card .footer{
+  position:relative;z-index:2;grid-column:2;margin-left:78px;margin-right:78px;width:auto
 }
-
-.card h2::after{
-  content:"";
-  display:block;
-  width:62px;
-  height:6px;
-  margin-top:14px;
-  border-radius:99px;
-  background:var(--lime);
+.card label{margin-top:9px;color:#4c5a76;font-size:12px;font-weight:850}
+.field-icon-label{display:flex;align-items:center;gap:7px}
+.card input,.card select{
+  width:calc(100% - 156px);padding:13px 15px;margin-top:6px;border:1.5px solid var(--line);
+  border-radius:13px;outline:none;background:var(--soft);color:var(--text);font-size:14px;transition:.22s ease;
 }
-
-/* Put form content in right column without changing existing HTML */
-.card label,
-.card input,
-.card select,
-.card .checkbox-container,
-.card button,
-.card #msg,
-.card .security-notice,
-.card .footer{
-  position:relative;
-  z-index:2;
-  grid-column:2;
-  margin-left:78px;
-  margin-right:78px;
-  width:auto;
-}
-
-.card label{
-  margin-top:9px;
-  color:#4c5a76;
-  font-size:12px;
-  font-weight:850;
-}
-
-.card input,
-.card select{
-  width:calc(100% - 156px);
-  padding:13px 15px;
-  margin-top:6px;
-  border:1.5px solid var(--line);
-  border-radius:13px;
-  outline:none;
-  background:var(--soft);
-  color:var(--text);
-  font-size:14px;
-  transition:.2s ease;
-}
-
-.card input:focus,
-.card select:focus{
-  border-color:var(--blue);
-  background:#fff;
-  box-shadow:0 0 0 4px rgba(23,73,245,.10);
-}
-
-.checkbox-container{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  margin-top:10px !important;
-  margin-bottom:3px;
-  cursor:pointer;
-}
-
-.card .checkbox-container input{
-  width:17px;
-  height:17px;
-  margin:0;
-  accent-color:var(--lime-2);
-}
-
-.card .checkbox-container label{
-  width:auto;
-  margin:0;
-  color:var(--muted);
-  font-size:12px;
-  font-weight:600;
-}
-
+.card input:hover,.card select:hover{border-color:#b9c8ed}
+.card input:focus,.card select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(23,73,245,.10);transform:translateY(-1px)}
+.checkbox-container{display:flex;align-items:center;gap:9px;margin-top:10px!important;margin-bottom:3px;cursor:pointer}
+.card .checkbox-container input{width:17px;height:17px;margin:0;accent-color:var(--lime-2)}
+.card .checkbox-container label{width:auto;margin:0;color:var(--muted);font-size:12px;font-weight:600}
 .card button{
-  width:calc(100% - 156px);
-  border:0;
-  border-radius:13px;
-  padding:13px 18px;
-  font-weight:950;
-  cursor:pointer;
-  transition:.2s ease;
+  width:calc(100% - 156px);border:0;border-radius:13px;padding:13px 18px;font-weight:950;cursor:pointer;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease
 }
-
-.btn-login{
-  background:linear-gradient(90deg,var(--lime),#d8ff2f) !important;
-  color:#07132f !important;
-  box-shadow:0 10px 24px rgba(200,255,0,.25);
-}
-
-.btn-login:hover{
-  transform:translateY(-1px);
-  box-shadow:0 13px 28px rgba(200,255,0,.30);
-}
-
-.btn-jadwal{
-  background:var(--blue) !important;
-  color:#fff !important;
-}
-
-.btn-jadwal:hover{
-  background:var(--blue-2) !important;
-}
-
-.btn-reset{
-  background:#edf1f7 !important;
-  color:#66718a !important;
-  padding:9px !important;
-  font-size:11px !important;
-}
-
-.card #msg{
-  min-height:18px;
-  color:var(--danger);
-  font-size:12px;
-  font-weight:750;
-}
-
-.security-notice{
-  display:none;
-  padding:11px 13px;
-  margin-top:8px !important;
-  border:1px solid #cbd8ff;
-  border-radius:12px;
-  background:#f2f5ff;
-  color:#42506a;
-  font-size:11px;
-  line-height:1.5;
-}
-
-.security-notice strong{
-  display:block;
-  color:var(--blue);
-  margin-bottom:3px;
-}
-
-.footer{
-  margin-top:7px !important;
-  padding-bottom:27px;
-  color:#9aa5ba;
-  font-size:10px;
-  line-height:1.55;
-}
-
-/* Decorative text in branding panel */
-.card .logo::after{display:none}
-
-.center::before{
-  content:"ASSESMEN DIGITAL";
-  position:fixed;
-  left:calc(50% - 530px);
-  top:calc(50% - 250px);
-  z-index:5;
-  color:rgba(255,255,255,.68);
-  font-size:11px;
-  font-weight:900;
-  letter-spacing:2.6px;
-  pointer-events:none;
-}
+.card button:hover{transform:translateY(-2px);filter:brightness(1.02)}
+.card button:active{transform:translateY(0) scale(.99)}
+.btn-login{background:linear-gradient(100deg,var(--lime),#e0ff58)!important;color:#07132f!important;box-shadow:0 12px 26px rgba(200,255,0,.25)}
+.btn-jadwal{background:linear-gradient(100deg,var(--blue),var(--blue-3))!important;color:#fff!important;box-shadow:0 10px 22px rgba(23,73,245,.18)}
+.btn-reset{background:#edf1f7!important;color:#66718a!important;font-size:12px!important}
+.card #msg{min-height:18px;color:var(--danger);font-size:12px;font-weight:750}
+.security-notice{display:none;padding:11px 13px;margin-top:8px!important;border:1px solid #cbd8ff;border-radius:12px;background:#f2f5ff;color:#42506a;font-size:11px;line-height:1.5}
+.security-notice strong{display:block;color:var(--blue);margin-bottom:3px}
+.footer{margin-top:7px!important;padding-bottom:24px;color:#9aa5ba;font-size:10px;line-height:1.55;text-align:center}
+.about-link{color:var(--blue);font-weight:850;cursor:pointer;text-decoration:none;transition:.2s}
+.about-link:hover{color:var(--blue-2);text-decoration:underline}
+.btn-reset,.btn-jadwal,.btn-login{min-height:45px}
 
 /* ===== DASHBOARD ===== */
-
-#dashboard{
-  display:none;
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 80% 0%,rgba(40,102,255,.12),transparent 30%),
-    #f2f5ff;
-}
-
+#dashboard{display:none;min-height:100vh;background:radial-gradient(circle at 80% 0%,rgba(40,102,255,.12),transparent 30%),#f2f5ff}
 #dashboard .header{
-  min-height:78px;
-  padding:13px 44px;
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-  color:#fff;
-  background:linear-gradient(105deg,#07132f,#1234aa 65%,#1749f5);
-  border-bottom:4px solid var(--lime);
-  box-shadow:0 7px 24px rgba(7,19,47,.16);
+  min-height:78px;padding:13px 44px;display:flex;justify-content:flex-end;align-items:center;color:#fff;
+  background:linear-gradient(105deg,#07132f,#1234aa 65%,#1749f5);border-bottom:4px solid var(--lime);
+  box-shadow:0 7px 24px rgba(7,19,47,.16)
 }
-
-.user-box{
-  text-align:right;
-  line-height:1.35;
-}
-
-.logout-btn{
-  width:auto !important;
-  margin:5px 0 0 !important;
-  padding:7px 14px !important;
-  border-radius:8px !important;
-  background:var(--lime) !important;
-  color:#07132f !important;
-}
-
-.content{
-  width:min(1180px,100%);
-  margin:auto;
-  padding:42px 30px 70px;
-  text-align:center;
-}
-
-.logo-center{
-  width:105px;
-  filter:drop-shadow(0 10px 18px rgba(23,73,245,.18));
-}
-
-.title{
-  color:var(--navy);
-  font-size:32px;
-  font-weight:950;
-  letter-spacing:-.5px;
-  margin-top:10px;
-}
-
-.box{
-  max-width:920px;
-  margin:25px auto;
-  padding:32px 38px;
-  text-align:left;
-  background:#fff;
-  border:1px solid #e0e6f3;
-  border-radius:24px;
-  box-shadow:0 18px 55px rgba(13,35,95,.10);
-}
-
-.box hr{
-  border:0;
-  border-top:1px solid #e5eaf3;
-  margin:22px 0;
-}
-
-.box ul{line-height:1.8}
-
-.btn-start{
-  background:linear-gradient(90deg,var(--lime),#d8ff2f) !important;
-  color:#07132f !important;
-  border:0;
-  border-radius:13px;
-  font-weight:950;
-  box-shadow:0 10px 24px rgba(200,255,0,.22);
-}
-
-.btn-start:hover{transform:translateY(-1px)}
+.user-box{text-align:right;line-height:1.35}
+.logout-btn{width:auto!important;margin:5px 0 0!important;padding:7px 14px!important;border-radius:8px!important;background:var(--lime)!important;color:#07132f!important}
+.content{width:min(1180px,100%);margin:auto;padding:42px 30px 70px;text-align:center}
+.logo-center{width:105px;filter:drop-shadow(0 10px 18px rgba(23,73,245,.18));animation:logoFloat 4s ease-in-out infinite}
+.title{color:var(--navy);font-size:32px;font-weight:950;letter-spacing:-.5px;margin-top:10px}
+.box{max-width:920px;margin:25px auto;padding:32px 38px;text-align:left;background:#fff;border:1px solid #e0e6f3;border-radius:24px;box-shadow:0 18px 55px rgba(13,35,95,.10);animation:fadeUp .55s both}
+.box hr{border:0;border-top:1px solid #e5eaf3;margin:22px 0}.box ul{line-height:1.8}
+.btn-start{background:linear-gradient(90deg,var(--lime),#d8ff2f)!important;color:#07132f!important;border:0;border-radius:13px;font-weight:950;box-shadow:0 10px 24px rgba(200,255,0,.22)}
+.btn-start:hover{transform:translateY(-2px)}
 
 /* ===== MODALS ===== */
-
 .modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  align-items:center;
-  justify-content:center;
-  padding:24px;
-  background:rgba(4,10,28,.70);
-  backdrop-filter:blur(7px);
+  display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:24px;
+  background:rgba(4,10,28,.72);backdrop-filter:blur(9px);opacity:0;
 }
-
+.modal[style*="display: flex"]{animation:overlayIn .22s ease forwards}
 .modal-box{
-  position:relative;
-  width:min(94%,560px);
-  max-height:88vh;
-  overflow:auto;
-  padding:30px;
-  background:#fff;
-  border:1px solid rgba(255,255,255,.7);
-  border-radius:22px;
-  text-align:center;
-  box-shadow:0 28px 80px rgba(0,0,0,.30);
+  position:relative;width:min(94%,560px);max-height:88vh;overflow:auto;padding:30px;background:#fff;
+  border:1px solid rgba(255,255,255,.75);border-radius:24px;text-align:center;
+  box-shadow:0 28px 80px rgba(0,0,0,.32);animation:modalIn .42s cubic-bezier(.2,.8,.2,1) both
 }
+.modal-box::before{content:"";display:block;width:64px;height:6px;margin:0 auto 17px;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--lime))}
+.modal-box h3{margin:0 0 10px;color:var(--navy);font-size:20px;font-weight:950}
+.modal-box p{color:#5f6c84;line-height:1.55;font-size:13px}
+.btn-group{display:flex;justify-content:center;gap:10px;margin-top:20px}
+.btn-blue{background:var(--blue)!important;color:#fff!important;padding:11px 20px!important;border-radius:10px!important}
+.btn-red{background:var(--danger)!important;color:#fff!important;padding:11px 20px!important;border-radius:10px!important}
+table{width:100%;border-collapse:separate;border-spacing:0;margin-bottom:15px;overflow:hidden;border:1px solid #dce3ef;border-radius:12px}
+th,td{border:0;border-bottom:1px solid #dce3ef;padding:10px;text-align:center;font-size:12px}
+th{background:#edf2ff;color:#153ba8}tr:last-child td{border-bottom:0}
+.violation-badge{display:none;position:fixed;left:18px;bottom:18px;z-index:8000;padding:8px 12px;border-radius:20px;background:var(--danger);color:#fff;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(229,72,77,.25)}
 
-.modal-box::before{
-  content:"";
-  display:block;
-  width:64px;
-  height:6px;
-  margin:0 auto 17px;
-  border-radius:99px;
-  background:var(--lime);
-}
+/* ===== ABOUT ===== */
+#aboutModal{display:flex;visibility:hidden;pointer-events:none;opacity:0;transition:opacity .25s ease}
+#aboutModal.show{visibility:visible;pointer-events:auto;opacity:1}
+#aboutModal .about-card{width:min(92%,500px);padding:0;overflow:hidden;transform:translateY(24px) scale(.94);opacity:0;transition:.42s cubic-bezier(.2,.8,.2,1);text-align:left}
+#aboutModal.show .about-card{transform:translateY(0) scale(1);opacity:1}
+.about-hero{padding:28px 30px 24px;background:linear-gradient(145deg,#07132f,#1234aa 65%,#1749f5);color:#fff;position:relative;overflow:hidden}
+.about-hero::after{content:"";position:absolute;width:180px;height:180px;right:-60px;top:-75px;border-radius:50%;background:rgba(200,255,0,.14);animation:pulseGlow 3s ease-in-out infinite}
+.about-logo{display:block;width:82px;height:82px;object-fit:contain;margin:0 0 16px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.25))}
+.about-kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:var(--lime);margin-bottom:7px}
+.about-hero h3{color:#fff;margin:0 0 5px;font-size:24px}
+.about-hero p{color:#dce6ff;margin:0;font-size:12px}
+.about-body{padding:24px 30px 28px}
+.about-body p{margin:0 0 14px}
+.about-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.meta-item{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+.meta-item small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.meta-item b{color:var(--navy);font-size:12px}
+.about-close{width:100%;border:0;border-radius:12px;padding:12px;background:var(--navy);color:#fff;font-weight:900;cursor:pointer;transition:.2s}
+.about-close:hover{background:var(--blue);transform:translateY(-1px)}
 
-.modal-box h3{
-  margin:0 0 10px;
-  color:var(--navy);
-  font-size:20px;
-  font-weight:950;
-}
-
-.modal-box p{
-  color:#5f6c84;
-  line-height:1.55;
-  font-size:13px;
-}
-
-.btn-group{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-  margin-top:20px;
-}
-
-.btn-blue{
-  background:var(--blue) !important;
-  color:#fff !important;
-  padding:11px 20px !important;
-  border-radius:10px !important;
-}
-
-.btn-red{
-  background:var(--danger) !important;
-  color:#fff !important;
-  padding:11px 20px !important;
-  border-radius:10px !important;
-}
-
-table{width:100%;border-collapse:collapse;margin-bottom:15px}
-th,td{border:1px solid #dce3ef;padding:10px;text-align:center;font-size:12px}
-th{background:#edf2ff;color:#153ba8}
-
-.violation-badge{
-  display:none;
-  position:fixed;
-  left:18px;
-  bottom:18px;
-  z-index:8000;
-  padding:8px 12px;
-  border-radius:20px;
-  background:var(--danger);
-  color:#fff;
-  font-size:11px;
-  font-weight:900;
-  box-shadow:0 8px 20px rgba(229,72,77,.25);
-}
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+@keyframes logoFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-8px)}}
+@keyframes floatOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,18px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
 
 @media(max-width:900px){
-  .center{padding:16px}
-  .card{
-    display:block;
-    width:100%;
-    min-height:0;
-    padding:28px 24px 22px;
-    border-radius:24px;
+  .center{padding:16px}.card{display:block;width:100%;min-height:0;padding:28px 24px 22px;border-radius:24px}
+  .card::before{display:none}.card::after{width:100%}.logo{position:static;display:block;width:90px;height:90px;margin:0 auto 12px;transform:none}
+  .card h2{padding:0;text-align:center}.card h2::before{display:none}
+  .card label,.card input,.card select,.card .checkbox-container,.card button,.card #msg,.card .security-notice,.card .footer{margin-left:0;margin-right:0}
+  .card input,.card select,.card button{width:100%}.brand-copy{position:static;max-width:none;margin:8px 0 24px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#07132f,#1749f5);text-align:center}
+  .brand-copy h1{font-size:20px}.brand-copy p{font-size:11px}.about-meta{grid-template-columns:1fr}
+}
+
+
+/* ===== FINAL LOGIN SPACING & CONTRAST ===== */
+.card #token{margin-bottom:12px !important;}
+.card .btn-reset{
+  background:#d5dceb !important;
+  color:#263653 !important;
+  border:1px solid #bcc7dc !important;
+  box-shadow:0 6px 14px rgba(7,19,47,.10) !important;
+}
+.card .btn-reset:hover{background:#c5cfdf !important;color:#07132f !important;}
+
+/* ===== FINAL RESPONSIVE POLISH ===== */
+/* Logo selalu benar-benar berada di tengah pada tablet & HP */
+@media (max-width:900px){
+  .card .logo{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    display:block !important;
+    width:92px !important;
+    height:92px !important;
+    margin:0 auto 14px !important;
+    transform:none !important;
+    animation:none !important;
   }
-  .card::before{display:none}
-  .card::after{width:100%}
-  .logo{
-    position:static;
-    display:block;
-    width:90px;
-    height:90px;
-    margin:0 auto 12px;
-    transform:none;
+
+  /* Beri ruang yang jelas antara token dan tombol Masuk */
+  .card #token{
+    margin-bottom:12px !important;
   }
-  .card h2{
-    padding:0;
+
+  .card .btn-login{
+    margin-top:0 !important;
+  }
+
+  /* Reset dibuat lebih pekat agar kontras dengan halaman */
+  .card .btn-reset{
+    background:#d5dceb !important;
+    color:#263653 !important;
+    border:1px solid #bcc7dc !important;
+    box-shadow:0 6px 14px rgba(7,19,47,.10) !important;
+  }
+
+  .card .btn-reset:hover{
+    background:#c5cfdf !important;
+    color:#07132f !important;
+  }
+
+  /* About: jangan sampai tombol Tutup terpotong di layar HP */
+  #aboutModal{
+    padding:12px !important;
+    overflow-y:auto !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+  #aboutModal .about-card{
+    width:min(100%,500px) !important;
+    max-height:calc(100dvh - 24px) !important;
+    margin:auto !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  #aboutModal .about-hero{
+    padding:22px 20px 18px !important;
+  }
+
+  #aboutModal .about-logo{
+    width:68px !important;
+    height:68px !important;
+    margin:0 auto 12px !important;
+  }
+
+  #aboutModal .about-kicker,
+  #aboutModal .about-hero h3,
+  #aboutModal .about-hero p{
     text-align:center;
   }
-  .card h2::before{display:none}
-  .card label,
-  .card input,
-  .card select,
-  .card .checkbox-container,
-  .card button,
-  .card #msg,
-  .card .security-notice,
-  .card .footer{
-    margin-left:0;
-    margin-right:0;
+
+  #aboutModal .about-hero h3{
+    font-size:21px !important;
   }
-  .card input,.card select,.card button{width:100%}
-  .center::before{display:none}
+
+  #aboutModal .about-body{
+    padding:18px 20px 20px !important;
+  }
+
+  #aboutModal .about-body p{
+    font-size:12px;
+    line-height:1.55;
+  }
+
+  #aboutModal .about-meta{
+    gap:8px !important;
+    margin:14px 0 16px !important;
+  }
+
+  #aboutModal .meta-item{
+    padding:10px !important;
+  }
+
+  #aboutModal .about-close{
+    display:block !important;
+    width:100% !important;
+    min-height:44px !important;
+    margin:0 !important;
+    padding:11px 14px !important;
+  }
 }
+
+@media (max-width:480px){
+  .center{padding:10px !important;}
+  .card{padding:22px 18px 18px !important;border-radius:22px !important;}
+  .card .logo{width:82px !important;height:82px !important;margin-bottom:10px !important;}
+
+  .brand-copy{margin-top:6px !important;margin-bottom:20px !important;}
+
+  #aboutModal{padding:8px !important;}
+  #aboutModal .about-card{
+    max-height:calc(100dvh - 16px) !important;
+    border-radius:20px !important;
+  }
+  #aboutModal .about-body{padding:16px 16px 18px !important;}
+}
+
+@media (max-height:650px) and (max-width:900px){
+  #aboutModal{align-items:flex-start !important;}
+}
+\n/* =========================================================\n   FINAL POLISH — HALAMAN KONFIRMASI PESERTA\n   Tidak mengubah HTML/JavaScript/fungsi CBT.\n========================================================= */\n\n/* Latar dashboard mengikuti identitas visual halaman login */\n#dashboard{\n  position:relative;\n  overflow:hidden;\n  background:\n    radial-gradient(circle at 12% 18%, rgba(23,73,245,.16), transparent 28%),\n    radial-gradient(circle at 88% 10%, rgba(200,255,0,.10), transparent 24%),\n    linear-gradient(135deg,#eef3ff 0%,#f7f9ff 48%,#e9efff 100%) !important;\n}\n\n#dashboard::before,\n#dashboard::after{\n  content:"";\n  position:absolute;\n  border-radius:50%;\n  pointer-events:none;\n  filter:blur(2px);\n}\n#dashboard::before{\n  width:360px;height:360px;\n  right:-150px;top:115px;\n  background:rgba(23,73,245,.08);\n}\n#dashboard::after{\n  width:280px;height:280px;\n  left:-130px;bottom:90px;\n  background:rgba(200,255,0,.07);\n}\n\n#dashboard .header,\n#dashboard .content{position:relative;z-index:2}\n\n#dashboard .content{\n  padding-top:42px !important;\n}\n\n#dashboard .logo-center{\n  width:112px !important;\n  height:112px !important;\n  object-fit:contain;\n  padding:9px;\n  border-radius:50%;\n  background:rgba(255,255,255,.82);\n  border:1px solid rgba(23,73,245,.10);\n  box-shadow:0 16px 40px rgba(23,73,245,.15);\n}\n\n#dashboard .title{\n  margin-top:18px !important;\n  font-size:32px !important;\n  font-weight:950 !important;\n  letter-spacing:-.8px;\n  color:#07132f !important;\n}\n\n#dashboard #tanggal,\n#dashboard #jamServer{\n  color:#66738d !important;\n  font-size:12px;\n}\n\n/* Kartu data peserta dibuat seperti panel profesional */\n#dashboard .box{\n  position:relative;\n  max-width:720px !important;\n  margin:28px auto 30px !important;\n  padding:30px 34px 34px !important;\n  text-align:left;\n  background:rgba(255,255,255,.88) !important;\n  border:1px solid rgba(210,220,242,.95) !important;\n  border-radius:26px !important;\n  box-shadow:0 24px 65px rgba(7,19,47,.12),0 4px 15px rgba(23,73,245,.05) !important;\n  backdrop-filter:blur(12px);\n  overflow:hidden;\n}\n\n#dashboard .box::before{\n  content:"KONFIRMASI PESERTA";\n  display:block;\n  margin:-30px -34px 24px;\n  padding:15px 34px;\n  background:linear-gradient(105deg,#07132f,#1234aa 68%,#1749f5);\n  color:#fff;\n  border-bottom:4px solid #c8ff00;\n  font-size:11px;\n  font-weight:950;\n  letter-spacing:2px;\n}\n\n#dashboard .box p{\n  color:#526078;\n  font-size:13px;\n  line-height:1.6;\n  margin:9px 0;\n}\n#dashboard .box p b{color:#07132f}\n#dashboard .box hr{\n  margin:22px 0 !important;\n  border-top:1px solid #e1e7f3 !important;\n}\n#dashboard .box ul{\n  color:#526078;\n  line-height:1.75 !important;\n  padding-left:22px;\n}\n#dashboard .box ul:last-of-type{\n  margin-bottom:26px !important;\n  padding:15px 18px 15px 34px;\n  background:#f2f5ff;\n  border:1px solid #dce5ff;\n  border-radius:14px;\n}\n\n/* Tombol mulai dibuat sebagai CTA utama */\n#dashboard .box .btn-start{\n  display:flex !important;\n  align-items:center;\n  justify-content:center;\n  width:100% !important;\n  min-height:58px !important;\n  margin:25px 0 0 !important;\n  padding:15px 24px !important;\n  border-radius:15px !important;\n  border:1px solid rgba(159,204,0,.5) !important;\n  background:linear-gradient(100deg,#b9ef00 0%,#d9ff42 55%,#c8ff00 100%) !important;\n  color:#07132f !important;\n  font-size:15px !important;\n  font-weight:950 !important;\n  letter-spacing:.2px;\n  box-shadow:0 12px 28px rgba(145,190,0,.25),inset 0 1px 0 rgba(255,255,255,.65) !important;\n  cursor:pointer;\n  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease !important;\n}\n#dashboard .box .btn-start::after{\n  content:"→";\n  margin-left:12px;\n  font-size:21px;\n  line-height:1;\n}\n#dashboard .box .btn-start:hover{\n  transform:translateY(-3px) !important;\n  filter:brightness(1.02);\n  box-shadow:0 17px 34px rgba(145,190,0,.30),inset 0 1px 0 rgba(255,255,255,.65) !important;\n}\n#dashboard .box .btn-start:active{\n  transform:translateY(0) scale(.99) !important;\n}\n\n/* Modal konfirmasi: lebih tegas, bukan modal putih polos */\n#confirmModal{\n  padding:18px !important;\n  background:rgba(4,10,28,.78) !important;\n  backdrop-filter:blur(12px) !important;\n}\n#confirmModal .modal-box{\n  width:min(94%,560px) !important;\n  max-height:90vh;\n  padding:0 !important;\n  overflow:hidden !important;\n  border:1px solid rgba(255,255,255,.72) !important;\n  border-radius:26px !important;\n  background:#f7f9ff !important;\n  text-align:left !important;\n  box-shadow:0 30px 90px rgba(0,0,0,.38) !important;\n}\n#confirmModal .modal-box::before{display:none !important}\n#confirmModal .modal-box::after{\n  content:"";\n  display:block;\n  height:5px;\n  background:linear-gradient(90deg,#1749f5,#29b6f6,#c8ff00);\n}\n#confirmModal h3{\n  margin:0 !important;\n  padding:24px 28px 7px !important;\n  color:#fff !important;\n  background:linear-gradient(105deg,#07132f,#1234aa 68%,#1749f5);\n  font-size:21px !important;\n}\n#confirmModal h3::before{\n  content:"✓";\n  display:inline-flex;\n  align-items:center;\n  justify-content:center;\n  width:30px;height:30px;\n  margin-right:10px;\n  border-radius:50%;\n  background:#c8ff00;\n  color:#07132f;\n  font-size:16px;\n  vertical-align:-4px;\n}\n#confirmModal h3 + p{\n  margin:0 !important;\n  padding:0 28px 18px !important;\n  background:linear-gradient(105deg,#07132f,#1234aa 68%,#1749f5);\n  color:#dce6ff !important;\n}\n#confirmModal .checkbox-container{\n  display:flex !important;\n  align-items:center !important;\n  gap:11px !important;\n  margin:0 !important;\n  padding:22px 28px 8px !important;\n  justify-content:flex-start !important;\n  cursor:pointer;\n}\n#confirmModal .checkbox-container input{\n  flex:0 0 auto;\n  width:19px !important;height:19px !important;\n  accent-color:#1749f5;\n}\n#confirmModal .checkbox-container label{\n  width:auto !important;\n  margin:0 !important;\n  color:#273650 !important;\n  font-size:13px !important;\n  font-weight:750 !important;\n}\n#confirmModal .btn-group{\n  display:flex !important;\n  gap:12px !important;\n  margin:12px 28px 26px !important;\n}\n#confirmModal .btn-group button{\n  flex:1 1 0;\n  min-height:52px !important;\n  padding:13px 18px !important;\n  border-radius:13px !important;\n  font-size:13px !important;\n  font-weight:900 !important;\n  cursor:pointer;\n  transition:.2s ease !important;\n}\n#confirmModal .btn-blue{\n  background:#e9eef8 !important;\n  color:#35445f !important;\n  border:1px solid #d1d9e9 !important;\n  box-shadow:none !important;\n}\n#confirmModal .btn-blue:hover{\n  background:#dce4f2 !important;\n  transform:translateY(-1px);\n}\n#confirmModal .btn-red{\n  background:linear-gradient(100deg,#b9ef00,#d8ff3c) !important;\n  color:#07132f !important;\n  border:1px solid rgba(159,204,0,.55) !important;\n  box-shadow:0 10px 24px rgba(145,190,0,.24) !important;\n}\n#confirmModal .btn-red:hover{\n  transform:translateY(-2px);\n  box-shadow:0 14px 28px rgba(145,190,0,.30) !important;\n}\n\n@media(max-width:600px){\n  #dashboard .content{padding:28px 14px 50px !important}\n  #dashboard .logo-center{width:88px !important;height:88px !important}\n  #dashboard .title{font-size:25px !important;margin-top:14px !important}\n  #dashboard .box{margin-top:22px !important;padding:24px 18px 22px !important;border-radius:21px !important}\n  #dashboard .box::before{margin:-24px -18px 20px;padding:13px 18px;font-size:10px}\n  #dashboard .box .btn-start{min-height:56px !important;font-size:14px !important}\n  #confirmModal{padding:10px !important}\n  #confirmModal .modal-box{width:100% !important;border-radius:21px !important}\n  #confirmModal h3{padding:20px 20px 6px !important;font-size:19px !important}\n  #confirmModal h3 + p{padding:0 20px 17px !important;font-size:12px !important}\n  #confirmModal .checkbox-container{padding:20px 20px 7px !important}\n  #confirmModal .btn-group{margin:12px 20px 20px !important;gap:9px !important}\n  #confirmModal .btn-group button{min-height:50px !important}\n}\n\n@media(max-width:380px){\n  #confirmModal .btn-group{flex-direction:column-reverse !important}\n  #confirmModal .btn-group button{width:100% !important}\n}\n
 </style>
 
 </head>
 
-
 <body>
-
-
-<!-- =======================================================
-     PAGE LOGIN
-======================================================== -->
-
 <div id="loginPage" class="center">
-
   <div class="card">
-
-    <img
-      src="https://yanuar-moga.github.io/cbt/assets/logo.png"
-      class="logo"
-      alt="Logo"
-    >
+    <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="logo" alt="Logo">
+    <div class="brand-copy">
+      <div class="eyebrow">ASESMEN DIGITAL</div>
+      <h1>Computer Based Test</h1>
+      <p>Platform asesmen digital untuk pelaksanaan ujian yang terstruktur, aman, dan mudah digunakan.</p>
+    </div>
 
     <h2>Computer Based Test</h2>
 
-
     <label>Kelas</label>
-
-    <select id="kelas">
-
-      <option value="">
-        -- Pilih Kelas --
-      </option>
-
-    </select>
-
+    <select id="kelas"><option value="">-- Pilih Kelas --</option></select>
 
     <label>Username</label>
-
-    <select id="username">
-
-      <option value="">
-        -- Pilih Siswa --
-      </option>
-
-    </select>
-
+    <select id="username"><option value="">-- Pilih Siswa --</option></select>
 
     <label>Password</label>
-
-    <input
-      type="password"
-      id="password"
-      placeholder="Masukkan password"
-      autocomplete="off"
-    >
-
+    <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
 
     <div class="checkbox-container">
-
-      <input
-        type="checkbox"
-        id="showPass"
-        onclick="togglePassword()"
-      >
-
-      <label for="showPass">
-        Tampilkan Password
-      </label>
-
+      <input type="checkbox" id="showPass" onclick="togglePassword()">
+      <label for="showPass">Tampilkan Password</label>
     </div>
-
 
     <label>Token</label>
+    <input type="text" id="token" placeholder="Masukkan token" autocomplete="off">
 
-    <input
-      type="text"
-      id="token"
-      placeholder="Masukkan token"
-      autocomplete="off"
-    >
-
-
-    <button
-      class="btn-login"
-      onclick="login()"
-    >
-      Masuk
-    </button>
-
-
-    <button
-      class="btn-jadwal"
-      onclick="openModal()"
-    >
-      Lihat Jadwal Token
-    </button>
-
-
-    <button
-      class="btn-reset"
-      onclick="triggerReset()"
-    >
-      Reset Login / Sesi
-    </button>
-
+    <button class="btn-login" onclick="login()">Masuk</button>
+    <button class="btn-jadwal" onclick="openModal()">Lihat Jadwal Token</button>
+    <button class="btn-reset" onclick="triggerReset()">Reset Login / Sesi</button>
 
     <p id="msg"></p>
-
-
     <div class="security-notice">
-
-      <strong>🔒 Sistem Keamanan CBT</strong>
-
-      Selama ujian berlangsung, siswa dilarang
-      berpindah tab, membuka aplikasi lain,
-      menggunakan klik kanan, menyalin soal,
-      atau menggunakan shortcut browser.
-
+      <strong>Sistem Keamanan CBT</strong>
+      Selama ujian berlangsung, siswa dilarang berpindah tab, membuka aplikasi lain, menggunakan klik kanan, menyalin soal, atau menggunakan shortcut browser.
     </div>
-
 
     <div class="footer">
-
-      CBT Browser Apps by MB<br>
-
-      © 2026 MB All Rights Reserved
-
+      <a class="about-link" onclick="openAbout()">About CBT Browser v 1.0</a> <br>
+      <span>© 2026 All Rights Reserved</span>
+      <br>
     </div>
-
   </div>
-
 </div>
-
-
-
-<!-- =======================================================
-     PAGE DASHBOARD
-======================================================== -->
 
 <div id="dashboard">
-
   <div class="header">
-
     <div class="user-box">
-
-      <b id="namaHeader"></b>
-
-      <br>
-
-      <span id="kelasHeader"></span>
-
-      <br>
-
-      <button
-        class="logout-btn"
-        onclick="logout()"
-      >
-        Keluar
-      </button>
-
+      <b id="namaHeader"></b><br>
+      <span id="kelasHeader"></span><br>
+      <button class="logout-btn" onclick="logout()">Keluar</button>
     </div>
-
   </div>
-
-
   <div class="content">
-
-    <img
-      src="https://yanuar-moga.github.io/cbt/assets/logo.png"
-      class="logo-center"
-      alt="Logo"
-    >
-
-
-    <div class="title">
-      Computer Based Test
-    </div>
-
-
-    <p id="tanggal"></p>
-
-    <p id="jamServer"></p>
-
-
+<img src="https://yanuar-moga.github.io/cbt/assets/logo.png" style="display: block; margin: 0 auto 20px auto; max-width: 100px; height: auto;" alt="Logo">
+    <div class="title">Computer Based Test</div>
+    <p id="tanggal"></p><p id="jamServer"></p>
     <div class="box">
-
-      <p>
-        Nama :
-        <b id="nama"></b>
-      </p>
-
-      <p>
-        Kelas :
-        <b id="kelasUser"></b>
-      </p>
-
-      <p>
-        Mata Pelajaran : Informatika
-      </p>
-
-      <p>
-        Semester : Genap
-      </p>
-
-      <p>
-        Tahun Pelajaran : 2026 - 2027
-      </p>
-
-
+      <p>Nama : <b id="nama"></b></p>
+      <p>Kelas : <b id="kelasUser"></b></p>
+      <p>Mata Pelajaran : Informatika</p>
+      <p>Semester : Genap</p>
+      <p>Tahun Pelajaran : 2026 - 2027</p>
       <hr>
-
-
-      <p>
-        <b>Informasi Ujian:</b>
-      </p>
-
-
-      <ul style="margin-bottom:15px;">
-
-        <li>
-          Jumlah soal: 20 Pilihan Ganda
-        </li>
-
-        <li>
-          Durasi: 90 menit
-        </li>
-
+      <p><b>Informasi Ujian:</b></p>
+      <ul style="margin-bottom:15px;"><li>Jumlah soal: 20 Pilihan Ganda</li><li>Durasi: 90 menit</li></ul>
+      <p><b>Penting:</b></p>
+      <ul style="color:#000000;font-weight:bold;">
+        <li>Dilarang keluar dari aplikasi selama ujian berlangsung</li>
+        <li>Kerjakan dengan jujur dan mandiri</li>
+        <li>Gunakan browser Google Chrome versi terbaru</li>
+        <li>Tutup semua aplikasi lain sebelum memulai</li>
+        <li>Jangan berpindah tab selama ujian</li>
       </ul>
-
-
-      <p>
-        <b>Penting:</b>
-      </p>
-
-
-      <ul
-        style="
-          color:#000000;
-          font-weight:bold;
-        "
-      >
-
-        <li>
-          Dilarang keluar dari aplikasi selama ujian berlangsung
-        </li>
-
-        <li>
-          Kerjakan dengan jujur dan mandiri
-        </li>
-
-        <li>
-          Gunakan browser Google Chrome versi terbaru
-        </li>
-
-        <li>
-          Tutup semua aplikasi lain sebelum memulai
-        </li>
-
-        <li>
-          Jangan berpindah tab selama ujian
-        </li>
-
-      </ul>
-
-
-      <button
-        class="btn-start"
-        onclick="openConfirm()"
-      >
-        Kerjakan Ujian
-      </button>
-
+<div style="text-align: center; width: 100%;">
+    <button onclick="openConfirm()" style="display: inline-flex !important; align-items: center; justify-content: center; width: 100% !important; min-height: 54px !important; margin: 25px 0 0 !important; padding: 15px 24px !important; border-radius: 14px !important; border: 1px solid rgba(159,204,0,.5) !important; background: linear-gradient(100deg,#b9ef00 0%,#d9ff42 55%,#c8ff00 100%) !important; color: #07132f !important; font-size: 15px !important; font-weight: 900 !important; letter-spacing: .2px; box-shadow: 0 10px 25px rgba(145,190,0,.25), inset 0 1px 0 rgba(255,255,255,.65) !important; cursor: pointer; box-sizing: border-box;">Kerjakan Ujian</button>
+</div>
     </div>
-
   </div>
-
 </div>
 
+<div id="violationBadge" class="violation-badge">Pelanggaran: <span id="violationCount">0</span></div>
 
-
-<!-- =======================================================
-     BADGE PELANGGARAN
-======================================================== -->
-
-<div
-  id="violationBadge"
-  class="violation-badge"
->
-  ⚠️ Pelanggaran: <span id="violationCount">0</span>
-</div>
-
-
-
-<!-- =======================================================
-     MODAL ALERT
-======================================================== -->
-
-<div
-  id="customAlert"
-  class="modal"
->
-
+<div id="customAlert" class="modal">
   <div class="modal-box">
-
-    <h3 id="alertTitle">
-      Notifikasi
-    </h3>
-
-    <p id="alertMsg"></p>
-
-    <div
-      class="btn-group"
-      id="alertBtns"
-    >
-    </div>
-
+    <h3 id="alertTitle">Notifikasi</h3><p id="alertMsg"></p>
+    <div class="btn-group" id="alertBtns"></div>
   </div>
-
 </div>
 
-
-
-<!-- =======================================================
-     MODAL KONFIRMASI DATA
-======================================================== -->
-
-<div
-  id="confirmModal"
-  class="modal"
->
-
+<div id="confirmModal" class="modal">
   <div class="modal-box">
-
-    <h3>
-      Konfirmasi Data
-    </h3>
-
-    <p>
-      Pastikan data Anda sudah benar
-    </p>
-
-
-    <div
-      class="checkbox-container"
-      style="
-        justify-content:center;
-        margin-bottom:15px;
-      "
-    >
-
-      <input
-        type="checkbox"
-        id="checkData"
-      >
-
-      <label for="checkData">
-        Saya yakin data sudah benar
-      </label>
-
+    <h3>Konfirmasi Data</h3><p>Pastikan data Anda sudah benar sebelum memulai ujian.</p>
+    <div class="checkbox-container" style="justify-content:center;margin-bottom:15px;">
+      <input type="checkbox" id="checkData"><label for="checkData">Saya yakin data sudah benar</label>
     </div>
-
-
     <div class="btn-group">
-
-      <button
-        class="btn-blue"
-        onclick="closeConfirm()"
-      >
-        Batal
-      </button>
-
-      <button
-        class="btn-red"
-        onclick="lanjutUjian()"
-      >
-        Mulai Ujian
-      </button>
-
+      <button class="btn-blue" onclick="closeConfirm()">Batal</button>
+      <button class="btn-red" onclick="lanjutUjian()">Mulai Ujian</button>
     </div>
-
   </div>
-
 </div>
 
-
-
-<!-- =======================================================
-     MODAL JADWAL
-======================================================== -->
-
-<div
-  id="modalJadwal"
-  class="modal"
->
-
+<div id="modalJadwal" class="modal">
   <div class="modal-box">
-
-    <h3>
-      Jadwal Token
-    </h3>
-
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>Kelas</th>
-
-          <th>Mulai</th>
-
-          <th>Selesai</th>
-
-        </tr>
-
-      </thead>
-
-
-      <tbody
-        id="jadwalBody"
-      >
-      </tbody>
-
-    </table>
-
-
-    <button
-      class="btn-blue"
-      onclick="closeModal()"
-    >
-      Tutup
-    </button>
-
+    <h3>Jadwal Token</h3>
+    <table><thead><tr><th>Kelas</th><th>Mulai</th><th>Selesai</th></tr></thead><tbody id="jadwalBody"></tbody></table>
+    <button class="btn-blue" onclick="closeModal()">Tutup</button>
   </div>
-
 </div>
 
-
+<div id="aboutModal" class="modal" onclick="if(event.target===this)closeAbout()">
+  <div class="modal-box about-card">
+    <div class="about-hero">
+      <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="about-logo" alt="Logo">
+      <div class="about-kicker">ABOUT APPLICATION</div>
+      <h3>Computer Based Test</h3>
+      <p>CBT Browser Apps by MB</p>
+    </div>
+    <div class="about-body">
+      <p>Aplikasi ini digunakan sebagai antarmuka pelaksanaan asesmen digital dengan sistem login siswa, token ujian, pemantauan sesi, dan halaman pengerjaan soal.</p>
+      <div class="about-meta">
+        <div class="meta-item"><small>Versi</small><b>CBT Ver 1.0</b></div>
+        <div class="meta-item"><small>Build</small><b>25 September 2026</b></div>
+        <div class="meta-item"><small>Platform</small><b>Web Browser</b></div>
+        <div class="meta-item"><small>Develop</small><b>MB</b></div>
+      </div>
+      <button class="about-close" onclick="closeAbout()">Tutup</button>
+    </div>
+  </div>
+</div>
 
 <script>
 
@@ -3054,8 +2522,24 @@ document.addEventListener(
    END SECURITY
 ========================================================= */
 
+
+/* =========================================================
+   ABOUT APPLICATION
+========================================================= */
+function openAbout(){
+  const modal=document.getElementById("aboutModal");
+  if(modal) modal.classList.add("show");
+}
+function closeAbout(){
+  const modal=document.getElementById("aboutModal");
+  if(modal) modal.classList.remove("show");
+}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){
+    const modal=document.getElementById("aboutModal");
+    if(modal && modal.classList.contains("show")) closeAbout();
+  }
+});
 </script>
-
-
 </body>
 </html>
