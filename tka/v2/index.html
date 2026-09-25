@@ -1,0 +1,2411 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Based Test</title>
+
+<style>
+:root{
+  --navy:#07132f;--navy-2:#0c1d4d;--blue:#1749f5;--blue-2:#1038c9;
+  --blue-3:#2866ff;--cyan:#47d8ff;--lime:#c8ff00;--lime-2:#b2f300;
+  --white:#fff;--text:#15203a;--muted:#71809b;--soft:#f4f7ff;
+  --line:#dce4f4;--danger:#e5484d;--warning:#f2a900;--success:#18a957;
+  --shadow:0 30px 90px rgba(5,20,65,.28);--radius:28px;
+  --primary-blue:var(--blue);--btn-red:var(--danger);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text)}
+body{
+  background:
+    radial-gradient(circle at 8% 10%,rgba(40,102,255,.34),transparent 28%),
+    radial-gradient(circle at 90% 90%,rgba(71,216,255,.14),transparent 24%),
+    linear-gradient(135deg,#040a1c,#0a1739 52%,#07132f);
+  user-select:none;-webkit-user-select:none;overflow-x:hidden;
+}
+button,input,select{font-family:inherit}
+input,select{user-select:text;-webkit-user-select:text}
+
+/* ===== LOGIN ===== */
+.center{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:34px;position:relative;overflow:hidden}
+.center::before,.center::after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(1px);
+}
+.center::before{width:420px;height:420px;right:-170px;top:-160px;background:radial-gradient(circle,rgba(200,255,0,.14),transparent 68%);animation:floatOrb 8s ease-in-out infinite}
+.center::after{width:500px;height:500px;left:-240px;bottom:-260px;background:radial-gradient(circle,rgba(71,216,255,.14),transparent 68%);animation:floatOrb 10s ease-in-out infinite reverse}
+.card{
+  position:relative;overflow:hidden;width:min(1120px,100%);min-height:680px;
+  display:grid;grid-template-columns:43% 57%;background:rgba(255,255,255,.98);
+  border:1px solid rgba(255,255,255,.7);border-radius:34px;box-shadow:var(--shadow);
+  text-align:left;animation:cardIn .8s cubic-bezier(.2,.8,.2,1) both;
+}
+.card::before{
+  content:"";position:absolute;inset:0 auto 0 0;width:43%;z-index:0;
+  background:
+    radial-gradient(circle at 18% 16%,rgba(200,255,0,.25),transparent 18%),
+    radial-gradient(circle at 82% 76%,rgba(71,216,255,.18),transparent 27%),
+    linear-gradient(155deg,#07112b 0%,#1032a5 48%,#1749f5 100%);
+  clip-path:polygon(0 0,100% 0,92% 45%,100% 100%,0 100%);
+}
+.card::after{content:"";position:absolute;left:0;bottom:0;width:43%;height:8px;background:var(--lime);z-index:4}
+.brand-copy{position:absolute;z-index:2;left:55px;bottom:62px;color:#fff;max-width:310px;animation:fadeUp .9s .15s both}
+.brand-copy .eyebrow{font-size:11px;font-weight:900;letter-spacing:2.5px;color:var(--lime);margin-bottom:10px}
+.brand-copy h1{font-size:28px;line-height:1.12;margin:0 0 10px;font-weight:950;letter-spacing:-.7px}
+.brand-copy p{margin:0;color:#d9e5ff;font-size:13px;line-height:1.6}
+.logo{
+  position:absolute;z-index:3;left:21.5%;top:39%;transform:translate(-50%,-50%);
+  width:170px;height:170px;object-fit:contain;filter:drop-shadow(0 18px 24px rgba(0,0,0,.30));
+  animation:logoFloat 5s ease-in-out infinite;
+}
+.card h2{
+  position:relative;z-index:2;grid-column:2;margin:0;padding:72px 78px 10px;color:var(--navy);
+  font-size:32px;line-height:1.08;font-weight:950;letter-spacing:-.7px;
+}
+.card h2::before{content:"GURU WALI • CBT";display:block;margin-bottom:10px;color:var(--blue);font-size:11px;font-weight:900;letter-spacing:2.2px}
+.card h2::after{content:"";display:block;width:58px;height:5px;margin-top:13px;border-radius:99px;background:var(--lime)}
+.card label,.card input,.card select,.card .checkbox-container,.card button,.card #msg,.card .security-notice,.card .footer{
+  position:relative;z-index:2;grid-column:2;margin-left:78px;margin-right:78px;width:auto
+}
+.card label{margin-top:9px;color:#4c5a76;font-size:12px;font-weight:850}
+.field-icon-label{display:flex;align-items:center;gap:7px}
+.card input,.card select{
+  width:calc(100% - 156px);padding:13px 15px;margin-top:6px;border:1.5px solid var(--line);
+  border-radius:13px;outline:none;background:var(--soft);color:var(--text);font-size:14px;transition:.22s ease;
+}
+.card input:hover,.card select:hover{border-color:#b9c8ed}
+.card input:focus,.card select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(23,73,245,.10);transform:translateY(-1px)}
+.checkbox-container{display:flex;align-items:center;gap:9px;margin-top:10px!important;margin-bottom:3px;cursor:pointer}
+.card .checkbox-container input{width:17px;height:17px;margin:0;accent-color:var(--lime-2)}
+.card .checkbox-container label{width:auto;margin:0;color:var(--muted);font-size:12px;font-weight:600}
+.card button{
+  width:calc(100% - 156px);border:0;border-radius:13px;padding:13px 18px;font-weight:950;cursor:pointer;
+  transition:transform .2s ease,box-shadow .2s ease,filter .2s ease
+}
+.card button:hover{transform:translateY(-2px);filter:brightness(1.02)}
+.card button:active{transform:translateY(0) scale(.99)}
+.btn-login{background:linear-gradient(100deg,var(--lime),#e0ff58)!important;color:#07132f!important;box-shadow:0 12px 26px rgba(200,255,0,.25)}
+.btn-jadwal{background:linear-gradient(100deg,var(--blue),var(--blue-3))!important;color:#fff!important;box-shadow:0 10px 22px rgba(23,73,245,.18)}
+.btn-reset{background:#edf1f7!important;color:#66718a!important;font-size:12px!important}
+.card #msg{min-height:18px;color:var(--danger);font-size:12px;font-weight:750}
+.security-notice{display:none;padding:11px 13px;margin-top:8px!important;border:1px solid #cbd8ff;border-radius:12px;background:#f2f5ff;color:#42506a;font-size:11px;line-height:1.5}
+.security-notice strong{display:block;color:var(--blue);margin-bottom:3px}
+.footer{margin-top:7px!important;padding-bottom:24px;color:#9aa5ba;font-size:10px;line-height:1.55;text-align:center}
+.about-link{color:var(--blue);font-weight:850;cursor:pointer;text-decoration:none;transition:.2s}
+.about-link:hover{color:var(--blue-2);text-decoration:underline}
+.btn-reset,.btn-jadwal,.btn-login{min-height:45px}
+
+/* ===== DASHBOARD ===== */
+#dashboard{display:none;min-height:100vh;background:radial-gradient(circle at 80% 0%,rgba(40,102,255,.12),transparent 30%),#f2f5ff}
+#dashboard .header{
+  min-height:78px;padding:13px 44px;display:flex;justify-content:flex-end;align-items:center;color:#fff;
+  background:linear-gradient(105deg,#07132f,#1234aa 65%,#1749f5);border-bottom:4px solid var(--lime);
+  box-shadow:0 7px 24px rgba(7,19,47,.16)
+}
+.user-box{text-align:right;line-height:1.35}
+.logout-btn{width:auto!important;margin:5px 0 0!important;padding:7px 14px!important;border-radius:8px!important;background:var(--lime)!important;color:#07132f!important}
+.content{width:min(1180px,100%);margin:auto;padding:42px 30px 70px;text-align:center}
+.logo-center{width:105px;filter:drop-shadow(0 10px 18px rgba(23,73,245,.18));animation:logoFloat 4s ease-in-out infinite}
+.title{color:var(--navy);font-size:32px;font-weight:950;letter-spacing:-.5px;margin-top:10px}
+.box{max-width:920px;margin:25px auto;padding:32px 38px;text-align:left;background:#fff;border:1px solid #e0e6f3;border-radius:24px;box-shadow:0 18px 55px rgba(13,35,95,.10);animation:fadeUp .55s both}
+.box hr{border:0;border-top:1px solid #e5eaf3;margin:22px 0}.box ul{line-height:1.8}
+.btn-start{background:linear-gradient(90deg,var(--lime),#d8ff2f)!important;color:#07132f!important;border:0;border-radius:13px;font-weight:950;box-shadow:0 10px 24px rgba(200,255,0,.22)}
+.btn-start:hover{transform:translateY(-2px)}
+
+/* ===== MODALS ===== */
+.modal{
+  display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:24px;
+  background:rgba(4,10,28,.72);backdrop-filter:blur(9px);opacity:0;
+}
+.modal[style*="display: flex"]{animation:overlayIn .22s ease forwards}
+.modal-box{
+  position:relative;width:min(94%,560px);max-height:88vh;overflow:auto;padding:30px;background:#fff;
+  border:1px solid rgba(255,255,255,.75);border-radius:24px;text-align:center;
+  box-shadow:0 28px 80px rgba(0,0,0,.32);animation:modalIn .42s cubic-bezier(.2,.8,.2,1) both
+}
+.modal-box::before{content:"";display:block;width:64px;height:6px;margin:0 auto 17px;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--lime))}
+.modal-box h3{margin:0 0 10px;color:var(--navy);font-size:20px;font-weight:950}
+.modal-box p{color:#5f6c84;line-height:1.55;font-size:13px}
+.btn-group{display:flex;justify-content:center;gap:10px;margin-top:20px}
+.btn-blue{background:var(--blue)!important;color:#fff!important;padding:11px 20px!important;border-radius:10px!important}
+.btn-red{background:var(--danger)!important;color:#fff!important;padding:11px 20px!important;border-radius:10px!important}
+table{width:100%;border-collapse:separate;border-spacing:0;margin-bottom:15px;overflow:hidden;border:1px solid #dce3ef;border-radius:12px}
+th,td{border:0;border-bottom:1px solid #dce3ef;padding:10px;text-align:center;font-size:12px}
+th{background:#edf2ff;color:#153ba8}tr:last-child td{border-bottom:0}
+.violation-badge{display:none;position:fixed;left:18px;bottom:18px;z-index:8000;padding:8px 12px;border-radius:20px;background:var(--danger);color:#fff;font-size:11px;font-weight:900;box-shadow:0 8px 20px rgba(229,72,77,.25)}
+
+/* ===== ABOUT ===== */
+#aboutModal{display:flex;visibility:hidden;pointer-events:none;opacity:0;transition:opacity .25s ease}
+#aboutModal.show{visibility:visible;pointer-events:auto;opacity:1}
+#aboutModal .about-card{width:min(92%,500px);padding:0;overflow:hidden;transform:translateY(24px) scale(.94);opacity:0;transition:.42s cubic-bezier(.2,.8,.2,1);text-align:left}
+#aboutModal.show .about-card{transform:translateY(0) scale(1);opacity:1}
+.about-hero{padding:28px 30px 24px;background:linear-gradient(145deg,#07132f,#1234aa 65%,#1749f5);color:#fff;position:relative;overflow:hidden}
+.about-hero::after{content:"";position:absolute;width:180px;height:180px;right:-60px;top:-75px;border-radius:50%;background:rgba(200,255,0,.14);animation:pulseGlow 3s ease-in-out infinite}
+.about-logo{display:block;width:82px;height:82px;object-fit:contain;margin:0 0 16px;filter:drop-shadow(0 10px 18px rgba(0,0,0,.25))}
+.about-kicker{font-size:10px;letter-spacing:2px;font-weight:900;color:var(--lime);margin-bottom:7px}
+.about-hero h3{color:#fff;margin:0 0 5px;font-size:24px}
+.about-hero p{color:#dce6ff;margin:0;font-size:12px}
+.about-body{padding:24px 30px 28px}
+.about-body p{margin:0 0 14px}
+.about-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}
+.meta-item{padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+.meta-item small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}.meta-item b{color:var(--navy);font-size:12px}
+.about-close{width:100%;border:0;border-radius:12px;padding:12px;background:var(--navy);color:#fff;font-weight:900;cursor:pointer;transition:.2s}
+.about-close:hover{background:var(--blue);transform:translateY(-1px)}
+
+@keyframes cardIn{from{opacity:0;transform:translateY(28px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes modalIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+@keyframes logoFloat{0%,100%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(-8px)}}
+@keyframes floatOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(15px,18px)}}
+@keyframes pulseGlow{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+
+@media(max-width:900px){
+  .center{padding:16px}.card{display:block;width:100%;min-height:0;padding:28px 24px 22px;border-radius:24px}
+  .card::before{display:none}.card::after{width:100%}.logo{position:static;display:block;width:90px;height:90px;margin:0 auto 12px;transform:none}
+  .card h2{padding:0;text-align:center}.card h2::before{display:none}
+  .card label,.card input,.card select,.card .checkbox-container,.card button,.card #msg,.card .security-notice,.card .footer{margin-left:0;margin-right:0}
+  .card input,.card select,.card button{width:100%}.brand-copy{position:static;max-width:none;margin:8px 0 24px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#07132f,#1749f5);text-align:center}
+  .brand-copy h1{font-size:20px}.brand-copy p{font-size:11px}.about-meta{grid-template-columns:1fr}
+}
+</style>
+
+</head>
+
+<body>
+<div id="loginPage" class="center">
+  <div class="card">
+    <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="logo" alt="Logo">
+    <div class="brand-copy">
+      <div class="eyebrow">ASESMEN DIGITAL</div>
+      <h1>Computer Based Test</h1>
+      <p>Platform asesmen digital untuk pelaksanaan ujian yang terstruktur, aman, dan mudah digunakan.</p>
+    </div>
+
+    <h2>Computer Based Test</h2>
+
+    <label>Kelas</label>
+    <select id="kelas"><option value="">-- Pilih Kelas --</option></select>
+
+    <label>Username</label>
+    <select id="username"><option value="">-- Pilih Siswa --</option></select>
+
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Masukkan password" autocomplete="off">
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="showPass" onclick="togglePassword()">
+      <label for="showPass">Tampilkan Password</label>
+    </div>
+
+    <label>Token</label>
+    <input type="text" id="token" placeholder="Masukkan token" autocomplete="off">
+
+    <button class="btn-login" onclick="login()">Masuk</button>
+    <button class="btn-jadwal" onclick="openModal()">Lihat Jadwal Token</button>
+    <button class="btn-reset" onclick="triggerReset()">Reset Login / Sesi</button>
+
+    <p id="msg"></p>
+    <div class="security-notice">
+      <strong>Sistem Keamanan CBT</strong>
+      Selama ujian berlangsung, siswa dilarang berpindah tab, membuka aplikasi lain, menggunakan klik kanan, menyalin soal, atau menggunakan shortcut browser.
+    </div>
+
+    <div class="footer">
+      CBT Browser Apps by MB<br>
+      <span>© 2026 MB All Rights Reserved</span>
+      <br><a class="about-link" onclick="openAbout()">About Aplikasi</a>
+    </div>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="header">
+    <div class="user-box">
+      <b id="namaHeader"></b><br>
+      <span id="kelasHeader"></span><br>
+      <button class="logout-btn" onclick="logout()">Keluar</button>
+    </div>
+  </div>
+  <div class="content">
+    <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="logo-center" alt="Logo">
+    <div class="title">Computer Based Test</div>
+    <p id="tanggal"></p><p id="jamServer"></p>
+    <div class="box">
+      <p>Nama : <b id="nama"></b></p>
+      <p>Kelas : <b id="kelasUser"></b></p>
+      <p>Mata Pelajaran : Informatika</p>
+      <p>Semester : Genap</p>
+      <p>Tahun Pelajaran : 2026 - 2027</p>
+      <hr>
+      <p><b>Informasi Ujian:</b></p>
+      <ul style="margin-bottom:15px;"><li>Jumlah soal: 20 Pilihan Ganda</li><li>Durasi: 90 menit</li></ul>
+      <p><b>Penting:</b></p>
+      <ul style="color:#000000;font-weight:bold;">
+        <li>Dilarang keluar dari aplikasi selama ujian berlangsung</li>
+        <li>Kerjakan dengan jujur dan mandiri</li>
+        <li>Gunakan browser Google Chrome versi terbaru</li>
+        <li>Tutup semua aplikasi lain sebelum memulai</li>
+        <li>Jangan berpindah tab selama ujian</li>
+      </ul>
+      <button class="btn-start" onclick="openConfirm()">Kerjakan Ujian</button>
+    </div>
+  </div>
+</div>
+
+<div id="violationBadge" class="violation-badge">Pelanggaran: <span id="violationCount">0</span></div>
+
+<div id="customAlert" class="modal">
+  <div class="modal-box">
+    <h3 id="alertTitle">Notifikasi</h3><p id="alertMsg"></p>
+    <div class="btn-group" id="alertBtns"></div>
+  </div>
+</div>
+
+<div id="confirmModal" class="modal">
+  <div class="modal-box">
+    <h3>Konfirmasi Data</h3><p>Pastikan data Anda sudah benar sebelum memulai ujian.</p>
+    <div class="checkbox-container" style="justify-content:center;margin-bottom:15px;">
+      <input type="checkbox" id="checkData"><label for="checkData">Saya yakin data sudah benar</label>
+    </div>
+    <div class="btn-group">
+      <button class="btn-blue" onclick="closeConfirm()">Batal</button>
+      <button class="btn-red" onclick="lanjutUjian()">Mulai Ujian</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalJadwal" class="modal">
+  <div class="modal-box">
+    <h3>Jadwal Token</h3>
+    <table><thead><tr><th>Kelas</th><th>Mulai</th><th>Selesai</th></tr></thead><tbody id="jadwalBody"></tbody></table>
+    <button class="btn-blue" onclick="closeModal()">Tutup</button>
+  </div>
+</div>
+
+<div id="aboutModal" class="modal" onclick="if(event.target===this)closeAbout()">
+  <div class="modal-box about-card">
+    <div class="about-hero">
+      <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="about-logo" alt="Logo">
+      <div class="about-kicker">ABOUT APPLICATION</div>
+      <h3>Computer Based Test</h3>
+      <p>CBT Browser Apps by MB</p>
+    </div>
+    <div class="about-body">
+      <p>Aplikasi ini digunakan sebagai antarmuka pelaksanaan asesmen digital dengan sistem login siswa, token ujian, pemantauan sesi, dan halaman pengerjaan soal.</p>
+      <div class="about-meta">
+        <div class="meta-item"><small>Versi</small><b>CBT Ver 1.0</b></div>
+        <div class="meta-item"><small>Tahun</small><b>2026</b></div>
+        <div class="meta-item"><small>Platform</small><b>Web Browser</b></div>
+        <div class="meta-item"><small>Developer</small><b>MB</b></div>
+      </div>
+      <button class="about-close" onclick="closeAbout()">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+/* =========================================================
+   URL GAS
+========================================================= */
+
+/*
+ * 🔐 GAS LOGIN SISWA
+ */
+
+const API_LOGIN =
+  "https://script.google.com/macros/s/AKfycbzYS6vuKiXqdrJ4YT5AcNn4GhQoAttH0mCOQwvklRvJVx9ulbCxWQYh5j7dE5q-_SgIIQ/exec";
+
+
+/*
+ * 📚 GAS SOAL
+ */
+
+const API_SOAL =
+  "https://script.google.com/macros/s/AKfycbwK8tBw35mg__J69hc-L-HAf62Eq2CHltBRHDsPVlB0e9Tvv5jkF-LbpgYCVk_HtQ3B/exec";
+
+
+/* =========================================================
+   VARIABEL
+========================================================= */
+
+let siswaData = [];
+
+let ip = "Unknown";
+
+let userAgent =
+  navigator.userAgent;
+
+let sessionChecker = null;
+
+let examStarted = false;
+
+let violationCount = 0;
+
+let lastViolationTime = 0;
+
+let isLeavingPage = false;
+
+
+/* =========================================================
+   🔐 SISTEM PROTEKSI BROWSER
+========================================================= */
+
+
+/*
+ * Klik kanan dilarang
+ */
+
+document.addEventListener(
+  "contextmenu",
+  function(e){
+
+    e.preventDefault();
+
+    showSecurityWarning(
+      "Klik kanan dinonaktifkan selama CBT."
+    );
+
+    return false;
+
+  },
+  true
+);
+
+
+/*
+ * Copy
+ */
+
+document.addEventListener(
+  "copy",
+  function(e){
+
+    e.preventDefault();
+
+    showSecurityWarning(
+      "Menyalin teks tidak diperbolehkan selama CBT."
+    );
+
+  },
+  true
+);
+
+
+/*
+ * Cut
+ */
+
+document.addEventListener(
+  "cut",
+  function(e){
+
+    e.preventDefault();
+
+    showSecurityWarning(
+      "Memotong teks tidak diperbolehkan selama CBT."
+    );
+
+  },
+  true
+);
+
+
+/*
+ * Paste
+ */
+
+document.addEventListener(
+  "paste",
+  function(e){
+
+    e.preventDefault();
+
+    showSecurityWarning(
+      "Menempelkan teks tidak diperbolehkan selama CBT."
+    );
+
+  },
+  true
+);
+
+
+/*
+ * Drag
+ */
+
+document.addEventListener(
+  "dragstart",
+  function(e){
+
+    e.preventDefault();
+
+  },
+  true
+);
+
+
+/*
+ * Shortcut keyboard
+ */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    const key =
+      String(e.key).toLowerCase();
+
+
+    const ctrl =
+      e.ctrlKey ||
+      e.metaKey;
+
+
+    /*
+     * F12
+     */
+
+    if(
+      e.key === "F12"
+    ){
+
+      e.preventDefault();
+
+      showSecurityWarning(
+        "Developer Tools tidak diperbolehkan."
+      );
+
+      return false;
+    }
+
+
+    /*
+     * Ctrl + C
+     * Ctrl + X
+     * Ctrl + V
+     * Ctrl + U
+     * Ctrl + S
+     * Ctrl + P
+     */
+
+    if(
+      ctrl &&
+      (
+        key === "c" ||
+        key === "x" ||
+        key === "v" ||
+        key === "u" ||
+        key === "s" ||
+        key === "p"
+      )
+    ){
+
+      e.preventDefault();
+
+      showSecurityWarning(
+        "Shortcut tersebut tidak diperbolehkan selama CBT."
+      );
+
+      return false;
+    }
+
+
+    /*
+     * Ctrl + Shift + I
+     * Ctrl + Shift + J
+     * Ctrl + Shift + C
+     */
+
+    if(
+      ctrl &&
+      e.shiftKey &&
+      (
+        key === "i" ||
+        key === "j" ||
+        key === "c"
+      )
+    ){
+
+      e.preventDefault();
+
+      showSecurityWarning(
+        "Developer Tools tidak diperbolehkan selama CBT."
+      );
+
+      return false;
+    }
+
+
+    /*
+     * Ctrl + Shift + S
+     */
+
+    if(
+      ctrl &&
+      e.shiftKey &&
+      key === "s"
+    ){
+
+      e.preventDefault();
+
+      showSecurityWarning(
+        "Shortcut browser dinonaktifkan selama CBT."
+      );
+
+      return false;
+    }
+
+
+    /*
+     * Ctrl + Tab
+     *
+     * Browser biasanya tetap mengontrol shortcut ini,
+     * tetapi kita tetap mencegah jika browser mengizinkannya.
+     */
+
+    if(
+      ctrl &&
+      key === "tab"
+    ){
+
+      e.preventDefault();
+
+      return false;
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   🚨 DETEKSI KELUAR TAB
+========================================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  function(){
+
+    /*
+     * Perpindahan dari dashboard ke HALAMAN_SOAL_CBT.html
+     * adalah perpindahan resmi dalam SATU sesi ujian.
+     * Browser dapat memicu visibilitychange saat navigasi,
+     * sehingga event tersebut WAJIB diabaikan ketika
+     * isLeavingPage = true.
+     */
+    if(
+      isLeavingPage
+    ){
+      return;
+    }
+
+    if(
+      !examStarted
+    ){
+      return;
+    }
+
+    if(
+      document.hidden
+    ){
+
+      registerViolation(
+        "Anda terdeteksi meninggalkan halaman CBT / berpindah tab."
+      );
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   🚨 DETEKSI BROWSER KEHILANGAN FOKUS
+========================================================= */
+
+window.addEventListener(
+  "blur",
+  function(){
+
+    /*
+     * Jangan menghitung blur kecil yang terjadi
+     * ketika siswa masih berada di halaman.
+     */
+
+    /*
+     * Jangan anggap perpindahan resmi dashboard ->
+     * HALAMAN_SOAL_CBT.html sebagai pelanggaran.
+     */
+    if(
+      isLeavingPage
+    ){
+      return;
+    }
+
+    if(
+      !examStarted
+    ){
+      return;
+    }
+
+    if(
+      examStarted
+    ){
+
+      registerViolation(
+        "Fokus browser terdeteksi berpindah. Jangan meninggalkan CBT."
+      );
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   🚨 KEMBALI KE TAB
+========================================================= */
+
+window.addEventListener(
+  "focus",
+  function(){
+
+    if(
+      examStarted &&
+      document.visibilityState === "visible"
+    ){
+
+      /*
+       * Tidak menambah pelanggaran lagi.
+       * Hanya memberikan informasi jika sebelumnya
+       * siswa meninggalkan tab.
+       */
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   ⚠️ REGISTRASI PELANGGARAN
+========================================================= */
+
+function registerViolation(message){
+
+  /*
+   * Debounce.
+   *
+   * visibilitychange + blur dapat terjadi bersamaan.
+   * Jangan menghitung dua kali dalam waktu sangat dekat.
+   */
+
+  const now =
+    Date.now();
+
+
+  if(
+    now - lastViolationTime < 1500
+  ){
+
+    return;
+  }
+
+
+  lastViolationTime =
+    now;
+
+
+  violationCount++;
+
+
+  sessionStorage.setItem(
+    "cbtViolationCount",
+    String(violationCount)
+  );
+
+
+  updateViolationBadge();
+
+
+  /*
+   * Jika belum ujian, tidak perlu
+   * memberi peringatan sebagai pelanggaran ujian.
+   */
+
+  if(
+    !examStarted
+  ){
+
+    return;
+  }
+
+
+  showSecurityWarning(
+    message +
+    "\n\nPelanggaran ke-" +
+    violationCount +
+    "."
+  );
+
+}
+
+
+/* =========================================================
+   ⚠️ UPDATE BADGE
+========================================================= */
+
+function updateViolationBadge(){
+
+  const badge =
+    document.getElementById(
+      "violationBadge"
+    );
+
+
+  const count =
+    document.getElementById(
+      "violationCount"
+    );
+
+
+  if(
+    !badge ||
+    !count
+  ){
+
+    return;
+  }
+
+
+  count.innerText =
+    violationCount;
+
+
+  if(
+    violationCount > 0
+  ){
+
+    badge.style.display =
+      "block";
+
+  }
+
+}
+
+
+/* =========================================================
+   ⚠️ WARNING KEAMANAN
+========================================================= */
+
+function showSecurityWarning(
+  message
+){
+
+  /*
+   * Jika modal sedang tampil,
+   * jangan menumpuk modal baru.
+   */
+
+  const modal =
+    document.getElementById(
+      "customAlert"
+    );
+
+
+  if(
+    modal &&
+    modal.style.display === "flex"
+  ){
+
+    return;
+  }
+
+
+  showAlert(
+    "⚠️ PERINGATAN KEAMANAN",
+    message,
+    "alert"
+  );
+
+}
+
+
+/* =========================================================
+   🔐 AKTIFKAN MODE UJIAN
+========================================================= */
+
+function activateExamMode(){
+
+  examStarted =
+    true;
+
+
+  sessionStorage.setItem(
+    "cbtExamStarted",
+    "true"
+  );
+
+
+  sessionStorage.setItem(
+    "cbtExamUser",
+    JSON.stringify(
+      JSON.parse(
+        localStorage.getItem("user") || "{}"
+      )
+    )
+  );
+
+
+  /*
+   * Reset penghitung untuk sesi ujian baru.
+   */
+
+  violationCount = 0;
+
+
+  sessionStorage.setItem(
+    "cbtViolationCount",
+    "0"
+  );
+
+
+  updateViolationBadge();
+
+}
+
+
+/* =========================================================
+   🔐 CEK MODE UJIAN
+========================================================= */
+
+function loadExamSecurityState(){
+
+  const started =
+    sessionStorage.getItem(
+      "cbtExamStarted"
+    );
+
+
+  const count =
+    parseInt(
+      sessionStorage.getItem(
+        "cbtViolationCount"
+      ) || "0",
+      10
+    );
+
+
+  violationCount =
+    isNaN(count)
+      ? 0
+      : count;
+
+
+  if(
+    started === "true"
+  ){
+
+    examStarted =
+      true;
+
+  }
+
+
+  updateViolationBadge();
+
+}
+
+
+/* =========================================================
+   🚫 BEFORE UNLOAD
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  function(e){
+
+    if(
+      examStarted &&
+      !isLeavingPage
+    ){
+
+      e.preventDefault();
+
+      e.returnValue =
+        "Ujian sedang berlangsung. Jangan meninggalkan halaman CBT.";
+
+      return e.returnValue;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   POPUP ALERT
+========================================================= */
+
+function showAlert(
+  title,
+  message,
+  type = "alert",
+  onConfirm = null
+){
+
+  document.getElementById(
+    "alertTitle"
+  ).innerText =
+    title;
+
+
+  document.getElementById(
+    "alertMsg"
+  ).innerText =
+    message;
+
+
+  const btnGroup =
+    document.getElementById(
+      "alertBtns"
+    );
+
+
+  btnGroup.innerHTML =
+    "";
+
+
+  if(
+    type === "confirm"
+  ){
+
+    btnGroup.innerHTML = `
+
+      <button
+        class="btn-blue"
+        onclick="closeAlert()"
+      >
+        Batal
+      </button>
+
+      <button
+        class="btn-red"
+        id="btnConfirmAction"
+      >
+        Ya, Lanjutkan
+      </button>
+
+    `;
+
+
+    document.getElementById(
+      "btnConfirmAction"
+    ).onclick =
+      function(){
+
+        closeAlert();
+
+        if(
+          onConfirm
+        ){
+
+          onConfirm();
+
+        }
+
+      };
+
+
+  }else{
+
+    btnGroup.innerHTML = `
+
+      <button
+        class="btn-blue"
+        onclick="closeAlert()"
+      >
+        OK
+      </button>
+
+    `;
+
+  }
+
+
+  document.getElementById(
+    "customAlert"
+  ).style.display =
+    "flex";
+
+}
+
+
+/* =========================================================
+   TUTUP ALERT
+========================================================= */
+
+function closeAlert(){
+
+  document.getElementById(
+    "customAlert"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =========================================================
+   CEK SESI LOGIN
+========================================================= */
+
+function checkSessionStatus(){
+
+  const saved =
+    localStorage.getItem(
+      "user"
+    );
+
+
+  if(
+    !saved
+  ){
+
+    return;
+  }
+
+
+  let savedUser;
+
+
+  try{
+
+    savedUser =
+      JSON.parse(saved);
+
+  }catch(e){
+
+    localStorage.removeItem(
+      "user"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !savedUser.idLogin
+  ){
+
+    return;
+  }
+
+
+  fetch(
+    API_LOGIN +
+    "?mode=cek_sesi&idLogin=" +
+    encodeURIComponent(
+      savedUser.idLogin
+    )
+  )
+
+  .then(
+    res => res.json()
+  )
+
+  .then(
+    data => {
+
+      if(
+        data.status === "off"
+      ){
+
+        examStarted =
+          false;
+
+
+        showAlert(
+          "Sesi Berakhir",
+          "Sesi Anda telah dihentikan oleh Admin.",
+          "alert",
+          function(){
+
+            localStorage.removeItem(
+              "user"
+            );
+
+            sessionStorage.clear();
+
+            location.reload();
+
+          }
+        );
+
+      }
+
+    }
+  )
+
+  .catch(
+    () => {
+      /*
+       * Tidak melakukan logout otomatis
+       * hanya karena koneksi sementara gagal.
+       */
+    }
+  );
+
+}
+
+
+/* =========================================================
+   AMBIL IP
+========================================================= */
+
+fetch(
+  "https://api.ipify.org?format=json"
+)
+
+.then(
+  r => r.json()
+)
+
+.then(
+  d => {
+
+    if(
+      d &&
+      d.ip
+    ){
+
+      ip =
+        d.ip;
+
+    }
+
+  }
+)
+
+.catch(
+  () => {
+
+    ip =
+      "Unknown";
+
+  }
+);
+
+
+/* =========================================================
+   LOAD DATA SISWA
+========================================================= */
+
+fetch(
+  API_LOGIN
+)
+
+.then(
+  r => {
+
+    if(
+      !r.ok
+    ){
+
+      throw new Error(
+        "Gagal menghubungi server login."
+      );
+
+    }
+
+    return r.json();
+
+  }
+)
+
+.then(
+  data => {
+
+    if(
+      !Array.isArray(data)
+    ){
+
+      throw new Error(
+        "Data siswa tidak valid."
+      );
+
+    }
+
+
+    siswaData =
+      data;
+
+
+    const kelasSelect =
+      document.getElementById(
+        "kelas"
+      );
+
+
+    const setKelas =
+      new Set();
+
+
+    data.forEach(
+      s => {
+
+        if(
+          s.kelas
+        ){
+
+          setKelas.add(
+            s.kelas
+          );
+
+        }
+
+      }
+    );
+
+
+    setKelas.forEach(
+      k => {
+
+        const option =
+          document.createElement(
+            "option"
+          );
+
+
+        option.value =
+          k;
+
+
+        option.textContent =
+          k;
+
+
+        kelasSelect.appendChild(
+          option
+        );
+
+      }
+    );
+
+  }
+)
+
+.catch(
+  err => {
+
+    document.getElementById(
+      "msg"
+    ).innerText =
+      "Server login tidak dapat dihubungi.";
+
+    console.error(
+      err
+    );
+
+  }
+);
+
+
+/* =========================================================
+   FILTER SISWA BERDASARKAN KELAS
+========================================================= */
+
+document.getElementById(
+  "kelas"
+).addEventListener(
+  "change",
+  function(){
+
+    const usernameSelect =
+      document.getElementById(
+        "username"
+      );
+
+
+    usernameSelect.innerHTML = `
+
+      <option value="">
+        -- Pilih Siswa --
+      </option>
+
+    `;
+
+
+    siswaData
+
+      .filter(
+        s =>
+          String(s.kelas) ===
+          String(this.value)
+      )
+
+      .forEach(
+        s => {
+
+          const option =
+            document.createElement(
+              "option"
+            );
+
+
+          option.value =
+            s.username;
+
+
+          option.textContent =
+            s.nama;
+
+
+          usernameSelect.appendChild(
+            option
+          );
+
+        }
+      );
+
+  }
+);
+
+
+/* =========================================================
+   TOGGLE PASSWORD
+========================================================= */
+
+function togglePassword(){
+
+  const password =
+    document.getElementById(
+      "password"
+    );
+
+
+  password.type =
+    password.type === "password"
+      ? "text"
+      : "password";
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function login(){
+
+  const username =
+    document.getElementById(
+      "username"
+    ).value;
+
+
+  const password =
+    document.getElementById(
+      "password"
+    ).value;
+
+
+  const token =
+    document.getElementById(
+      "token"
+    ).value;
+
+
+  if(
+    !username ||
+    !password ||
+    !token
+  ){
+
+    showAlert(
+      "Peringatan",
+      "Lengkapi semua data!"
+    );
+
+    return;
+  }
+
+
+  document.getElementById(
+    "msg"
+  ).innerText =
+    "Memverifikasi...";
+
+
+  fetch(
+    API_LOGIN,
+    {
+
+      method:"POST",
+
+      body:JSON.stringify({
+
+        username:
+          username,
+
+        password:
+          password,
+
+        token:
+          token,
+
+        ip:
+          ip,
+
+        userAgent:
+          userAgent
+
+      })
+
+    }
+  )
+
+  .then(
+    r => {
+
+      if(
+        !r.ok
+      ){
+
+        throw new Error(
+          "Server login bermasalah."
+        );
+
+      }
+
+      return r.json();
+
+    }
+  )
+
+  .then(
+    result => {
+
+      if(
+        result.status === "success"
+      ){
+
+        /*
+         * Simpan hasil login
+         */
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(
+            result
+          )
+        );
+
+
+        /*
+         * Reset status keamanan
+         */
+
+        sessionStorage.removeItem(
+          "cbtExamStarted"
+        );
+
+        sessionStorage.removeItem(
+          "cbtViolationCount"
+        );
+
+
+        examStarted =
+          false;
+
+        violationCount =
+          0;
+
+
+        updateViolationBadge();
+
+
+        showDashboard(
+          result
+        );
+
+
+      }else{
+
+        document.getElementById(
+          "msg"
+        ).innerText =
+          "";
+
+
+        showAlert(
+          "Login Gagal",
+          result.msg ||
+          "Username atau password salah."
+        );
+
+      }
+
+    }
+  )
+
+  .catch(
+    err => {
+
+      console.error(
+        err
+      );
+
+
+      document.getElementById(
+        "msg"
+      ).innerText =
+        "";
+
+
+      showAlert(
+        "Koneksi Gagal",
+        "Server login tidak dapat dihubungi. Periksa koneksi internet Anda."
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function showDashboard(
+  user
+){
+
+  document.getElementById(
+    "loginPage"
+  ).style.display =
+    "none";
+
+
+  document.getElementById(
+    "dashboard"
+  ).style.display =
+    "block";
+
+
+  document.getElementById(
+    "nama"
+  ).innerText =
+    user.nama || "-";
+
+
+  document.getElementById(
+    "kelasUser"
+  ).innerText =
+    user.kelas || "-";
+
+
+  document.getElementById(
+    "namaHeader"
+  ).innerText =
+    user.nama || "-";
+
+
+  document.getElementById(
+    "kelasHeader"
+  ).innerText =
+    "Kelas " +
+    (user.kelas || "-");
+
+
+  setTanggal();
+
+
+  updateClock();
+
+
+  setInterval(
+    updateClock,
+    1000
+  );
+
+
+  if(
+    sessionChecker
+  ){
+
+    clearInterval(
+      sessionChecker
+    );
+
+  }
+
+
+  sessionChecker =
+    setInterval(
+      checkSessionStatus,
+      15000
+    );
+
+}
+
+
+/* =========================================================
+   JAM
+========================================================= */
+
+function updateClock(){
+
+  const jam =
+    document.getElementById(
+      "jamServer"
+    );
+
+
+  if(
+    jam
+  ){
+
+    jam.innerText =
+      "⏰ " +
+      new Date().toLocaleTimeString(
+        "id-ID",
+        {
+          hour12:false
+        }
+      ) +
+      " WIB";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+  const saved =
+    localStorage.getItem(
+      "user"
+    );
+
+
+  showAlert(
+    "Keluar",
+    "Apakah Anda yakin ingin mengakhiri sesi ini?",
+    "confirm",
+    function(){
+
+      isLeavingPage =
+        true;
+
+
+      examStarted =
+        false;
+
+
+      let savedUser =
+        null;
+
+
+      try{
+
+        savedUser =
+          saved
+            ? JSON.parse(saved)
+            : null;
+
+      }catch(e){
+
+        savedUser =
+          null;
+
+      }
+
+
+      if(
+        savedUser &&
+        savedUser.idLogin
+      ){
+
+        fetch(
+          API_LOGIN +
+          "?mode=logout&idLogin=" +
+          encodeURIComponent(
+            savedUser.idLogin
+          )
+        )
+
+        .catch(
+          () => {}
+        )
+
+        .finally(
+          function(){
+
+            localStorage.removeItem(
+              "user"
+            );
+
+            sessionStorage.clear();
+
+            location.reload();
+
+          }
+        );
+
+
+      }else{
+
+        localStorage.removeItem(
+          "user"
+        );
+
+        sessionStorage.clear();
+
+        location.reload();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   RESET LOGIN
+========================================================= */
+
+function triggerReset(){
+
+  const username =
+    document.getElementById(
+      "username"
+    ).value;
+
+
+  if(
+    !username
+  ){
+
+    showAlert(
+      "Peringatan",
+      "Pilih nama siswa yang akan direset!"
+    );
+
+    return;
+
+  }
+
+
+  showAlert(
+    "Reset Sesi",
+    "Reset login untuk " +
+    username +
+    "? Gunakan ini jika Anda terputus sebelumnya.",
+    "confirm",
+    function(){
+
+      fetch(
+        API_LOGIN +
+        "?mode=reset_manual&username=" +
+        encodeURIComponent(
+          username
+        )
+      )
+
+      .then(
+        r => r.json()
+      )
+
+      .then(
+        result => {
+
+          if(
+            result.status === "success"
+          ){
+
+            showAlert(
+              "Berhasil",
+              "Sesi telah direset. Silakan login kembali."
+            );
+
+          }else{
+
+            showAlert(
+              "Informasi",
+              result.msg ||
+              "Tidak ada sesi aktif."
+            );
+
+          }
+
+        }
+      )
+
+      .catch(
+        () => {
+
+          showAlert(
+            "Gagal",
+            "Tidak dapat menghubungi server."
+          );
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   TANGGAL
+========================================================= */
+
+function setTanggal(){
+
+  const now =
+    new Date();
+
+
+  const hari = [
+
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu"
+
+  ];
+
+
+  const bulan = [
+
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+
+  ];
+
+
+  document.getElementById(
+    "tanggal"
+  ).innerText =
+
+    hari[now.getDay()] +
+    ", " +
+    now.getDate() +
+    " " +
+    bulan[now.getMonth()] +
+    " " +
+    now.getFullYear();
+
+}
+
+
+/* =========================================================
+   MODAL KONFIRMASI
+========================================================= */
+
+function openConfirm(){
+
+  document.getElementById(
+    "checkData"
+  ).checked =
+    false;
+
+
+  document.getElementById(
+    "confirmModal"
+  ).style.display =
+    "flex";
+
+}
+
+
+function closeConfirm(){
+
+  document.getElementById(
+    "confirmModal"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =========================================================
+   MULAI UJIAN
+========================================================= */
+
+function lanjutUjian(){
+
+  const check =
+    document.getElementById(
+      "checkData"
+    );
+
+
+  if(
+    !check.checked
+  ){
+
+    showAlert(
+      "Peringatan",
+      "Centang konfirmasi terlebih dahulu!"
+    );
+
+    return;
+
+  }
+
+
+  const saved =
+    localStorage.getItem(
+      "user"
+    );
+
+
+  if(
+    !saved
+  ){
+
+    showAlert(
+      "Sesi Tidak Ditemukan",
+      "Silakan login kembali."
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * Aktifkan mode keamanan
+   * SEBELUM membuka halaman soal.
+   */
+
+  activateExamMode();
+
+
+  /*
+   * Penanda bahwa perpindahan ini
+   * merupakan perpindahan resmi
+   * dari dashboard menuju ujian.
+   */
+
+  isLeavingPage =
+    true;
+
+
+  sessionStorage.setItem(
+    "cbtReturnFromDashboard",
+    "true"
+  );
+
+
+  /*
+   * Simpan URL GAS Soal agar halaman
+   * soal dapat menggunakan konfigurasi
+   * yang sama.
+   */
+
+  sessionStorage.setItem(
+    "cbtSoalAPI",
+    API_SOAL
+  );
+
+
+  /*
+   * Buka halaman soal.
+   */
+
+  window.location.href =
+    "HALAMAN_SOAL_CBT.html";
+
+}
+
+
+/* =========================================================
+   JADWAL TOKEN
+========================================================= */
+
+function openModal(){
+
+  document.getElementById(
+    "modalJadwal"
+  ).style.display =
+    "flex";
+
+
+  const body =
+    document.getElementById(
+      "jadwalBody"
+    );
+
+
+  body.innerHTML = `
+
+    <tr>
+
+      <td colspan="3">
+        Memuat jadwal...
+      </td>
+
+    </tr>
+
+  `;
+
+
+  fetch(
+    API_LOGIN +
+    "?mode=token"
+  )
+
+  .then(
+    r => r.json()
+  )
+
+  .then(
+    data => {
+
+      body.innerHTML =
+        "";
+
+
+      if(
+        !Array.isArray(data) ||
+        data.length === 0
+      ){
+
+        body.innerHTML = `
+
+          <tr>
+
+            <td colspan="3">
+              Tidak ada jadwal token.
+            </td>
+
+          </tr>
+
+        `;
+
+        return;
+
+      }
+
+
+      data.forEach(
+        d => {
+
+          const tr =
+            document.createElement(
+              "tr"
+            );
+
+
+          const tdKelas =
+            document.createElement(
+              "td"
+            );
+
+
+          const tdMulai =
+            document.createElement(
+              "td"
+            );
+
+
+          const tdSelesai =
+            document.createElement(
+              "td"
+            );
+
+
+          tdKelas.textContent =
+            d.kelas || "-";
+
+
+          tdMulai.textContent =
+            d.mulai || "-";
+
+
+          tdSelesai.textContent =
+            d.selesai || "-";
+
+
+          tr.appendChild(
+            tdKelas
+          );
+
+
+          tr.appendChild(
+            tdMulai
+          );
+
+
+          tr.appendChild(
+            tdSelesai
+          );
+
+
+          body.appendChild(
+            tr
+          );
+
+        }
+      );
+
+    }
+  )
+
+  .catch(
+    () => {
+
+      body.innerHTML = `
+
+        <tr>
+
+          <td colspan="3">
+            Gagal memuat jadwal.
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+}
+
+
+function closeModal(){
+
+  document.getElementById(
+    "modalJadwal"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =========================================================
+   KLIK DI LUAR MODAL
+========================================================= */
+
+window.addEventListener(
+  "click",
+  function(e){
+
+    const jadwal =
+      document.getElementById(
+        "modalJadwal"
+      );
+
+
+    const alert =
+      document.getElementById(
+        "customAlert"
+      );
+
+
+    const confirm =
+      document.getElementById(
+        "confirmModal"
+      );
+
+
+    if(
+      e.target === jadwal
+    ){
+
+      closeModal();
+
+    }
+
+
+    /*
+     * Modal peringatan keamanan
+     * tidak ditutup dengan klik luar.
+     */
+
+  }
+);
+
+
+/* =========================================================
+   LOAD SESSION
+========================================================= */
+
+window.addEventListener(
+  "load",
+  function(){
+
+    loadExamSecurityState();
+
+
+    const saved =
+      localStorage.getItem(
+        "user"
+      );
+
+
+    if(
+      saved
+    ){
+
+      try{
+
+        const user =
+          JSON.parse(
+            saved
+          );
+
+
+        showDashboard(
+          user
+        );
+
+
+        /*
+         * Validasi session ke server
+         */
+
+        checkSessionStatus();
+
+
+      }catch(e){
+
+        localStorage.removeItem(
+          "user"
+        );
+
+      }
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   BLOKIR SELECTION
+========================================================= */
+
+document.addEventListener(
+  "selectstart",
+  function(e){
+
+    /*
+     * Input tetap boleh digunakan.
+     */
+
+    if(
+      e.target.tagName === "INPUT" ||
+      e.target.tagName === "TEXTAREA"
+    ){
+
+      return;
+
+    }
+
+
+    e.preventDefault();
+
+  },
+  true
+);
+
+
+/* =========================================================
+   BLOKIR DRAG IMAGE
+========================================================= */
+
+document.addEventListener(
+  "dragstart",
+  function(e){
+
+    if(
+      e.target.tagName === "IMG"
+    ){
+
+      e.preventDefault();
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   BLOKIR OPEN VIEW SOURCE
+========================================================= */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      e.ctrlKey &&
+      e.key.toLowerCase() === "u"
+    ){
+
+      e.preventDefault();
+
+    }
+
+  },
+  true
+);
+
+
+/* =========================================================
+   END SECURITY
+========================================================= */
+
+
+/* =========================================================
+   ABOUT APPLICATION
+========================================================= */
+function openAbout(){
+  const modal=document.getElementById("aboutModal");
+  if(modal) modal.classList.add("show");
+}
+function closeAbout(){
+  const modal=document.getElementById("aboutModal");
+  if(modal) modal.classList.remove("show");
+}
+document.addEventListener("keydown",function(e){
+  if(e.key==="Escape"){
+    const modal=document.getElementById("aboutModal");
+    if(modal && modal.classList.contains("show")) closeAbout();
+  }
+});
+</script>
+</body>
+</html>
