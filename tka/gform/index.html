@@ -239,6 +239,8 @@
       margin:14px 0 28px;
     }
 
+    .loading-options{color:var(--muted);font-size:12px;margin-top:6px}
+
     .field{
       margin-bottom:15px;
     }
@@ -662,12 +664,12 @@
           <form id="loginForm" novalidate>
             <div class="field">
               <label for="kelas">Kelas</label>
-              <input id="kelas" type="text" autocomplete="off" placeholder="Contoh: 9I" required>
+              <select id="kelas" required><option value="">Memuat daftar kelas...</option></select>
             </div>
 
             <div class="field">
               <label for="username">Username</label>
-              <input id="username" type="text" autocomplete="username" placeholder="Masukkan username" required>
+              <select id="username" autocomplete="username" required disabled><option value="">Pilih kelas terlebih dahulu</option></select>
             </div>
 
             <div class="field">
@@ -888,6 +890,62 @@
       });
     }
 
+    async function loadClasses(){
+      const select=$("kelas");
+      select.disabled=true;
+      select.innerHTML='<option value="">Memuat daftar kelas...</option>';
+      try{
+        const data=await api("getClasses");
+        if(!data.success) throw new Error(data.message||"Gagal memuat kelas.");
+        const classes=Array.isArray(data.classes)?data.classes:[];
+        select.innerHTML='<option value="">-- Pilih Kelas --</option>';
+        classes.forEach(kelas=>{
+          const option=document.createElement("option");
+          option.value=kelas; option.textContent=kelas;
+          select.appendChild(option);
+        });
+        if(!classes.length){
+          select.innerHTML='<option value="">Belum ada data kelas</option>';
+        }
+      }catch(err){
+        select.innerHTML='<option value="">Gagal memuat kelas</option>';
+        setMessage("loginMessage",err.message||"Gagal mengambil daftar kelas dari server.");
+      }finally{
+        select.disabled=false;
+      }
+    }
+
+    async function loadStudentsByClass(kelas){
+      const select=$("username");
+      select.disabled=true;
+      select.innerHTML='<option value="">Memuat daftar siswa...</option>';
+      if(!kelas){
+        select.innerHTML='<option value="">Pilih kelas terlebih dahulu</option>';
+        return;
+      }
+      try{
+        const data=await api("getStudents",{kelas});
+        if(!data.success) throw new Error(data.message||"Gagal memuat daftar siswa.");
+        const students=Array.isArray(data.students)?data.students:[];
+        select.innerHTML='<option value="">-- Pilih Nama Siswa --</option>';
+        students.forEach(student=>{
+          const option=document.createElement("option");
+          option.value=student.username;
+          option.textContent=student.nama || student.username;
+          option.dataset.nama=student.nama||"";
+          select.appendChild(option);
+        });
+        if(!students.length){
+          select.innerHTML='<option value="">Tidak ada siswa pada kelas ini</option>';
+        }
+      }catch(err){
+        select.innerHTML='<option value="">Gagal memuat siswa</option>';
+        setMessage("loginMessage",err.message||"Gagal mengambil daftar siswa.");
+      }finally{
+        select.disabled=false;
+      }
+    }
+
     function saveState(){
       localStorage.setItem("cbt_session_id",state.sessionId);
       localStorage.setItem("cbt_state",JSON.stringify({user:state.user,jadwal:state.jadwal,googleFormUrl:state.googleFormUrl}));
@@ -945,6 +1003,13 @@
 
     $("togglePassword").addEventListener("click",()=>{const i=$("password");i.type=i.type==="password"?"text":"password";});
     $("showPassword").addEventListener("change",e=>{$("password").type=e.target.checked?"text":"password";});
+
+    $("kelas").addEventListener("change",async e=>{
+      hideMessage("loginMessage");
+      $("password").value="";
+      $("token").value="";
+      await loadStudentsByClass(e.target.value);
+    });
 
     $("loginForm").addEventListener("submit",async e=>{
       e.preventDefault();hideMessage("loginMessage");
@@ -1009,6 +1074,7 @@
     $("finishButton").addEventListener("click",()=>{resetState();location.reload();});
     $("scheduleButton").addEventListener("click",()=>alert("Jadwal dan token mengikuti data pada sheet JADWAL. Masukkan token yang diberikan pengawas."));
 
+    loadClasses();
     restoreState();
   </script>
 </body>
