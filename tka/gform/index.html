@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#102b8f">
+  <title>CBT SMPN 1 MOGA</title>
+
+  <style>
+    :root{
+      --navy:#071737;
+      --navy-2:#102b8f;
+      --blue:#1f50f5;
+      --blue-2:#173bd1;
+      --lime:#c8ff00;
+      --lime-2:#b9f000;
+      --text:#0d1730;
+      --muted:#69738a;
+      --line:#dbe2f1;
+      --soft:#f3f6fc;
+      --white:#fff;
+      --danger:#d93025;
+      --success:#167c4b;
+      --shadow:0 24px 70px rgba(4,18,55,.25);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 12% 15%,rgba(36,66,190,.38),transparent 23%),
+        radial-gradient(circle at 95% 12%,rgba(200,255,0,.12),transparent 18%),
+        linear-gradient(135deg,#102b68 0%,#07132f 55%,#06132d 100%);
+    }
+
+    body{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      overflow-x:hidden;
+    }
+
+    button,input,select,textarea{font:inherit}
+
+    .app{
+      width:min(1120px,100%);
+      min-height:600px;
+      background:var(--white);
+      border:1px solid rgba(255,255,255,.85);
+      border-radius:var(--radius);
+      overflow:hidden;
+      display:grid;
+      grid-template-columns:1.05fr 1fr;
+      box-shadow:var(--shadow);
+    }
+
+    /* LEFT / BRAND */
+    .brand{
+      position:relative;
+      min-height:600px;
+      padding:48px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      overflow:hidden;
+      color:white;
+      background:
+        radial-gradient(circle at 18% 15%,rgba(200,255,0,.15),transparent 18%),
+        linear-gradient(150deg,#10286e 0%,#173ba9 58%,#1c54f5 100%);
+    }
+
+    .brand:after{
+      content:"";
+      position:absolute;
+      top:-5%;
+      right:-7%;
+      width:20%;
+      height:110%;
+      background:var(--white);
+      clip-path:polygon(36% 0,100% 0,100% 100%,0 100%);
+      opacity:.98;
+    }
+
+    .brand-top,
+    .brand-bottom{
+      position:relative;
+      z-index:2;
+      max-width:430px;
+    }
+
+    .brand-top{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+
+    .mini-mark{
+      width:48px;
+      height:48px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      font-weight:1000;
+      font-size:18px;
+      letter-spacing:-1px;
+      color:#0c2b98;
+      background:var(--lime);
+      box-shadow:0 10px 30px rgba(0,0,0,.16);
+    }
+
+    .brand-school{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      opacity:.92;
+    }
+
+    .logo{
+      width:180px;
+      height:110px;
+      margin:50px auto 0;
+      position:relative;
+      display:grid;
+      place-items:center;
+      transform:skewX(-6deg);
+    }
+
+    .logo-ring{
+      position:absolute;
+      width:145px;
+      height:76px;
+      border:8px solid #11c6ff;
+      border-right-color:#0e55e8;
+      border-radius:50%;
+      transform:rotate(-10deg);
+    }
+
+    .logo-core{
+      position:relative;
+      padding:10px 17px 13px;
+      border-radius:48% 52% 48% 52%;
+      background:linear-gradient(145deg,#fff 0 18%,#ffd900 19% 48%,#ef9700 49% 54%,#fff 55% 60%,#1b45cf 61%);
+      color:#1543be;
+      font-weight:1000;
+      font-size:40px;
+      line-height:1;
+      letter-spacing:-4px;
+      text-shadow:0 2px 0 rgba(255,255,255,.7);
+      box-shadow:0 14px 28px rgba(0,0,0,.25);
+    }
+
+    .logo-tag{
+      position:absolute;
+      bottom:2px;
+      padding:4px 13px;
+      border-radius:999px;
+      background:#1238a9;
+      color:#fff;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.12em;
+    }
+
+    .eyebrow{
+      color:var(--lime);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin:0 0 10px;
+    }
+
+    .brand h1{
+      margin:0 0 12px;
+      font-size:clamp(28px,4vw,42px);
+      line-height:1.02;
+      letter-spacing:-1.7px;
+    }
+
+    .brand p{
+      margin:0;
+      max-width:430px;
+      color:rgba(255,255,255,.78);
+      line-height:1.6;
+      font-size:14px;
+    }
+
+    .version{
+      margin-top:24px;
+      font-size:11px;
+      color:rgba(255,255,255,.58);
+    }
+
+    /* RIGHT / CONTENT */
+    .content{
+      padding:58px clamp(28px,5vw,62px) 34px;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      min-width:0;
+    }
+
+    .content-inner{
+      width:min(100%,430px);
+      margin:0 auto;
+    }
+
+    .title-kicker{
+      margin:0 0 8px;
+      color:#1d55ff;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .content h2{
+      margin:0;
+      color:#0a1737;
+      font-size:clamp(25px,3vw,34px);
+      letter-spacing:-1.2px;
+      line-height:1.1;
+    }
+
+    .title-line{
+      width:46px;
+      height:5px;
+      border-radius:99px;
+      background:var(--lime);
+      margin:14px 0 28px;
+    }
+
+    .field{
+      margin-bottom:15px;
+    }
+
+    label{
+      display:block;
+      margin:0 0 7px;
+      font-size:11px;
+      font-weight:800;
+      color:#46516a;
+    }
+
+    .control-wrap{
+      position:relative;
+    }
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid #d4ddef;
+      outline:none;
+      background:#f5f7fc;
+      color:#17213a;
+      border-radius:11px;
+      transition:.18s ease;
+    }
+
+    input,select{
+      height:39px;
+      padding:0 13px;
+      font-size:12px;
+    }
+
+    textarea{
+      min-height:100px;
+      padding:12px 13px;
+      resize:vertical;
+      font-size:13px;
+    }
+
+    input:focus,select:focus,textarea:focus{
+      border-color:#4c70ff;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(31,80,245,.10);
+    }
+
+    .password-row{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .password-row input{flex:1}
+
+    .toggle-pass{
+      width:39px;
+      height:39px;
+      flex:0 0 39px;
+      border:1px solid #d4ddef;
+      border-radius:11px;
+      background:#f5f7fc;
+      cursor:pointer;
+      color:#546078;
+    }
+
+    .check{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      margin:7px 0 15px;
+      color:#66718a;
+      font-size:10px;
+      cursor:pointer;
+    }
+
+    .check input{
+      width:13px;
+      height:13px;
+      accent-color:#1f50f5;
+    }
+
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:11px;
+      height:39px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .12s ease,filter .12s ease,box-shadow .12s ease;
+    }
+
+    .btn:hover{filter:brightness(.98)}
+    .btn:active{transform:translateY(1px)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .btn-primary{
+      color:#07152d;
+      background:linear-gradient(180deg,#d2ff19,#baff00);
+      box-shadow:0 9px 24px rgba(188,244,0,.22);
+    }
+
+    .btn-blue{
+      margin-top:0;
+      color:#fff;
+      background:linear-gradient(180deg,#2856ff,#1c4ced);
+    }
+
+    .btn-secondary{
+      color:#243452;
+      background:#dce3f1;
+      border:1px solid #c9d3e7;
+    }
+
+    .stack{display:grid;gap:9px}
+
+    .footer{
+      margin-top:38px;
+      text-align:center;
+      font-size:8px;
+      color:#9aa4b8;
+    }
+
+    .footer strong{
+      color:#1f50f5;
+      font-weight:900;
+    }
+
+    /* SCREENS */
+    .screen{display:none}
+    .screen.active{display:block}
+
+    .panel{
+      background:#f7f9fd;
+      border:1px solid #e1e6f1;
+      border-radius:16px;
+      padding:18px;
+      margin:18px 0;
+    }
+
+    .summary{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .summary-item{
+      background:#fff;
+      border:1px solid #e3e8f2;
+      border-radius:12px;
+      padding:11px;
+    }
+
+    .summary-item small{
+      display:block;
+      color:#8992a5;
+      font-size:9px;
+      margin-bottom:4px;
+    }
+
+    .summary-item strong{
+      display:block;
+      font-size:12px;
+      overflow-wrap:anywhere;
+    }
+
+    .notice{
+      padding:12px 14px;
+      border-radius:11px;
+      background:#edf3ff;
+      color:#29447f;
+      font-size:11px;
+      line-height:1.55;
+    }
+
+    .notice.success{
+      background:#eaf8f1;
+      color:#176a46;
+    }
+
+    .notice.error{
+      background:#fff0ef;
+      color:#9a2d26;
+    }
+
+    .form-actions{
+      display:grid;
+      gap:9px;
+      margin-top:16px;
+    }
+
+    .rating-group{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:7px;
+    }
+
+    .rating-option{
+      position:relative;
+    }
+
+    .rating-option input{
+      position:absolute;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .rating-option label{
+      margin:0;
+      height:42px;
+      display:grid;
+      place-items:center;
+      border:1px solid #d8dfed;
+      background:#f7f9fd;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:900;
+      color:#56617a;
+    }
+
+    .rating-option input:checked + label{
+      color:#102b8f;
+      border-color:#7d9aff;
+      background:#eaf0ff;
+      box-shadow:0 0 0 2px rgba(31,80,245,.08);
+    }
+
+    .top-user{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .user-chip{
+      min-width:0;
+    }
+
+    .user-chip strong{
+      display:block;
+      font-size:13px;
+    }
+
+    .user-chip span{
+      color:#7a8499;
+      font-size:10px;
+    }
+
+    .link-btn{
+      border:0;
+      background:transparent;
+      color:#1f50f5;
+      font-weight:900;
+      font-size:10px;
+      cursor:pointer;
+      padding:7px;
+    }
+
+    .loading{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+    }
+
+    .spinner{
+      width:13px;
+      height:13px;
+      border:2px solid rgba(0,0,0,.15);
+      border-top-color:currentColor;
+      border-radius:50%;
+      animation:spin .7s linear infinite;
+    }
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* TABLET */
+    @media (max-width:900px){
+      body{padding:16px}
+      .app{
+        grid-template-columns:1fr;
+        max-width:680px;
+        min-height:0;
+      }
+
+      .brand{
+        min-height:280px;
+        padding:30px 32px;
+      }
+
+      .brand:after{display:none}
+
+      .logo{
+        position:absolute;
+        right:30px;
+        top:48px;
+        margin:0;
+        transform:scale(.78) skewX(-6deg);
+        transform-origin:right top;
+      }
+
+      .brand-bottom{max-width:58%}
+      .brand h1{font-size:30px}
+      .content{padding:34px 32px 28px}
+    }
+
+    /* PHONE */
+    @media (max-width:560px){
+      body{
+        padding:0;
+        align-items:stretch;
+        background:#fff;
+      }
+
+      .app{
+        width:100%;
+        min-height:100vh;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+      }
+
+      .brand{
+        min-height:225px;
+        padding:24px 22px;
+      }
+
+      .brand-top{gap:10px}
+      .mini-mark{width:38px;height:38px;border-radius:12px;font-size:14px}
+      .brand-school{font-size:9px}
+
+      .logo{
+        width:130px;
+        height:80px;
+        right:14px;
+        top:25px;
+        transform:scale(.62) skewX(-6deg);
+      }
+
+      .brand-bottom{
+        max-width:100%;
+        margin-top:auto;
+      }
+
+      .brand h1{
+        font-size:25px;
+        margin-bottom:7px;
+      }
+
+      .brand p{
+        font-size:11px;
+        max-width:62%;
+        line-height:1.45;
+      }
+
+      .version{margin-top:10px;font-size:9px}
+
+      .content{
+        padding:28px 20px 24px;
+        justify-content:flex-start;
+      }
+
+      .content h2{font-size:25px}
+      .title-line{margin-bottom:23px}
+
+      input,select{height:45px}
+      .toggle-pass{height:45px;flex-basis:45px}
+      .btn{height:45px}
+
+      .summary{grid-template-columns:1fr}
+      .panel{padding:14px}
+      .rating-group{gap:5px}
+      .rating-option label{height:40px}
+
+      .footer{margin-top:30px}
+    }
+
+    @media (max-width:360px){
+      .brand{min-height:205px}
+      .brand p{max-width:58%}
+      .logo{right:2px;transform:scale(.53) skewX(-6deg)}
+      .content{padding-left:16px;padding-right:16px}
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <!-- BRAND -->
+    <section class="brand">
+      <div class="brand-top">
+        <div class="mini-mark">CBT</div>
+        <div class="brand-school">ASESMEN DIGITAL • 2026</div>
+      </div>
+
+      <div class="logo" aria-label="Logo CBT">
+        <div class="logo-ring"></div>
+        <div class="logo-core">CBT</div>
+        <div class="logo-tag">DEV BY MB</div>
+      </div>
+
+      <div class="brand-bottom">
+        <p class="eyebrow">ASESMEN DIGITAL</p>
+        <h1>Computer Based Test</h1>
+        <p>Platform asesmen digital untuk pelaksanaan ujian yang terstruktur, aman, dan mudah digunakan.</p>
+        <div class="version">CBT SMPN 1 MOGA • v1.0</div>
+      </div>
+    </section>
+
+    <!-- CONTENT -->
+    <section class="content">
+      <div class="content-inner">
+
+        <!-- LOGIN -->
+        <section id="loginScreen" class="screen active">
+          <p class="title-kicker">ASESMEN DIGITAL • 2026</p>
+          <h2>Computer Based Test</h2>
+          <div class="title-line"></div>
+
+          <div id="loginMessage" class="notice error" style="display:none"></div>
+
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label for="kelas">Kelas</label>
+              <select id="kelas" required>
+                <option value="">-- Pilih Kelas --</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="username">Username</label>
+              <select id="username" required disabled>
+                <option value="">-- Pilih Siswa --</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="password-row">
+                <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" required>
+                <button class="toggle-pass" type="button" id="togglePassword" aria-label="Tampilkan password">◉</button>
+              </div>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" id="showPassword">
+              Tampilkan Password
+            </label>
+
+            <div class="field">
+              <label for="token">Token</label>
+              <input id="token" type="text" autocomplete="off" placeholder="Masukkan token" required>
+            </div>
+
+            <div class="stack">
+              <button class="btn btn-primary" id="loginButton" type="submit">Masuk</button>
+              <button class="btn btn-blue" type="button" id="scheduleButton">Lihat Jadwal Token</button>
+              <button class="btn btn-secondary" type="button" id="resetButton">Reset Login / Sesi</button>
+            </div>
+          </form>
+
+          <div class="footer">
+            <strong>About CBT Browser v1.0</strong><br>
+            © 2026 All Rights Reserved
+          </div>
+        </section>
+
+        <!-- EXAM PREVIEW -->
+        <section id="examScreen" class="screen">
+          <div class="top-user">
+            <div class="user-chip">
+              <strong id="examName">-</strong>
+              <span id="examClass">-</span>
+            </div>
+            <button class="link-btn" id="logoutBeforeExam">Keluar</button>
+          </div>
+
+          <p class="title-kicker">VERIFIKASI SESI</p>
+          <h2 id="examMapel">Ujian</h2>
+          <div class="title-line"></div>
+
+          <div class="panel">
+            <div class="summary">
+              <div class="summary-item"><small>Kelas</small><strong id="sumKelas">-</strong></div>
+              <div class="summary-item"><small>Mata Pelajaran</small><strong id="sumMapel">-</strong></div>
+              <div class="summary-item"><small>Mulai</small><strong id="sumMulai">-</strong></div>
+              <div class="summary-item"><small>Selesai</small><strong id="sumSelesai">-</strong></div>
+            </div>
+          </div>
+
+          <div class="notice">
+            Pastikan data dan jadwal sudah benar. Tombol <b>Mulai Ujian</b> akan membuka Google Form yang ditentukan pada sheet JADWAL.
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="startExamButton">Mulai Ujian</button>
+            <button class="btn btn-secondary" id="backLoginButton">Kembali ke Login</button>
+          </div>
+
+          <div class="footer"><strong>CBT SMPN 1 MOGA</strong></div>
+        </section>
+
+        <!-- RUNNING EXAM -->
+        <section id="runningScreen" class="screen">
+          <p class="title-kicker">UJIAN BERLANGSUNG</p>
+          <h2 id="runningMapel">Ujian</h2>
+          <div class="title-line"></div>
+
+          <div class="notice success">
+            Google Form sudah dibuka. Selesaikan seluruh soal pada tab/jendela ujian, lalu kembali ke halaman CBT ini dan tekan <b>Sudah Kirim Jawaban</b>.
+          </div>
+
+          <div class="panel">
+            <div class="summary">
+              <div class="summary-item"><small>Peserta</small><strong id="runningName">-</strong></div>
+              <div class="summary-item"><small>Kelas</small><strong id="runningClass">-</strong></div>
+              <div class="summary-item"><small>Mulai</small><strong id="runningStart">-</strong></div>
+              <div class="summary-item"><small>Selesai</small><strong id="runningEnd">-</strong></div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-blue" id="openFormButton">Buka Kembali Google Form</button>
+            <button class="btn btn-primary" id="submitFormButton">Sudah Kirim Jawaban</button>
+            <button class="btn btn-secondary" id="logoutRunningButton">Keluar</button>
+          </div>
+
+          <div class="footer">Status sesi dicatat pada sheet <strong>SESI</strong> dan aktivitas pada <strong>LOG_AKTIVITAS</strong>.</div>
+        </section>
+
+        <!-- QUESTIONNAIRE -->
+        <section id="questionnaireScreen" class="screen">
+          <p class="title-kicker">EVALUASI</p>
+          <h2>Kuesioner Singkat</h2>
+          <div class="title-line"></div>
+
+          <div id="questionMessage" class="notice" style="margin-bottom:16px">
+            Berikan penilaian setelah menyelesaikan CBT.
+          </div>
+
+          <form id="questionnaireForm">
+            <div class="field">
+              <label>Rating kemudahan aplikasi</label>
+              <div class="rating-group">
+                <div class="rating-option"><input id="app1" type="radio" name="ratingAplikasi" value="1"><label for="app1">1</label></div>
+                <div class="rating-option"><input id="app2" type="radio" name="ratingAplikasi" value="2"><label for="app2">2</label></div>
+                <div class="rating-option"><input id="app3" type="radio" name="ratingAplikasi" value="3"><label for="app3">3</label></div>
+                <div class="rating-option"><input id="app4" type="radio" name="ratingAplikasi" value="4"><label for="app4">4</label></div>
+                <div class="rating-option"><input id="app5" type="radio" name="ratingAplikasi" value="5"><label for="app5">5</label></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Rating kemudahan soal</label>
+              <div class="rating-group">
+                <div class="rating-option"><input id="soal1" type="radio" name="ratingSoal" value="1"><label for="soal1">1</label></div>
+                <div class="rating-option"><input id="soal2" type="radio" name="ratingSoal" value="2"><label for="soal2">2</label></div>
+                <div class="rating-option"><input id="soal3" type="radio" name="ratingSoal" value="3"><label for="soal3">3</label></div>
+                <div class="rating-option"><input id="soal4" type="radio" name="ratingSoal" value="4"><label for="soal4">4</label></div>
+                <div class="rating-option"><input id="soal5" type="radio" name="ratingSoal" value="5"><label for="soal5">5</label></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="saran">Saran / masukan (opsional)</label>
+              <textarea id="saran" maxlength="1000" placeholder="Tuliskan saran atau kendala selama menggunakan CBT..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" type="submit" id="questionnaireButton">Kirim Kuesioner</button>
+          </form>
+
+          <div class="footer"><strong>Terima kasih telah mengikuti asesmen.</strong></div>
+        </section>
+
+        <!-- FINISH -->
+        <section id="finishScreen" class="screen">
+          <p class="title-kicker">SELESAI</p>
+          <h2>Ujian Berhasil Dicatat</h2>
+          <div class="title-line"></div>
+
+          <div class="notice success">
+            Kuesioner berhasil disimpan dan sesi CBT telah ditandai selesai.
+          </div>
+
+          <div class="panel">
+            <div class="summary">
+              <div class="summary-item"><small>Peserta</small><strong id="finishName">-</strong></div>
+              <div class="summary-item"><small>Kelas</small><strong id="finishClass">-</strong></div>
+              <div class="summary-item"><small>Mata Pelajaran</small><strong id="finishMapel">-</strong></div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="finishButton">Kembali ke Login</button>
+
+          <div class="footer"><strong>CBT SMPN 1 MOGA</strong><br>Silakan mengikuti instruksi pengawas berikutnya.</div>
+        </section>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /*
+      =========================================================
+      KONFIGURASI FRONTEND
+      =========================================================
+
+      1. Deploy GAS sebagai Web App.
+      2. Salin URL /exec ke GAS_WEB_APP_URL.
+      3. Isi STUDENT_LIST sesuai sheet USER.
+
+      Backend yang dipakai HTML ini:
+        login
+        startExam
+        submitForm
+        questionnaire
+        logout
+        checkSession
+
+      Struktur respons mengikuti GAS yang diberikan.
+    */
+
+    const CONFIG = {
+      APP_NAME: "CBT SMPN 1 MOGA",
+      GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwPo_GJRaAcZbq1p8Udy5zHwdKYQZRZmmNeaajgzSFlP79QNW07nRj7isD6R80QZGwPhQ/exec",
+
+      /*
+        Isi daftar siswa dari sheet USER.
+        Contoh:
+        { kelas:"9A", username:"9A001", nama:"CONTOH SISWA" }
+
+        Password TIDAK disimpan di HTML.
+      */
+      STUDENT_LIST: [
+        { kelas: "9A", username: "9A001", nama: "CONTOH SISWA" }
+      ]
+    };
+
+    const state = {
+      sessionId: "",
+      user: null,
+      jadwal: null,
+      googleFormUrl: ""
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function showScreen(id){
+      document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function setMessage(id, message, type="error"){
+      const el = $(id);
+      el.textContent = message;
+      el.className = "notice " + type;
+      el.style.display = "block";
+    }
+
+    function hideMessage(id){
+      $(id).style.display = "none";
+    }
+
+    function setButtonLoading(button, loading, text){
+      if(loading){
+        button.disabled = true;
+        button.dataset.originalText = button.textContent;
+        button.innerHTML = '<span class="loading"><span class="spinner"></span>' + text + '</span>';
+      }else{
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || text || "Simpan";
+      }
+    }
+
+    function formatValue(value){
+      if(value === null || value === undefined || value === "") return "-";
+      if(typeof value === "object" && value.toString) return value.toString();
+      return String(value);
+    }
+
+    async function api(action, payload = {}){
+      if(!CONFIG.GAS_WEB_APP_URL || CONFIG.GAS_WEB_APP_URL.includes("PASTE_URL")){
+        throw new Error("URL Web App Google Apps Script belum diisi pada CONFIG.GAS_WEB_APP_URL.");
+      }
+
+      const response = await fetch(CONFIG.GAS_WEB_APP_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({ action, ...payload })
+      });
+
+      const text = await response.text();
+
+      let data;
+      try{
+        data = JSON.parse(text);
+      }catch(e){
+        throw new Error("Respons server bukan JSON yang valid.");
+      }
+
+      return data;
+    }
+
+    function getDevice(){
+      return [
+        navigator.userAgent,
+        navigator.platform || "",
+        window.innerWidth + "x" + window.innerHeight
+      ].join(" | ");
+    }
+
+    function loadLoginOptions(){
+      const kelasSelect = $("kelas");
+      const usernameSelect = $("username");
+
+      const classes = [...new Set(
+        CONFIG.STUDENT_LIST.map(s => s.kelas).filter(Boolean)
+      )].sort();
+
+      kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>' +
+        classes.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join("");
+
+      kelasSelect.addEventListener("change", () => {
+        const kelas = kelasSelect.value;
+
+        usernameSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+        usernameSelect.disabled = !kelas;
+
+        CONFIG.STUDENT_LIST
+          .filter(s => s.kelas === kelas)
+          .forEach(s => {
+            const option = document.createElement("option");
+            option.value = s.username;
+            option.textContent = s.nama ? `${s.nama} — ${s.username}` : s.username;
+            usernameSelect.appendChild(option);
+          });
+      });
+    }
+
+    function escapeHtml(value){
+      return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function resetState(){
+      state.sessionId = "";
+      state.user = null;
+      state.jadwal = null;
+      state.googleFormUrl = "";
+      localStorage.removeItem("cbt_session_id");
+      localStorage.removeItem("cbt_state");
+    }
+
+    function saveState(){
+      localStorage.setItem("cbt_session_id", state.sessionId);
+      localStorage.setItem("cbt_state", JSON.stringify({
+        user: state.user,
+        jadwal: state.jadwal,
+        googleFormUrl: state.googleFormUrl
+      }));
+    }
+
+    function restoreState(){
+      const sessionId = localStorage.getItem("cbt_session_id");
+      const saved = localStorage.getItem("cbt_state");
+
+      if(!sessionId) return;
+
+      state.sessionId = sessionId;
+
+      try{
+        const parsed = JSON.parse(saved || "{}");
+        state.user = parsed.user || null;
+        state.jadwal = parsed.jadwal || null;
+        state.googleFormUrl = parsed.googleFormUrl || "";
+      }catch(e){}
+
+      if(state.user){
+        checkExistingSession();
+      }
+    }
+
+    async function checkExistingSession(){
+      try{
+        const url = new URL(CONFIG.GAS_WEB_APP_URL);
+        url.searchParams.set("action","checkSession");
+        url.searchParams.set("sessionId",state.sessionId);
+
+        const response = await fetch(url.toString(), {method:"GET"});
+        const data = await response.json();
+
+        if(data && data.valid){
+          if(data.status === "SUBMIT_FORM"){
+            showQuestionnaire();
+          }else{
+            showExamScreen();
+          }
+        }else{
+          resetState();
+        }
+      }catch(e){
+        // Jika gagal cek sesi, biarkan halaman login tetap tersedia.
+      }
+    }
+
+    function showExamScreen(){
+      $("examName").textContent = formatValue(state.user?.nama);
+      $("examClass").textContent = "Kelas " + formatValue(state.user?.kelas);
+
+      $("examMapel").textContent = formatValue(state.jadwal?.mapel);
+      $("sumKelas").textContent = formatValue(state.jadwal?.kelas);
+      $("sumMapel").textContent = formatValue(state.jadwal?.mapel);
+      $("sumMulai").textContent = formatValue(state.jadwal?.mulai);
+      $("sumSelesai").textContent = formatValue(state.jadwal?.selesai);
+
+      showScreen("examScreen");
+    }
+
+    function showRunningScreen(){
+      $("runningMapel").textContent = formatValue(state.jadwal?.mapel);
+      $("runningName").textContent = formatValue(state.user?.nama);
+      $("runningClass").textContent = formatValue(state.user?.kelas);
+      $("runningStart").textContent = formatValue(state.jadwal?.mulai);
+      $("runningEnd").textContent = formatValue(state.jadwal?.selesai);
+
+      showScreen("runningScreen");
+    }
+
+    function showQuestionnaire(){
+      $("questionMessage").textContent = "Berikan penilaian setelah menyelesaikan CBT.";
+      $("questionMessage").className = "notice";
+      showScreen("questionnaireScreen");
+    }
+
+    function openGoogleForm(){
+      if(!state.googleFormUrl || state.googleFormUrl.includes("PASTE_LINK")){
+        alert("Link Google Form belum diisi pada sheet JADWAL.");
+        return;
+      }
+
+      window.open(state.googleFormUrl, "_blank", "noopener,noreferrer");
+    }
+
+    $("togglePassword").addEventListener("click", () => {
+      const input = $("password");
+      input.type = input.type === "password" ? "text" : "password";
+    });
+
+    $("showPassword").addEventListener("change", (e) => {
+      $("password").type = e.target.checked ? "text" : "password";
+    });
+
+    $("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideMessage("loginMessage");
+
+      const kelas = $("kelas").value.trim();
+      const username = $("username").value.trim();
+      const password = $("password").value;
+      const token = $("token").value.trim();
+
+      if(!kelas || !username || !password || !token){
+        setMessage("loginMessage","Kelas, username, password, dan token wajib diisi.","error");
+        return;
+      }
+
+      const button = $("loginButton");
+      setButtonLoading(button,true,"Memverifikasi...");
+
+      try{
+        const data = await api("login",{
+          username,
+          password,
+          token,
+          ip:"",
+          device:getDevice()
+        });
+
+        if(!data.success){
+          setMessage("loginMessage",data.message || "Login gagal.","error");
+          return;
+        }
+
+        if(data.user?.kelas && data.user.kelas !== kelas){
+          setMessage("loginMessage","Kelas yang dipilih tidak sesuai dengan akun siswa.","error");
+          return;
+        }
+
+        state.sessionId = data.sessionId || "";
+        state.user = data.user || null;
+        state.jadwal = data.jadwal || null;
+        saveState();
+
+        showExamScreen();
+      }catch(err){
+        setMessage("loginMessage",err.message || "Tidak dapat terhubung ke server.","error");
+      }finally{
+        setButtonLoading(button,false,"Masuk");
+      }
+    });
+
+    $("startExamButton").addEventListener("click", async () => {
+      const button = $("startExamButton");
+      setButtonLoading(button,true,"Menyiapkan ujian...");
+
+      try{
+        const data = await api("startExam",{
+          sessionId:state.sessionId,
+          ip:"",
+          device:getDevice()
+        });
+
+        if(!data.success){
+          alert(data.message || "Ujian tidak dapat dimulai.");
+          return;
+        }
+
+        state.googleFormUrl = data.googleFormUrl || "";
+        if(data.mapel) state.jadwal.mapel = data.mapel;
+        if(data.kelas) state.jadwal.kelas = data.kelas;
+        if(data.mulai) state.jadwal.mulai = data.mulai;
+        if(data.selesai) state.jadwal.selesai = data.selesai;
+
+        saveState();
+        showRunningScreen();
+        openGoogleForm();
+      }catch(err){
+        alert(err.message || "Gagal memulai ujian.");
+      }finally{
+        setButtonLoading(button,false,"Mulai Ujian");
+      }
+    });
+
+    $("openFormButton").addEventListener("click", openGoogleForm);
+
+    $("submitFormButton").addEventListener("click", async () => {
+      if(!confirm("Pastikan Anda sudah menekan tombol Kirim/Kirim Jawaban pada Google Form. Lanjutkan?")) return;
+
+      const button = $("submitFormButton");
+      setButtonLoading(button,true,"Mencatat...");
+
+      try{
+        const data = await api("submitForm",{
+          sessionId:state.sessionId,
+          ip:"",
+          device:getDevice()
+        });
+
+        if(!data.success){
+          alert(data.message || "Pengerjaan belum dapat dicatat.");
+          return;
+        }
+
+        showQuestionnaire();
+      }catch(err){
+        alert(err.message || "Gagal mencatat pengerjaan.");
+      }finally{
+        setButtonLoading(button,false,"Sudah Kirim Jawaban");
+      }
+    });
+
+    $("questionnaireForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const ratingAplikasi = document.querySelector('input[name="ratingAplikasi"]:checked')?.value || "";
+      const ratingSoal = document.querySelector('input[name="ratingSoal"]:checked')?.value || "";
+      const saran = $("saran").value.trim();
+
+      if(!ratingAplikasi || !ratingSoal){
+        setMessage("questionMessage","Kedua rating wajib diisi.","error");
+        return;
+      }
+
+      const button = $("questionnaireButton");
+      setButtonLoading(button,true,"Menyimpan...");
+
+      try{
+        const data = await api("questionnaire",{
+          sessionId:state.sessionId,
+          ratingAplikasi,
+          ratingSoal,
+          saran
+        });
+
+        if(!data.success){
+          setMessage("questionMessage",data.message || "Kuesioner gagal disimpan.","error");
+          return;
+        }
+
+        $("finishName").textContent = formatValue(state.user?.nama);
+        $("finishClass").textContent = formatValue(state.user?.kelas);
+        $("finishMapel").textContent = formatValue(state.jadwal?.mapel);
+
+        showScreen("finishScreen");
+      }catch(err){
+        setMessage("questionMessage",err.message || "Gagal menyimpan kuesioner.","error");
+      }finally{
+        setButtonLoading(button,false,"Kirim Kuesioner");
+      }
+    });
+
+    async function logoutSession(){
+      if(!state.sessionId){
+        resetState();
+        showScreen("loginScreen");
+        return;
+      }
+
+      try{
+        await api("logout",{
+          sessionId:state.sessionId,
+          ip:"",
+          device:getDevice()
+        });
+      }catch(e){
+        // Tetap reset di sisi browser walaupun request logout gagal.
+      }finally{
+        resetState();
+        location.reload();
+      }
+    }
+
+    $("logoutBeforeExam").addEventListener("click", logoutSession);
+    $("logoutRunningButton").addEventListener("click", logoutSession);
+
+    $("backLoginButton").addEventListener("click", () => {
+      resetState();
+      showScreen("loginScreen");
+    });
+
+    $("resetButton").addEventListener("click", () => {
+      if(confirm("Reset sesi dan kembali ke halaman login?")){
+        resetState();
+        location.reload();
+      }
+    });
+
+    $("finishButton").addEventListener("click", () => {
+      resetState();
+      location.reload();
+    });
+
+    $("scheduleButton").addEventListener("click", () => {
+      alert(
+        "Jadwal/token mengikuti data pada sheet JADWAL.\n\n" +
+        "Untuk keamanan, aplikasi tidak menampilkan seluruh token dari database secara otomatis. " +
+        "Masukkan token yang diberikan pengawas."
+      );
+    });
+
+    loadLoginOptions();
+    restoreState();
+  </script>
+</body>
+</html>
