@@ -862,13 +862,19 @@
 
     const CONFIG = {
       APP_NAME: "CBT SMPN 1 MOGA",
-      GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwPo_GJRaAcZbq1p8Udy5zHwdKYQZRZmmNeaajgzSFlP79QNW07nRj7isD6R80QZGwPhQ/exec",
+
+      // URL Web App GAS Anda. HTML ini tetap harus dijalankan
+      // dari project GAS yang sama agar google.script.run bekerja.
+      GAS_WEB_APP_URL:
+        "https://script.google.com/macros/s/AKfycbwPo_GJRaAcZbq1p8Udy5zHwdKYQZRZmmNeaajgzSFlP79QNW07nRj7isD6R80QZGwPhQ/exec",
+
+      // Fallback Google Form yang Anda berikan.
+      // Normalnya URL diambil dari kolom GOOGLE_FORM_URL pada sheet JADWAL.
+      DEFAULT_GOOGLE_FORM_URL:
+        "https://docs.google.com/forms/d/e/1FAIpQLSdwBS3rLkjRjn8fuw-eArPhGHwVI6BuqWM8MuICHZ4kjlacLg/viewform?usp=header",
 
       /*
-        Isi daftar siswa dari sheet USER.
-        Contoh:
-        { kelas:"9A", username:"9A001", nama:"CONTOH SISWA" }
-
+        Untuk sementara daftar siswa diisi dari sheet USER.
         Password TIDAK disimpan di HTML.
       */
       STUDENT_LIST: [
@@ -919,29 +925,41 @@
       return String(value);
     }
 
-    async function api(action, payload = {}){
-      if(!CONFIG.GAS_WEB_APP_URL || CONFIG.GAS_WEB_APP_URL.includes("PASTE_URL")){
-        throw new Error("URL Web App Google Apps Script belum diisi pada CONFIG.GAS_WEB_APP_URL.");
-      }
+    function api(action, payload = {}) {
+      /*
+        google.script.run adalah cara yang tepat ketika HTML ini
+        disajikan oleh Google Apps Script HtmlService.
+      */
+      return new Promise((resolve, reject) => {
+        const runner = google.script.run
+          .withSuccessHandler(resolve)
+          .withFailureHandler(error => {
+            reject(new Error(error && error.message ? error.message : "Server error"));
+          });
 
-      const response = await fetch(CONFIG.GAS_WEB_APP_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({ action, ...payload })
+        switch(action){
+          case "login":
+            runner.login(payload);
+            break;
+          case "startExam":
+            runner.startExam(payload);
+            break;
+          case "submitForm":
+            runner.submitForm(payload);
+            break;
+          case "questionnaire":
+            runner.questionnaire(payload);
+            break;
+          case "logout":
+            runner.logout(payload);
+            break;
+          case "checkSession":
+            runner.checkSession(payload);
+            break;
+          default:
+            reject(new Error("Action tidak dikenal: " + action));
+        }
       });
-
-      const text = await response.text();
-
-      let data;
-      try{
-        data = JSON.parse(text);
-      }catch(e){
-        throw new Error("Respons server bukan JSON yang valid.");
-      }
-
-      return data;
     }
 
     function getDevice(){
@@ -1029,12 +1047,9 @@
 
     async function checkExistingSession(){
       try{
-        const url = new URL(CONFIG.GAS_WEB_APP_URL);
-        url.searchParams.set("action","checkSession");
-        url.searchParams.set("sessionId",state.sessionId);
-
-        const response = await fetch(url.toString(), {method:"GET"});
-        const data = await response.json();
+        const data = await api("checkSession", {
+          sessionId: state.sessionId
+        });
 
         if(data && data.valid){
           if(data.status === "SUBMIT_FORM"){
@@ -1080,12 +1095,17 @@
     }
 
     function openGoogleForm(){
-      if(!state.googleFormUrl || state.googleFormUrl.includes("PASTE_LINK")){
-        alert("Link Google Form belum diisi pada sheet JADWAL.");
+      const url =
+        (state.googleFormUrl && !state.googleFormUrl.includes("PASTE_LINK"))
+          ? state.googleFormUrl
+          : CONFIG.DEFAULT_GOOGLE_FORM_URL;
+
+      if(!url){
+        alert("Link Google Form belum tersedia.");
         return;
       }
 
-      window.open(state.googleFormUrl, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank", "noopener,noreferrer");
     }
 
     $("togglePassword").addEventListener("click", () => {
@@ -1162,7 +1182,9 @@
           return;
         }
 
-        state.googleFormUrl = data.googleFormUrl || "";
+        state.googleFormUrl =
+          data.googleFormUrl ||
+          CONFIG.DEFAULT_GOOGLE_FORM_URL;
         if(data.mapel) state.jadwal.mapel = data.mapel;
         if(data.kelas) state.jadwal.kelas = data.kelas;
         if(data.mulai) state.jadwal.mulai = data.mulai;
