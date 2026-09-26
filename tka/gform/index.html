@@ -841,45 +841,35 @@
 
   <script>
     /*
-      =========================================================
-      KONFIGURASI FRONTEND
-      =========================================================
-
-      1. Deploy GAS sebagai Web App.
-      2. Salin URL /exec ke GAS_WEB_APP_URL.
-      3. Isi STUDENT_LIST sesuai sheet USER.
-
-      Backend yang dipakai HTML ini:
-        login
-        startExam
-        submitForm
-        questionnaire
-        logout
-        checkSession
-
-      Struktur respons mengikuti GAS yang diberikan.
-    */
+     * =========================================================
+     * FRONTEND GITHUB PAGES
+     * =========================================================
+     * HTML ini TIDAK lagi menggunakan google.script.run.
+     *
+     * Alur:
+     * GitHub Pages (index.html)
+     *        ↓
+     * GAS Web App (doPost / doGet)
+     *        ↓
+     * Google Spreadsheet
+     *
+     * Karena GitHub Pages berbeda origin dengan GAS, komunikasi
+     * menggunakan:
+     * 1. POST no-cors untuk mengirim perintah.
+     * 2. GET JSONP untuk mengambil hasil dari CacheService.
+     *
+     * Jangan ubah GAS_WEB_APP_URL kecuali URL deployment Web App
+     * GAS berubah.
+     */
 
     const CONFIG = {
       APP_NAME: "CBT SMPN 1 MOGA",
 
-      // URL Web App GAS Anda. HTML ini tetap harus dijalankan
-      // dari project GAS yang sama agar google.script.run bekerja.
       GAS_WEB_APP_URL:
         "https://script.google.com/macros/s/AKfycbwPo_GJRaAcZbq1p8Udy5zHwdKYQZRZmmNeaajgzSFlP79QNW07nRj7isD6R80QZGwPhQ/exec",
 
-      // Fallback Google Form yang Anda berikan.
-      // Normalnya URL diambil dari kolom GOOGLE_FORM_URL pada sheet JADWAL.
       DEFAULT_GOOGLE_FORM_URL:
-        "https://docs.google.com/forms/d/e/1FAIpQLSdwBS3rLkjRjn8fuw-eArPhGHwVI6BuqWM8MuICHZ4kjlacLg/viewform?usp=header",
-
-      /*
-        Untuk sementara daftar siswa diisi dari sheet USER.
-        Password TIDAK disimpan di HTML.
-      */
-      STUDENT_LIST: [
-        { kelas: "9A", username: "9A001", nama: "CONTOH SISWA" }
-      ]
+        ""
     };
 
     const state = {
@@ -892,7 +882,9 @@
     const $ = (id) => document.getElementById(id);
 
     function showScreen(id){
-      document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".screen").forEach(el =>
+        el.classList.remove("active")
+      );
       $(id).classList.add("active");
       window.scrollTo({top:0, behavior:"smooth"});
     }
@@ -912,54 +904,245 @@
       if(loading){
         button.disabled = true;
         button.dataset.originalText = button.textContent;
-        button.innerHTML = '<span class="loading"><span class="spinner"></span>' + text + '</span>';
+        button.innerHTML =
+          '<span class="loading"><span class="spinner"></span>' +
+          text +
+          '</span>';
       }else{
         button.disabled = false;
-        button.textContent = button.dataset.originalText || text || "Simpan";
+        button.textContent =
+          button.dataset.originalText || text || "Simpan";
       }
     }
 
     function formatValue(value){
-      if(value === null || value === undefined || value === "") return "-";
-      if(typeof value === "object" && value.toString) return value.toString();
+      if(value === null || value === undefined || value === "") {
+        return "-";
+      }
+
+      if(typeof value === "object" && value.toString) {
+        return value.toString();
+      }
+
       return String(value);
     }
 
-    function api(action, payload = {}) {
-      /*
-        google.script.run adalah cara yang tepat ketika HTML ini
-        disajikan oleh Google Apps Script HtmlService.
-      */
-      return new Promise((resolve, reject) => {
-        const runner = google.script.run
-          .withSuccessHandler(resolve)
-          .withFailureHandler(error => {
-            reject(new Error(error && error.message ? error.message : "Server error"));
-          });
+    function makeRequestId(){
+      return "REQ-" +
+        Date.now().toString(36) + "-" +
+        Math.random().toString(36).slice(2) + "-" +
+        Math.random().toString(36).slice(2);
+    }
 
-        switch(action){
-          case "login":
-            runner.login(payload);
-            break;
-          case "startExam":
-            runner.startExam(payload);
-            break;
-          case "submitForm":
-            runner.submitForm(payload);
-            break;
-          case "questionnaire":
-            runner.questionnaire(payload);
-            break;
-          case "logout":
-            runner.logout(payload);
-            break;
-          case "checkSession":
-            runner.checkSession(payload);
-            break;
-          default:
-            reject(new Error("Action tidak dikenal: " + action));
+    /*
+     * Kirim perintah ke GAS.
+     *
+     * POST memakai mode no-cors sehingga browser GitHub Pages
+     * tidak perlu membaca response POST. GAS menyimpan hasil
+     * berdasarkan requestId, kemudian hasil diambil melalui
+     * endpoint JSONP.
+     */
+    async function api(action, payload = {}){
+      const requestId = makeRequestId();
+
+      const body = {
+        action,
+        requestId,
+        ...payload
+      };
+
+      try{
+        await fetch(CONFIG.GAS_WEB_APP_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=UTF-8"
+          },
+          body: JSON.stringify(body),
+          keepalive: true
+        });
+      }catch(error){
+        throw new Error(
+          "Tidak dapat mengirim permintaan ke server. " +
+          "Periksa koneksi internet."
+        );
+      }
+
+      return await pollResult(requestId);
+    }
+
+    /*
+     * Ambil hasil POST menggunakan JSONP.
+     * JSONP dipakai karena endpoint GAS berbeda origin
+     * dengan GitHub Pages.
+     */
+    function pollResult(requestId, attempt = 0){
+      const maxAttempts = 25;
+      const delay = 600;
+
+      return new Promise((resolve, reject) => {
+        let finished = false;
+
+        function cleanup(){
+          finished = true;
+
+          if(script && script.parentNode){
+            script.parentNode.removeChild(script);
+          }
+
+          clearTimeout(timer);
         }
+
+        function tryAgain(){
+          if(finished) return;
+
+          if(attempt >= maxAttempts){
+            cleanup();
+            reject(new Error(
+              "Server belum memberikan respons. " +
+              "Silakan coba lagi."
+            ));
+            return;
+          }
+
+          setTimeout(() => {
+            pollResult(requestId, attempt + 1)
+              .then(resolve)
+              .catch(reject);
+          }, delay);
+        }
+
+        const callbackName =
+          "__cbt_" +
+          Date.now() +
+          "_" +
+          Math.random().toString(36).slice(2);
+
+        const script = document.createElement("script");
+
+        const params = new URLSearchParams({
+          action: "getResult",
+          requestId,
+          callback: callbackName
+        });
+
+        let timer = null;
+
+        window[callbackName] = function(data){
+          delete window[callbackName];
+
+          if(data && data.pending){
+            cleanup();
+            tryAgain();
+            return;
+          }
+
+          cleanup();
+
+          if(!data){
+            reject(new Error("Respons server kosong."));
+            return;
+          }
+
+          resolve(data);
+        };
+
+        script.onerror = function(){
+          delete window[callbackName];
+          cleanup();
+
+          if(attempt < maxAttempts){
+            tryAgain();
+          }else{
+            reject(new Error(
+              "Tidak dapat membaca respons dari server GAS."
+            ));
+          }
+        };
+
+        script.src =
+          CONFIG.GAS_WEB_APP_URL +
+          "?" +
+          params.toString();
+
+        document.head.appendChild(script);
+
+        timer = setTimeout(() => {
+          if(!finished){
+            delete window[callbackName];
+            cleanup();
+
+            if(attempt < maxAttempts){
+              tryAgain();
+            }else{
+              reject(new Error(
+                "Waktu tunggu server habis."
+              ));
+            }
+          }
+        }, 5000);
       });
+    }
+
+    /*
+     * Ambil daftar kelas aktif dari sheet USER.
+     * Nama siswa tidak dikirim ke browser; siswa tetap memasukkan
+     * username sendiri.
+     */
+    function loadClasses(){
+      const kelasSelect = $("kelas");
+
+      const callbackName =
+        "__class_" +
+        Date.now() +
+        "_" +
+        Math.random().toString(36).slice(2);
+
+      const script = document.createElement("script");
+
+      const params = new URLSearchParams({
+        action: "getClasses",
+        callback: callbackName
+      });
+
+      window[callbackName] = function(data){
+        delete window[callbackName];
+        script.remove();
+
+        if(!data || !data.success){
+          kelasSelect.innerHTML =
+            '<option value="">-- Pilih Kelas --</option>';
+          return;
+        }
+
+        const classes = Array.isArray(data.classes)
+          ? data.classes
+          : [];
+
+        kelasSelect.innerHTML =
+          '<option value="">-- Pilih Kelas --</option>' +
+          classes.map(k =>
+            '<option value="' +
+            escapeHtml(k) +
+            '">' +
+            escapeHtml(k) +
+            '</option>'
+          ).join("");
+      };
+
+      script.onerror = function(){
+        delete window[callbackName];
+        script.remove();
+        kelasSelect.innerHTML =
+          '<option value="">-- Pilih Kelas --</option>';
+      };
+
+      script.src =
+        CONFIG.GAS_WEB_APP_URL +
+        "?" +
+        params.toString();
+
+      document.head.appendChild(script);
     }
 
     function getDevice(){
@@ -968,34 +1151,6 @@
         navigator.platform || "",
         window.innerWidth + "x" + window.innerHeight
       ].join(" | ");
-    }
-
-    function loadLoginOptions(){
-      const kelasSelect = $("kelas");
-      const usernameSelect = $("username");
-
-      const classes = [...new Set(
-        CONFIG.STUDENT_LIST.map(s => s.kelas).filter(Boolean)
-      )].sort();
-
-      kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>' +
-        classes.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join("");
-
-      kelasSelect.addEventListener("change", () => {
-        const kelas = kelasSelect.value;
-
-        usernameSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-        usernameSelect.disabled = !kelas;
-
-        CONFIG.STUDENT_LIST
-          .filter(s => s.kelas === kelas)
-          .forEach(s => {
-            const option = document.createElement("option");
-            option.value = s.username;
-            option.textContent = s.nama ? `${s.nama} — ${s.username}` : s.username;
-            usernameSelect.appendChild(option);
-          });
-      });
     }
 
     function escapeHtml(value){
@@ -1012,33 +1167,54 @@
       state.user = null;
       state.jadwal = null;
       state.googleFormUrl = "";
+
       localStorage.removeItem("cbt_session_id");
       localStorage.removeItem("cbt_state");
     }
 
     function saveState(){
-      localStorage.setItem("cbt_session_id", state.sessionId);
-      localStorage.setItem("cbt_state", JSON.stringify({
-        user: state.user,
-        jadwal: state.jadwal,
-        googleFormUrl: state.googleFormUrl
-      }));
+      localStorage.setItem(
+        "cbt_session_id",
+        state.sessionId
+      );
+
+      localStorage.setItem(
+        "cbt_state",
+        JSON.stringify({
+          user: state.user,
+          jadwal: state.jadwal,
+          googleFormUrl: state.googleFormUrl
+        })
+      );
     }
 
     function restoreState(){
-      const sessionId = localStorage.getItem("cbt_session_id");
-      const saved = localStorage.getItem("cbt_state");
+      const sessionId =
+        localStorage.getItem("cbt_session_id");
+
+      const saved =
+        localStorage.getItem("cbt_state");
 
       if(!sessionId) return;
 
       state.sessionId = sessionId;
 
       try{
-        const parsed = JSON.parse(saved || "{}");
-        state.user = parsed.user || null;
-        state.jadwal = parsed.jadwal || null;
-        state.googleFormUrl = parsed.googleFormUrl || "";
-      }catch(e){}
+        const parsed =
+          JSON.parse(saved || "{}");
+
+        state.user =
+          parsed.user || null;
+
+        state.jadwal =
+          parsed.jadwal || null;
+
+        state.googleFormUrl =
+          parsed.googleFormUrl || "";
+      }catch(e){
+        resetState();
+        return;
+      }
 
       if(state.user){
         checkExistingSession();
@@ -1047,9 +1223,12 @@
 
     async function checkExistingSession(){
       try{
-        const data = await api("checkSession", {
-          sessionId: state.sessionId
-        });
+        const data = await api(
+          "checkSession",
+          {
+            sessionId: state.sessionId
+          }
+        );
 
         if(data && data.valid){
           if(data.status === "SUBMIT_FORM"){
@@ -1061,212 +1240,412 @@
           resetState();
         }
       }catch(e){
-        // Jika gagal cek sesi, biarkan halaman login tetap tersedia.
+        /*
+         * Jika pengecekan gagal, jangan menghapus session lokal
+         * secara otomatis. Login tetap dapat digunakan.
+         */
       }
     }
 
     function showExamScreen(){
-      $("examName").textContent = formatValue(state.user?.nama);
-      $("examClass").textContent = "Kelas " + formatValue(state.user?.kelas);
+      $("examName").textContent =
+        formatValue(state.user?.nama);
 
-      $("examMapel").textContent = formatValue(state.jadwal?.mapel);
-      $("sumKelas").textContent = formatValue(state.jadwal?.kelas);
-      $("sumMapel").textContent = formatValue(state.jadwal?.mapel);
-      $("sumMulai").textContent = formatValue(state.jadwal?.mulai);
-      $("sumSelesai").textContent = formatValue(state.jadwal?.selesai);
+      $("examClass").textContent =
+        "Kelas " + formatValue(state.user?.kelas);
+
+      $("examMapel").textContent =
+        formatValue(state.jadwal?.mapel);
+
+      $("sumKelas").textContent =
+        formatValue(state.jadwal?.kelas);
+
+      $("sumMapel").textContent =
+        formatValue(state.jadwal?.mapel);
+
+      $("sumMulai").textContent =
+        formatValue(state.jadwal?.mulai);
+
+      $("sumSelesai").textContent =
+        formatValue(state.jadwal?.selesai);
 
       showScreen("examScreen");
     }
 
     function showRunningScreen(){
-      $("runningMapel").textContent = formatValue(state.jadwal?.mapel);
-      $("runningName").textContent = formatValue(state.user?.nama);
-      $("runningClass").textContent = formatValue(state.user?.kelas);
-      $("runningStart").textContent = formatValue(state.jadwal?.mulai);
-      $("runningEnd").textContent = formatValue(state.jadwal?.selesai);
+      $("runningMapel").textContent =
+        formatValue(state.jadwal?.mapel);
+
+      $("runningName").textContent =
+        formatValue(state.user?.nama);
+
+      $("runningClass").textContent =
+        formatValue(state.user?.kelas);
+
+      $("runningStart").textContent =
+        formatValue(state.jadwal?.mulai);
+
+      $("runningEnd").textContent =
+        formatValue(state.jadwal?.selesai);
 
       showScreen("runningScreen");
     }
 
     function showQuestionnaire(){
-      $("questionMessage").textContent = "Berikan penilaian setelah menyelesaikan CBT.";
-      $("questionMessage").className = "notice";
+      $("questionMessage").textContent =
+        "Berikan penilaian setelah menyelesaikan CBT.";
+
+      $("questionMessage").className =
+        "notice";
+
       showScreen("questionnaireScreen");
     }
 
     function openGoogleForm(){
       const url =
-        (state.googleFormUrl && !state.googleFormUrl.includes("PASTE_LINK"))
+        (state.googleFormUrl &&
+         !state.googleFormUrl.includes("PASTE_LINK"))
           ? state.googleFormUrl
           : CONFIG.DEFAULT_GOOGLE_FORM_URL;
 
       if(!url){
-        alert("Link Google Form belum tersedia.");
+        alert(
+          "Link Google Form belum tersedia pada jadwal."
+        );
         return;
       }
 
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(
+        url,
+        "_blank",
+        "noopener,noreferrer"
+      );
     }
 
     $("togglePassword").addEventListener("click", () => {
       const input = $("password");
-      input.type = input.type === "password" ? "text" : "password";
+
+      input.type =
+        input.type === "password"
+          ? "text"
+          : "password";
     });
 
     $("showPassword").addEventListener("change", (e) => {
-      $("password").type = e.target.checked ? "text" : "password";
+      $("password").type =
+        e.target.checked
+          ? "text"
+          : "password";
     });
 
     $("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
+
       hideMessage("loginMessage");
 
-      const kelas = $("kelas").value.trim();
-      const username = $("username").value.trim();
-      const password = $("password").value;
-      const token = $("token").value.trim();
+      const kelas =
+        $("kelas").value.trim();
+
+      const username =
+        $("username").value.trim();
+
+      const password =
+        $("password").value;
+
+      const token =
+        $("token").value.trim();
 
       if(!kelas || !username || !password || !token){
-        setMessage("loginMessage","Kelas, username, password, dan token wajib diisi.","error");
+        setMessage(
+          "loginMessage",
+          "Kelas, username, password, dan token wajib diisi.",
+          "error"
+        );
         return;
       }
 
       const button = $("loginButton");
-      setButtonLoading(button,true,"Memverifikasi...");
+
+      setButtonLoading(
+        button,
+        true,
+        "Memverifikasi..."
+      );
 
       try{
-        const data = await api("login",{
-          username,
-          password,
-          token,
-          ip:"",
-          device:getDevice()
-        });
+        const data = await api(
+          "login",
+          {
+            username,
+            password,
+            token,
+            kelas,
+            ip: "",
+            device: getDevice()
+          }
+        );
 
         if(!data.success){
-          setMessage("loginMessage",data.message || "Login gagal.","error");
+          setMessage(
+            "loginMessage",
+            data.message || "Login gagal.",
+            "error"
+          );
           return;
         }
 
-        if(data.user?.kelas && data.user.kelas !== kelas){
-          setMessage("loginMessage","Kelas yang dipilih tidak sesuai dengan akun siswa.","error");
+        if(
+          data.user?.kelas &&
+          data.user.kelas !== kelas
+        ){
+          setMessage(
+            "loginMessage",
+            "Kelas yang dipilih tidak sesuai dengan akun siswa.",
+            "error"
+          );
           return;
         }
 
-        state.sessionId = data.sessionId || "";
-        state.user = data.user || null;
-        state.jadwal = data.jadwal || null;
+        state.sessionId =
+          data.sessionId || "";
+
+        state.user =
+          data.user || null;
+
+        state.jadwal =
+          data.jadwal || null;
+
         saveState();
-
         showExamScreen();
+
       }catch(err){
-        setMessage("loginMessage",err.message || "Tidak dapat terhubung ke server.","error");
+        setMessage(
+          "loginMessage",
+          err.message ||
+            "Tidak dapat terhubung ke server.",
+          "error"
+        );
       }finally{
-        setButtonLoading(button,false,"Masuk");
+        setButtonLoading(
+          button,
+          false,
+          "Masuk"
+        );
       }
     });
 
-    $("startExamButton").addEventListener("click", async () => {
-      const button = $("startExamButton");
-      setButtonLoading(button,true,"Menyiapkan ujian...");
+    $("startExamButton").addEventListener(
+      "click",
+      async () => {
 
-      try{
-        const data = await api("startExam",{
-          sessionId:state.sessionId,
-          ip:"",
-          device:getDevice()
-        });
+        const button =
+          $("startExamButton");
 
-        if(!data.success){
-          alert(data.message || "Ujian tidak dapat dimulai.");
+        setButtonLoading(
+          button,
+          true,
+          "Menyiapkan ujian..."
+        );
+
+        try{
+          const data = await api(
+            "startExam",
+            {
+              sessionId: state.sessionId,
+              ip: "",
+              device: getDevice()
+            }
+          );
+
+          if(!data.success){
+            alert(
+              data.message ||
+              "Ujian tidak dapat dimulai."
+            );
+            return;
+          }
+
+          state.googleFormUrl =
+            data.googleFormUrl ||
+            CONFIG.DEFAULT_GOOGLE_FORM_URL;
+
+          if(data.mapel)
+            state.jadwal.mapel = data.mapel;
+
+          if(data.kelas)
+            state.jadwal.kelas = data.kelas;
+
+          if(data.mulai)
+            state.jadwal.mulai = data.mulai;
+
+          if(data.selesai)
+            state.jadwal.selesai = data.selesai;
+
+          saveState();
+          showRunningScreen();
+          openGoogleForm();
+
+        }catch(err){
+          alert(
+            err.message ||
+            "Gagal memulai ujian."
+          );
+        }finally{
+          setButtonLoading(
+            button,
+            false,
+            "Mulai Ujian"
+          );
+        }
+      }
+    );
+
+    $("openFormButton").addEventListener(
+      "click",
+      openGoogleForm
+    );
+
+    $("submitFormButton").addEventListener(
+      "click",
+      async () => {
+
+        if(!confirm(
+          "Pastikan Anda sudah menekan tombol " +
+          "Kirim/Kirim Jawaban pada Google Form. " +
+          "Lanjutkan?"
+        )){
           return;
         }
 
-        state.googleFormUrl =
-          data.googleFormUrl ||
-          CONFIG.DEFAULT_GOOGLE_FORM_URL;
-        if(data.mapel) state.jadwal.mapel = data.mapel;
-        if(data.kelas) state.jadwal.kelas = data.kelas;
-        if(data.mulai) state.jadwal.mulai = data.mulai;
-        if(data.selesai) state.jadwal.selesai = data.selesai;
+        const button =
+          $("submitFormButton");
 
-        saveState();
-        showRunningScreen();
-        openGoogleForm();
-      }catch(err){
-        alert(err.message || "Gagal memulai ujian.");
-      }finally{
-        setButtonLoading(button,false,"Mulai Ujian");
+        setButtonLoading(
+          button,
+          true,
+          "Mencatat..."
+        );
+
+        try{
+          const data = await api(
+            "submitForm",
+            {
+              sessionId: state.sessionId,
+              ip: "",
+              device: getDevice()
+            }
+          );
+
+          if(!data.success){
+            alert(
+              data.message ||
+              "Pengerjaan belum dapat dicatat."
+            );
+            return;
+          }
+
+          showQuestionnaire();
+
+        }catch(err){
+          alert(
+            err.message ||
+            "Gagal mencatat pengerjaan."
+          );
+        }finally{
+          setButtonLoading(
+            button,
+            false,
+            "Sudah Kirim Jawaban"
+          );
+        }
       }
-    });
+    );
 
-    $("openFormButton").addEventListener("click", openGoogleForm);
+    $("questionnaireForm").addEventListener(
+      "submit",
+      async (e) => {
 
-    $("submitFormButton").addEventListener("click", async () => {
-      if(!confirm("Pastikan Anda sudah menekan tombol Kirim/Kirim Jawaban pada Google Form. Lanjutkan?")) return;
+        e.preventDefault();
 
-      const button = $("submitFormButton");
-      setButtonLoading(button,true,"Mencatat...");
+        const ratingAplikasi =
+          document.querySelector(
+            'input[name="ratingAplikasi"]:checked'
+          )?.value || "";
 
-      try{
-        const data = await api("submitForm",{
-          sessionId:state.sessionId,
-          ip:"",
-          device:getDevice()
-        });
+        const ratingSoal =
+          document.querySelector(
+            'input[name="ratingSoal"]:checked'
+          )?.value || "";
 
-        if(!data.success){
-          alert(data.message || "Pengerjaan belum dapat dicatat.");
+        const saran =
+          $("saran").value.trim();
+
+        if(!ratingAplikasi || !ratingSoal){
+          setMessage(
+            "questionMessage",
+            "Kedua rating wajib diisi.",
+            "error"
+          );
           return;
         }
 
-        showQuestionnaire();
-      }catch(err){
-        alert(err.message || "Gagal mencatat pengerjaan.");
-      }finally{
-        setButtonLoading(button,false,"Sudah Kirim Jawaban");
-      }
-    });
+        const button =
+          $("questionnaireButton");
 
-    $("questionnaireForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+        setButtonLoading(
+          button,
+          true,
+          "Menyimpan..."
+        );
 
-      const ratingAplikasi = document.querySelector('input[name="ratingAplikasi"]:checked')?.value || "";
-      const ratingSoal = document.querySelector('input[name="ratingSoal"]:checked')?.value || "";
-      const saran = $("saran").value.trim();
+        try{
+          const data = await api(
+            "questionnaire",
+            {
+              sessionId: state.sessionId,
+              ratingAplikasi,
+              ratingSoal,
+              saran
+            }
+          );
 
-      if(!ratingAplikasi || !ratingSoal){
-        setMessage("questionMessage","Kedua rating wajib diisi.","error");
-        return;
-      }
+          if(!data.success){
+            setMessage(
+              "questionMessage",
+              data.message ||
+                "Kuesioner gagal disimpan.",
+              "error"
+            );
+            return;
+          }
 
-      const button = $("questionnaireButton");
-      setButtonLoading(button,true,"Menyimpan...");
+          $("finishName").textContent =
+            formatValue(state.user?.nama);
 
-      try{
-        const data = await api("questionnaire",{
-          sessionId:state.sessionId,
-          ratingAplikasi,
-          ratingSoal,
-          saran
-        });
+          $("finishClass").textContent =
+            formatValue(state.user?.kelas);
 
-        if(!data.success){
-          setMessage("questionMessage",data.message || "Kuesioner gagal disimpan.","error");
-          return;
+          $("finishMapel").textContent =
+            formatValue(state.jadwal?.mapel);
+
+          showScreen("finishScreen");
+
+        }catch(err){
+          setMessage(
+            "questionMessage",
+            err.message ||
+              "Gagal menyimpan kuesioner.",
+            "error"
+          );
+        }finally{
+          setButtonLoading(
+            button,
+            false,
+            "Kirim Kuesioner"
+          );
         }
-
-        $("finishName").textContent = formatValue(state.user?.nama);
-        $("finishClass").textContent = formatValue(state.user?.kelas);
-        $("finishMapel").textContent = formatValue(state.jadwal?.mapel);
-
-        showScreen("finishScreen");
-      }catch(err){
-        setMessage("questionMessage",err.message || "Gagal menyimpan kuesioner.","error");
-      }finally{
-        setButtonLoading(button,false,"Kirim Kuesioner");
       }
-    });
+    );
 
     async function logoutSession(){
       if(!state.sessionId){
@@ -1276,48 +1655,76 @@
       }
 
       try{
-        await api("logout",{
-          sessionId:state.sessionId,
-          ip:"",
-          device:getDevice()
-        });
+        await api(
+          "logout",
+          {
+            sessionId: state.sessionId,
+            ip: "",
+            device: getDevice()
+          }
+        );
       }catch(e){
-        // Tetap reset di sisi browser walaupun request logout gagal.
+        /*
+         * Tetap reset lokal walaupun server gagal.
+         */
       }finally{
         resetState();
         location.reload();
       }
     }
 
-    $("logoutBeforeExam").addEventListener("click", logoutSession);
-    $("logoutRunningButton").addEventListener("click", logoutSession);
+    $("logoutBeforeExam").addEventListener(
+      "click",
+      logoutSession
+    );
 
-    $("backLoginButton").addEventListener("click", () => {
-      resetState();
-      showScreen("loginScreen");
-    });
+    $("logoutRunningButton").addEventListener(
+      "click",
+      logoutSession
+    );
 
-    $("resetButton").addEventListener("click", () => {
-      if(confirm("Reset sesi dan kembali ke halaman login?")){
+    $("backLoginButton").addEventListener(
+      "click",
+      () => {
+        resetState();
+        showScreen("loginScreen");
+      }
+    );
+
+    $("resetButton").addEventListener(
+      "click",
+      () => {
+        if(confirm(
+          "Reset sesi dan kembali ke halaman login?"
+        )){
+          resetState();
+          location.reload();
+        }
+      }
+    );
+
+    $("finishButton").addEventListener(
+      "click",
+      () => {
         resetState();
         location.reload();
       }
-    });
+    );
 
-    $("finishButton").addEventListener("click", () => {
-      resetState();
-      location.reload();
-    });
+    $("scheduleButton").addEventListener(
+      "click",
+      () => {
+        alert(
+          "Jadwal/token mengikuti data pada sheet JADWAL.\n\n" +
+          "Masukkan token yang diberikan pengawas."
+        );
+      }
+    );
 
-    $("scheduleButton").addEventListener("click", () => {
-      alert(
-        "Jadwal/token mengikuti data pada sheet JADWAL.\n\n" +
-        "Untuk keamanan, aplikasi tidak menampilkan seluruh token dari database secara otomatis. " +
-        "Masukkan token yang diberikan pengawas."
-      );
-    });
-
-    loadLoginOptions();
+    /*
+     * Inisialisasi.
+     */
+    loadClasses();
     restoreState();
   </script>
 </body>
