@@ -997,19 +997,27 @@
 
     function unlockWarningAudio(){
       const audio=$("warningAudio");
-      if(!audio||warningAudioUnlocked)return;
+      if(!audio)return;
+      if($("violationOverlay").classList.contains("active")){startWarningSound();return;}
+      if(warningAudioUnlocked)return;
       audio.muted=true;
       const attempt=audio.play();
       if(attempt&&typeof attempt.then==="function"){
         attempt.then(()=>{audio.pause();audio.currentTime=0;audio.muted=false;warningAudioUnlocked=true;}).catch(()=>{audio.muted=false;});
       }else{audio.pause();audio.currentTime=0;audio.muted=false;warningAudioUnlocked=true;}
     }
-    function playWarningSound(){
+    function startWarningSound(){
       const audio=$("warningAudio");
       if(!audio)return;
-      audio.pause();audio.currentTime=0;audio.muted=false;audio.volume=1;
+      if(!audio.paused&&!audio.ended)return;
+      audio.currentTime=0;audio.muted=false;audio.volume=1;audio.loop=true;
       const attempt=audio.play();
-      if(attempt&&typeof attempt.then==="function")attempt.then(()=>{warningSoundPending=false;}).catch(()=>{warningSoundPending=true;});
+      if(attempt&&typeof attempt.then==="function")attempt.then(()=>{warningSoundPending=false;warningAudioUnlocked=true;}).catch(()=>{warningSoundPending=true;});
+    }
+    function stopWarningSound(){
+      const audio=$("warningAudio");
+      if(!audio)return;
+      audio.loop=false;audio.pause();audio.currentTime=0;warningSoundPending=false;
     }
 
     document.addEventListener("pointerdown",unlockWarningAudio,{capture:true});
@@ -1237,13 +1245,13 @@
       $("adminPinError").textContent="";
       $("violationOverlay").classList.add("active");
       $("adminPinInput").value="";
+      startWarningSound();
     }
     function recordExamViolation(reason){
       if(!state.examActive)return;
       const existing=getSavedViolation();
       const record={locked:true,count:(Number(existing?.count)||0)+1,reason:reason||"Meninggalkan halaman ujian",time:new Date().toISOString()};
       try{localStorage.setItem(CONFIG.VIOLATION_STORAGE_KEY,JSON.stringify(record));}catch(e){}
-      playWarningSound();
       showViolationLock(record);
     }
     function restoreViolationLock(){
@@ -1256,6 +1264,7 @@
       if(pin!==CONFIG.ADMIN_PIN){$("adminPinError").textContent="PIN Admin salah. Peringatan tetap terkunci.";$("adminPinInput").select();return;}
       localStorage.removeItem(CONFIG.VIOLATION_STORAGE_KEY);
       $("violationOverlay").classList.remove("active");
+      stopWarningSound();
       $("adminPinError").textContent="";
       if(state.examActive)updateExamTimer();
     });
@@ -1349,12 +1358,15 @@
 
     document.addEventListener("visibilitychange",()=>{
       if(document.hidden&&state.examActive)recordExamViolation("Membuka tab/jendela lain atau meninggalkan halaman ujian");
-      else if(state.examActive){if(warningSoundPending)playWarningSound();updateExamTimer();}
+      else{
+        if($("violationOverlay").classList.contains("active"))startWarningSound();
+        if(state.examActive)updateExamTimer();
+      }
     });
     window.addEventListener("storage",e=>{
       if(e.key!==CONFIG.VIOLATION_STORAGE_KEY)return;
       if(e.newValue){try{const record=JSON.parse(e.newValue);if(record&&record.locked){playWarningSound();showViolationLock(record);}}catch(err){}}
-      else $("violationOverlay").classList.remove("active");
+      else{$("violationOverlay").classList.remove("active");stopWarningSound();}
     });
 
     loadClasses();
