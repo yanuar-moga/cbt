@@ -426,6 +426,24 @@
     .about-content p{margin:5px 0;color:#526079;font-size:13px;line-height:1.5}
     .about-content .about-version{color:#0d1730;font-weight:900}
     .about-close{margin-top:19px}
+    .schedule-dialog{width:min(780px,calc(100% - 24px));max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px);padding:0;border:0;border-radius:20px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.35);color:#152443;overflow:hidden}
+    .schedule-dialog::backdrop{background:rgba(4,12,30,.72);backdrop-filter:blur(5px)}
+    .schedule-dialog-inner{max-height:inherit;display:flex;flex-direction:column}
+    .schedule-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 24px 17px;background:linear-gradient(120deg,#102b8f,#214de0);color:#fff}
+    .schedule-dialog-head h2{margin:0;font-size:21px}
+    .schedule-dialog-head p{margin:5px 0 0;color:rgba(255,255,255,.78);font-size:12px}
+    .schedule-close{width:34px;height:34px;flex:0 0 34px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:20px;cursor:pointer;transition:transform .18s ease,background .18s ease}
+    .schedule-close:hover{transform:rotate(90deg);background:rgba(255,255,255,.24)}
+    .schedule-dialog-body{padding:18px 22px 22px;overflow:auto}
+    .schedule-message{margin:0 0 12px;padding:11px 13px;border-radius:10px;background:#f2f5fb;color:#58657c;font-size:12px}
+    .schedule-message.error{background:#fff0ef;color:#a3312b}
+    .schedule-table-wrap{max-height:55vh;overflow:auto;border:1px solid #e1e7f2;border-radius:12px}
+    .schedule-table{width:100%;min-width:590px;border-collapse:separate;border-spacing:0;font-size:12px}
+    .schedule-table th{position:sticky;top:0;padding:12px 13px;background:#f1f4fb;color:#53617a;font-size:10px;letter-spacing:.06em;text-align:left;text-transform:uppercase;border-bottom:1px solid #e1e7f2}
+    .schedule-table td{padding:13px;border-bottom:1px solid #edf0f6;color:#263653}
+    .schedule-table tbody tr:nth-child(even){background:#fafbfe}
+    .schedule-table tbody tr:last-child td{border-bottom:0}
+    .schedule-table .schedule-time{font-variant-numeric:tabular-nums;font-weight:800;color:#173b9b;white-space:nowrap}
     .violation-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,12,30,.88);backdrop-filter:blur(8px)}
     .violation-overlay.active{display:flex}
     .violation-card{width:min(480px,100%);padding:28px;border:1px solid #ffd1ce;border-radius:20px;background:#fff;box-shadow:0 30px 100px rgba(0,0,0,.4);text-align:center}
@@ -452,6 +470,9 @@
       .about-trigger{gap:7px;padding:6px 12px 6px 7px}
       .about-footer-logo{width:27px;height:27px;flex-basis:27px}
       .about-footer-title{font-size:10px}
+      .schedule-dialog-head{padding:18px 16px 14px}
+      .schedule-dialog-head h2{font-size:18px}
+      .schedule-dialog-body{padding:14px 12px 16px}
       .violation-card{padding:23px 18px}
       .violation-card h2{font-size:22px}
     }
@@ -952,6 +973,27 @@
     </footer>
   </section>
 
+  <dialog id="scheduleDialog" class="schedule-dialog" aria-labelledby="scheduleTitle">
+    <div class="schedule-dialog-inner">
+      <header class="schedule-dialog-head">
+        <div>
+          <h2 id="scheduleTitle">Jadwal Ujian</h2>
+          <p>Informasi jadwal dari spreadsheet CBT</p>
+        </div>
+        <button id="closeScheduleButton" class="schedule-close" type="button" aria-label="Tutup jadwal">×</button>
+      </header>
+      <div class="schedule-dialog-body">
+        <p id="scheduleStatus" class="schedule-message" role="status">Memuat jadwal...</p>
+        <div class="schedule-table-wrap">
+          <table class="schedule-table">
+            <thead><tr><th>Tanggal</th><th>Kelas</th><th>Mapel</th><th>Mulai</th><th>Selesai</th></tr></thead>
+            <tbody id="scheduleRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="aboutDialog" class="about-dialog" aria-labelledby="aboutTitle">
     <div class="about-content">
       <img class="about-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo aplikasi CBT">
@@ -1128,6 +1170,36 @@
         setMessage("loginMessage",err.message||"Gagal mengambil daftar siswa.");
       }finally{
         select.disabled=false;
+      }
+    }
+
+    async function showScheduleDialog(){
+      const dialog=$("scheduleDialog");
+      const status=$("scheduleStatus");
+      const rows=$("scheduleRows");
+      rows.replaceChildren();
+      status.className="schedule-message";
+      status.textContent="Memuat jadwal...";
+      if(!dialog.open)dialog.showModal();
+      try{
+        const data=await api("getSchedules");
+        if(!data.success)throw new Error(data.message||"Jadwal gagal dimuat.");
+        const schedules=Array.isArray(data.schedules)?data.schedules:[];
+        if(!schedules.length){status.textContent="Belum ada jadwal aktif pada spreadsheet.";return;}
+        status.textContent="Menampilkan "+schedules.length+" jadwal aktif.";
+        schedules.forEach(schedule=>{
+          const tr=document.createElement("tr");
+          [schedule.tanggal,schedule.kelas,schedule.mapel,schedule.mulai,schedule.selesai].forEach((value,index)=>{
+            const td=document.createElement("td");
+            td.textContent=index>=3?formatTimeValue(value):formatValue(value);
+            if(index>=3)td.className="schedule-time";
+            tr.appendChild(td);
+          });
+          rows.appendChild(tr);
+        });
+      }catch(err){
+        status.className="schedule-message error";
+        status.textContent=err.message||"Gagal memuat jadwal. Periksa koneksi dan deployment Apps Script.";
       }
     }
 
@@ -1348,7 +1420,9 @@
     $("backLoginButton").addEventListener("click",logoutSession);
     $("resetButton").addEventListener("click",()=>{if(confirm("Reset sesi dan kembali ke halaman login?")){resetState();location.reload();}});
     $("finishButton").addEventListener("click",()=>{resetState();location.reload();});
-    $("scheduleButton").addEventListener("click",()=>alert("Jadwal dan token mengikuti data pada sheet JADWAL. Masukkan token yang diberikan pengawas."));
+    $("scheduleButton").addEventListener("click",showScheduleDialog);
+    $("closeScheduleButton").addEventListener("click",()=>$("scheduleDialog").close());
+    $("scheduleDialog").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close();});
 
     document.addEventListener("contextmenu",e=>{
       if(!state.examActive)return;
