@@ -369,6 +369,8 @@
       color:#1f50f5;
       font-weight:900;
     }
+    .about-trigger{border:0;padding:0;background:none;color:#1f50f5;font:inherit;font-weight:900;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+    .app-footer{padding:10px 12px 0;text-align:center;color:#71809c;font-size:10px}
 
     /* SCREENS */
     .screen{display:none}
@@ -384,24 +386,39 @@
     }
     .google-form-overlay.active{display:flex}
     .google-form-toolbar{
-      min-height:58px;
+      height:84px;
+      min-height:84px;
+      flex:0 0 84px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding:9px 16px;
+      padding:7px 16px;
       color:#fff;
       background:#102b8f;
       box-shadow:0 2px 12px rgba(4,18,55,.18);
     }
     .google-form-toolbar strong{font-size:13px}
-    .exam-hud{display:flex;flex-direction:column;gap:4px;min-width:0}
-    .exam-hud-student{font-size:11px;color:rgba(255,255,255,.82);overflow-wrap:anywhere}
+    .exam-hud-wrap{display:flex;align-items:center;gap:14px;min-width:0}
+    .exam-hud-brand{width:94px;flex:0 0 94px;display:flex;flex-direction:column;align-items:center;gap:3px}
+    .exam-hud-logo{display:block;width:48px;height:48px;max-width:48px;max-height:48px;object-fit:contain;border-radius:7px;background:#fff}
+    .exam-hud-student{max-width:100%;font-size:9px;line-height:1.15;color:rgba(255,255,255,.9);text-align:center;overflow-wrap:anywhere}
+    .exam-hud{display:flex;flex-direction:column;gap:5px;min-width:0}
     .exam-timer{display:flex;align-items:center;gap:7px;color:#d2ff19;font-size:11px;font-weight:900;letter-spacing:.06em}
     .exam-timer strong{font-variant-numeric:tabular-nums;font-size:15px;letter-spacing:.08em}
     .google-form-toolbar-actions{display:flex;gap:8px;align-items:center}
     .google-form-toolbar .btn{width:auto;min-width:132px;padding:0 14px}
-    #googleFormFrame{width:100%;height:calc(100vh - 58px);height:calc(100dvh - 58px);border:0;background:#fff}
+    .google-form-toolbar .about-toolbar-button{min-width:0;padding:0 6px;border:0;background:transparent;color:#fff;font-size:10px;text-decoration:underline;text-underline-offset:3px}
+    .about-footer-short{display:none}
+    #googleFormFrame{width:100%;height:calc(100vh - 84px);height:calc(100dvh - 84px);flex:1 1 auto;min-height:0;border:0;background:#fff}
+    .about-dialog{width:min(430px,calc(100% - 32px));padding:0;border:0;border-radius:20px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.35);color:#0d1730}
+    .about-dialog::backdrop{background:rgba(4,12,30,.68);backdrop-filter:blur(5px)}
+    .about-content{padding:28px;text-align:center}
+    .about-logo{width:88px;height:88px;object-fit:contain;margin:0 auto 12px}
+    .about-content h2{margin:0 0 9px;font-size:22px;color:#102b8f}
+    .about-content p{margin:5px 0;color:#526079;font-size:13px;line-height:1.5}
+    .about-content .about-version{color:#0d1730;font-weight:900}
+    .about-close{margin-top:19px}
     .violation-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,12,30,.88);backdrop-filter:blur(8px)}
     .violation-overlay.active{display:flex}
     .violation-card{width:min(480px,100%);padding:28px;border:1px solid #ffd1ce;border-radius:20px;background:#fff;box-shadow:0 30px 100px rgba(0,0,0,.4);text-align:center}
@@ -415,13 +432,19 @@
     .violation-card .btn{height:46px}
     .violation-card small{display:block;margin-top:13px;color:#7b8498;font-size:11px;line-height:1.5}
     @media (max-width:560px){
-      .google-form-toolbar{min-height:62px;padding:8px 10px;gap:8px}
+      .google-form-toolbar{height:74px;min-height:74px;flex-basis:74px;padding:6px 8px;gap:6px}
       .google-form-toolbar strong{font-size:11px}
       .exam-hud{gap:2px}
-      .exam-hud-student,.exam-timer{font-size:9px}
+      .exam-hud-wrap{gap:8px}
+      .exam-hud-brand{width:72px;flex-basis:72px;gap:2px}
+      .exam-hud-logo{width:38px;height:38px;max-width:38px;max-height:38px}
+      .exam-hud-student,.exam-timer{font-size:8px}
       .exam-timer strong{font-size:12px}
-      .google-form-toolbar .btn{min-width:0;padding:0 9px;font-size:10px}
-      #googleFormFrame{height:calc(100vh - 62px);height:calc(100dvh - 62px)}
+      .google-form-toolbar .btn{min-width:0;padding:0 8px;font-size:9px}
+      .google-form-toolbar .about-toolbar-button{padding:0 2px;font-size:8px}
+      .about-footer-full{display:none}
+      .about-footer-short{display:inline}
+      #googleFormFrame{height:calc(100vh - 74px);height:calc(100dvh - 74px)}
       .violation-card{padding:23px 18px}
       .violation-card h2{font-size:22px}
     }
@@ -750,8 +773,7 @@
           </form>
 
           <div class="footer">
-            <strong>About CBT Browser v1.0</strong><br>
-            © 2026 All Rights Reserved
+            <button class="about-trigger" type="button" data-open-about>CBT Integrated GForm by MB</button>
           </div>
         </section>
 
@@ -886,26 +908,41 @@
         </section>
 
       </div>
+      <footer class="app-footer"><button class="about-trigger" type="button" data-open-about>CBT Integrated GForm by MB</button></footer>
     </section>
   </main>
 
   <section id="googleFormOverlay" class="google-form-overlay" aria-hidden="true" aria-label="Google Form ujian">
     <div class="google-form-toolbar">
       <div class="exam-hud-wrap">
-        <img class="exam-hud-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
+        <div class="exam-hud-brand">
+          <img class="exam-hud-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
+          <span id="embeddedStudentName" class="exam-hud-student">-</span>
+        </div>
         <div class="exam-hud">
           <strong id="embeddedFormTitle">Ujian CBT</strong>
-          <span id="embeddedStudentName" class="exam-hud-student">-</span>
           <span class="exam-timer"><span>SISA WAKTU</span><strong id="examTimer">--:--:--</strong></span>
         </div>
       </div>
       <div class="google-form-toolbar-actions">
+        <button class="btn about-toolbar-button" type="button" data-open-about><span class="about-footer-full">CBT Integrated GForm by MB</span><span class="about-footer-short">Tentang</span></button>
         <button class="btn btn-secondary" id="closeEmbeddedFormButton" type="button">Kembali ke CBT</button>
         <button class="btn btn-primary" id="embeddedSubmitButton" type="button">Sudah kirim</button>
       </div>
     </div>
     <iframe id="googleFormFrame" title="Formulir ujian CBT" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
   </section>
+
+  <dialog id="aboutDialog" class="about-dialog" aria-labelledby="aboutTitle">
+    <div class="about-content">
+      <img class="about-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo aplikasi CBT">
+      <h2 id="aboutTitle">CBT Integrated GForm by MB</h2>
+      <p class="about-version">Versi aplikasi V 1.0</p>
+      <p>Build 27 September 2026</p>
+      <p>Develop by MB</p>
+      <button id="closeAboutButton" class="btn btn-primary about-close" type="button">Tutup</button>
+    </div>
+  </dialog>
 
   <section id="violationOverlay" class="violation-overlay" role="alertdialog" aria-modal="true" aria-labelledby="violationTitle" aria-describedby="violationDescription">
     <div class="violation-card">
@@ -1221,6 +1258,8 @@
     $("closeEmbeddedFormButton").addEventListener("click",closeGoogleForm);
     $("submitFormButton").addEventListener("click",e=>recordFormSubmission(e.currentTarget));
     $("embeddedSubmitButton").addEventListener("click",e=>recordFormSubmission(e.currentTarget));
+    document.querySelectorAll("[data-open-about]").forEach(button=>button.addEventListener("click",()=>$("aboutDialog").showModal()));
+    $("closeAboutButton").addEventListener("click",()=>$("aboutDialog").close());
 
     $("questionnaireForm").addEventListener("submit",async e=>{
       e.preventDefault();
