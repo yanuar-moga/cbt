@@ -408,9 +408,11 @@
     .exam-timer strong{font-variant-numeric:tabular-nums;font-size:15px;letter-spacing:.08em}
     .google-form-toolbar-actions{display:flex;gap:8px;align-items:center}
     .google-form-toolbar .btn{width:auto;min-width:132px;padding:0 14px}
-    .google-form-toolbar .about-toolbar-button{min-width:0;padding:0 6px;border:0;background:transparent;color:#fff;font-size:10px;text-decoration:underline;text-underline-offset:3px}
-    .about-footer-short{display:none}
-    #googleFormFrame{width:100%;height:calc(100vh - 84px);height:calc(100dvh - 84px);flex:1 1 auto;min-height:0;border:0;background:#fff}
+    #googleFormFrame{width:100%;height:auto;flex:1 1 0;min-height:0;border:0;background:#fff}
+    .google-form-footer{height:30px;flex:0 0 30px;display:grid;place-items:center;background:#f4f7fc;border-top:1px solid #dbe2f1;font-size:10px;animation:footerPulse 2.6s ease-in-out infinite}
+    .google-form-footer button{border:0;background:transparent;color:#1f50f5;font:inherit;font-weight:900;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+    .app-footer{animation:footerPulse 2.6s ease-in-out infinite}
+    @keyframes footerPulse{0%,100%{opacity:.72}50%{opacity:1}}
     .about-dialog{width:min(430px,calc(100% - 32px));padding:0;border:0;border-radius:20px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.35);color:#0d1730}
     .about-dialog::backdrop{background:rgba(4,12,30,.68);backdrop-filter:blur(5px)}
     .about-content{padding:28px;text-align:center}
@@ -441,10 +443,7 @@
       .exam-hud-student,.exam-timer{font-size:8px}
       .exam-timer strong{font-size:12px}
       .google-form-toolbar .btn{min-width:0;padding:0 8px;font-size:9px}
-      .google-form-toolbar .about-toolbar-button{padding:0 2px;font-size:8px}
-      .about-footer-full{display:none}
-      .about-footer-short{display:inline}
-      #googleFormFrame{height:calc(100vh - 74px);height:calc(100dvh - 74px)}
+      .google-form-footer{height:27px;flex-basis:27px;font-size:9px}
       .violation-card{padding:23px 18px}
       .violation-card h2{font-size:22px}
     }
@@ -772,9 +771,6 @@
             </div>
           </form>
 
-          <div class="footer">
-            <button class="about-trigger" type="button" data-open-about>CBT Integrated GForm by MB</button>
-          </div>
         </section>
 
         <!-- EXAM PREVIEW -->
@@ -925,12 +921,12 @@
         </div>
       </div>
       <div class="google-form-toolbar-actions">
-        <button class="btn about-toolbar-button" type="button" data-open-about><span class="about-footer-full">CBT Integrated GForm by MB</span><span class="about-footer-short">Tentang</span></button>
         <button class="btn btn-secondary" id="closeEmbeddedFormButton" type="button">Kembali ke CBT</button>
         <button class="btn btn-primary" id="embeddedSubmitButton" type="button">Sudah kirim</button>
       </div>
     </div>
     <iframe id="googleFormFrame" title="Formulir ujian CBT" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
+    <footer class="google-form-footer"><button type="button" data-open-about>CBT Integrated GForm by MB</button></footer>
   </section>
 
   <dialog id="aboutDialog" class="about-dialog" aria-labelledby="aboutTitle">
@@ -988,6 +984,15 @@
       else{button.disabled=false;button.textContent=button.dataset.originalText||text||"Simpan";}
     }
     function formatValue(v){return v===null||v===undefined||v===""?"-":String(v);}
+    function formatTimeValue(value){
+      if(value===null||value===undefined||value==="")return "-";
+      const text=String(value).trim();
+      const direct=text.match(/^(\d{1,2}):(\d{2})(?::\d{2})?/);
+      if(direct)return String(direct[1]).padStart(2,"0")+":"+direct[2];
+      const date=new Date(text);
+      if(Number.isNaN(date.getTime()))return text;
+      return new Intl.DateTimeFormat("id-ID",{timeZone:"Asia/Jakarta",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).format(date);
+    }
     function getDevice(){return [navigator.userAgent,navigator.platform||"",window.innerWidth+"x"+window.innerHeight].join(" | ");}
 
     /*
@@ -1103,16 +1108,16 @@
       $("examMapel").textContent=formatValue(state.jadwal?.mapel);
       $("sumKelas").textContent=formatValue(state.jadwal?.kelas);
       $("sumMapel").textContent=formatValue(state.jadwal?.mapel);
-      $("sumMulai").textContent=formatValue(state.jadwal?.mulai);
-      $("sumSelesai").textContent=formatValue(state.jadwal?.selesai);
+      $("sumMulai").textContent=formatTimeValue(state.jadwal?.mulai);
+      $("sumSelesai").textContent=formatTimeValue(state.jadwal?.selesai);
       showScreen("examScreen");
     }
     function showRunningScreen(){
       $("runningMapel").textContent=formatValue(state.jadwal?.mapel);
       $("runningName").textContent=formatValue(state.user?.nama);
       $("runningClass").textContent=formatValue(state.user?.kelas);
-      $("runningStart").textContent=formatValue(state.jadwal?.mulai);
-      $("runningEnd").textContent=formatValue(state.jadwal?.selesai);
+      $("runningStart").textContent=formatTimeValue(state.jadwal?.mulai);
+      $("runningEnd").textContent=formatTimeValue(state.jadwal?.selesai);
       showScreen("runningScreen");
       if(state.examActive)startExamTimer();
     }
