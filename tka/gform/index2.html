@@ -369,8 +369,20 @@
       color:#1f50f5;
       font-weight:900;
     }
-    .about-trigger{border:0;padding:0;background:none;color:#1f50f5;font:inherit;font-weight:900;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-    .app-footer{padding:10px 12px 0;text-align:center;color:#71809c;font-size:10px}
+    .about-trigger{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;gap:10px;max-width:min(100%,360px);padding:7px 13px 7px 8px;border:1px solid rgba(31,80,245,.15);border-radius:999px;background:linear-gradient(135deg,#fff 0%,#f4f7ff 55%,#eef3ff 100%);box-shadow:0 5px 16px rgba(16,43,143,.08);color:#173b9b;font:inherit;text-align:left;cursor:pointer;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}
+    .about-trigger:focus-visible{outline:3px solid rgba(31,80,245,.28);outline-offset:3px}
+    .about-trigger::after{content:"";position:absolute;z-index:-1;inset:-40% auto -40% -45%;width:35%;transform:skewX(-24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);opacity:0}
+    .about-trigger:hover,.about-trigger:focus-visible{transform:translateY(-2px);border-color:rgba(31,80,245,.38);background:linear-gradient(135deg,#fff 0%,#f3f7ff 55%,#e8efff 100%);box-shadow:0 10px 24px rgba(16,43,143,.17)}
+    .about-trigger:hover::after,.about-trigger:focus-visible::after{animation:aboutShine .8s ease forwards;opacity:1}
+    .about-trigger:hover .about-footer-logo,.about-trigger:focus-visible .about-footer-logo{transform:rotate(-7deg) scale(1.08);box-shadow:0 5px 12px rgba(16,43,143,.2)}
+    .about-trigger:hover .about-footer-info,.about-trigger:focus-visible .about-footer-info{transform:translateX(2px);background:#c8ff00;color:#102b8f}
+    .about-footer-logo{width:31px;height:31px;flex:0 0 31px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 2px 7px rgba(16,43,143,.12);transition:transform .22s ease,box-shadow .22s ease}
+    .about-footer-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .about-footer-title{font-size:11px;font-weight:900;line-height:1.15;white-space:nowrap}
+    .about-footer-caption{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7a8499;line-height:1.2}
+    .about-footer-info{width:21px;height:21px;flex:0 0 21px;margin-left:2px;border-radius:50%;display:grid;place-items:center;background:#e8efff;color:#1f50f5;font-size:12px;font-weight:1000;transition:transform .22s ease,background .22s ease,color .22s ease}
+    @keyframes aboutShine{0%{left:-45%;opacity:0}20%{opacity:1}100%{left:125%;opacity:0}}
+    .app-footer{display:flex;justify-content:center;padding:14px 12px 8px;text-align:center}
 
     /* SCREENS */
     .screen{display:none}
@@ -409,10 +421,7 @@
     .google-form-toolbar-actions{display:flex;gap:8px;align-items:center}
     .google-form-toolbar .btn{width:auto;min-width:132px;padding:0 14px}
     #googleFormFrame{width:100%;height:auto;flex:1 1 0;min-height:0;border:0;background:#fff}
-    .google-form-footer{height:30px;flex:0 0 30px;display:grid;place-items:center;background:#f4f7fc;border-top:1px solid #dbe2f1;font-size:10px;animation:footerPulse 2.6s ease-in-out infinite}
-    .google-form-footer button{border:0;background:transparent;color:#1f50f5;font:inherit;font-weight:900;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-    .app-footer{animation:footerPulse 2.6s ease-in-out infinite}
-    @keyframes footerPulse{0%,100%{opacity:.72}50%{opacity:1}}
+    .google-form-footer{min-height:55px;flex:0 0 55px;display:flex;align-items:center;justify-content:center;padding:4px 12px;background:linear-gradient(90deg,#f3f6fc,#fff 50%,#f3f6fc);border-top:1px solid #dbe2f1}
     .about-dialog{width:min(430px,calc(100% - 32px));padding:0;border:0;border-radius:20px;background:#fff;box-shadow:0 24px 80px rgba(0,0,0,.35);color:#0d1730}
     .about-dialog::backdrop{background:rgba(4,12,30,.68);backdrop-filter:blur(5px)}
     .about-content{padding:28px;text-align:center}
@@ -443,9 +452,19 @@
       .exam-hud-student,.exam-timer{font-size:8px}
       .exam-timer strong{font-size:12px}
       .google-form-toolbar .btn{min-width:0;padding:0 8px;font-size:9px}
-      .google-form-footer{height:27px;flex-basis:27px;font-size:9px}
+      .google-form-footer{min-height:51px;flex-basis:51px;padding:3px 8px}
+      .about-trigger{gap:7px;padding:6px 10px 6px 7px}
+      .about-footer-logo{width:27px;height:27px;flex-basis:27px}
+      .about-footer-title{font-size:10px}
+      .about-footer-caption{font-size:7px}
+      .about-footer-info{width:19px;height:19px;flex-basis:19px}
       .violation-card{padding:23px 18px}
       .violation-card h2{font-size:22px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .about-trigger,.about-footer-logo,.about-footer-info{transition:none}
+      .about-trigger:hover::after,.about-trigger:focus-visible::after{animation:none}
     }
 
     .panel{
@@ -904,7 +923,13 @@
         </section>
 
       </div>
-      <footer class="app-footer"><button class="about-trigger" type="button" data-open-about>CBT Integrated GForm by MB</button></footer>
+      <footer class="app-footer">
+        <button class="about-trigger" type="button" data-open-about aria-label="Buka informasi tentang CBT Integrated GForm by MB">
+          <img class="about-footer-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="">
+          <span class="about-footer-copy"><span class="about-footer-title">CBT Integrated GForm by MB</span><span class="about-footer-caption">Tentang aplikasi</span></span>
+          <span class="about-footer-info" aria-hidden="true">i</span>
+        </button>
+      </footer>
     </section>
   </main>
 
@@ -926,7 +951,13 @@
       </div>
     </div>
     <iframe id="googleFormFrame" title="Formulir ujian CBT" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
-    <footer class="google-form-footer"><button type="button" data-open-about>CBT Integrated GForm by MB</button></footer>
+    <footer class="google-form-footer">
+      <button class="about-trigger" type="button" data-open-about aria-label="Buka informasi tentang CBT Integrated GForm by MB">
+        <img class="about-footer-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="">
+        <span class="about-footer-copy"><span class="about-footer-title">CBT Integrated GForm by MB</span><span class="about-footer-caption">Tentang aplikasi</span></span>
+        <span class="about-footer-info" aria-hidden="true">i</span>
+      </button>
+    </footer>
   </section>
 
   <dialog id="aboutDialog" class="about-dialog" aria-labelledby="aboutTitle">
