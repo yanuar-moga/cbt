@@ -114,6 +114,7 @@
       background:var(--lime);
       box-shadow:0 10px 30px rgba(0,0,0,.16);
     }
+    .mini-mark img{width:100%;height:100%;object-fit:contain;border-radius:inherit}
 
     .brand-school{
       font-size:12px;
@@ -132,6 +133,7 @@
       place-items:center;
       transform:skewX(-6deg);
     }
+    .logo img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 12px 20px rgba(0,0,0,.18))}
 
     .logo-ring{
       position:absolute;
@@ -393,14 +395,35 @@
       box-shadow:0 2px 12px rgba(4,18,55,.18);
     }
     .google-form-toolbar strong{font-size:13px}
+    .exam-hud{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .exam-hud-student{font-size:11px;color:rgba(255,255,255,.82);overflow-wrap:anywhere}
+    .exam-timer{display:flex;align-items:center;gap:7px;color:#d2ff19;font-size:11px;font-weight:900;letter-spacing:.06em}
+    .exam-timer strong{font-variant-numeric:tabular-nums;font-size:15px;letter-spacing:.08em}
     .google-form-toolbar-actions{display:flex;gap:8px;align-items:center}
     .google-form-toolbar .btn{width:auto;min-width:132px;padding:0 14px}
     #googleFormFrame{width:100%;height:calc(100vh - 58px);height:calc(100dvh - 58px);border:0;background:#fff}
+    .violation-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(4,12,30,.88);backdrop-filter:blur(8px)}
+    .violation-overlay.active{display:flex}
+    .violation-card{width:min(480px,100%);padding:28px;border:1px solid #ffd1ce;border-radius:20px;background:#fff;box-shadow:0 30px 100px rgba(0,0,0,.4);text-align:center}
+    .violation-mark{width:56px;height:56px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;color:#fff;background:#d93025;font-size:30px;font-weight:900}
+    .violation-card h2{margin:0 0 10px;color:#9f1d16;font-size:25px}
+    .violation-card p{margin:0 0 18px;color:#46516a;font-size:14px;line-height:1.6}
+    .violation-count{display:inline-block;margin-bottom:18px;padding:7px 12px;border-radius:999px;background:#fff0ef;color:#9f1d16;font-size:12px;font-weight:900}
+    .violation-card label{text-align:left}
+    .violation-card input{height:46px;margin-bottom:10px;font-size:16px;letter-spacing:.2em;text-align:center}
+    .violation-error{min-height:20px;margin:0 0 10px!important;color:#b3261e!important;font-size:12px!important}
+    .violation-card .btn{height:46px}
+    .violation-card small{display:block;margin-top:13px;color:#7b8498;font-size:11px;line-height:1.5}
     @media (max-width:560px){
       .google-form-toolbar{min-height:62px;padding:8px 10px;gap:8px}
       .google-form-toolbar strong{font-size:11px}
+      .exam-hud{gap:2px}
+      .exam-hud-student,.exam-timer{font-size:9px}
+      .exam-timer strong{font-size:12px}
       .google-form-toolbar .btn{min-width:0;padding:0 9px;font-size:10px}
       #googleFormFrame{height:calc(100vh - 62px);height:calc(100dvh - 62px)}
+      .violation-card{padding:23px 18px}
+      .violation-card h2{font-size:22px}
     }
 
     .panel{
@@ -662,14 +685,12 @@
     <!-- BRAND -->
     <section class="brand">
       <div class="brand-top">
-        <div class="mini-mark">CBT</div>
+        <div class="mini-mark"><img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga"></div>
         <div class="brand-school">ASESMEN DIGITAL • 2026</div>
       </div>
 
-      <div class="logo" aria-label="Logo CBT">
-        <div class="logo-ring"></div>
-        <div class="logo-core">CBT</div>
-        <div class="logo-tag">DEV BY MB</div>
+      <div class="logo" aria-label="Logo SMPN 1 Moga">
+        <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
       </div>
 
       <div class="brand-bottom">
@@ -870,7 +891,14 @@
 
   <section id="googleFormOverlay" class="google-form-overlay" aria-hidden="true" aria-label="Google Form ujian">
     <div class="google-form-toolbar">
-      <strong id="embeddedFormTitle">Ujian CBT</strong>
+      <div class="exam-hud-wrap">
+        <img class="exam-hud-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
+        <div class="exam-hud">
+          <strong id="embeddedFormTitle">Ujian CBT</strong>
+          <span id="embeddedStudentName" class="exam-hud-student">-</span>
+          <span class="exam-timer"><span>SISA WAKTU</span><strong id="examTimer">--:--:--</strong></span>
+        </div>
+      </div>
       <div class="google-form-toolbar-actions">
         <button class="btn btn-secondary" id="closeEmbeddedFormButton" type="button">Kembali ke CBT</button>
         <button class="btn btn-primary" id="embeddedSubmitButton" type="button">Sudah kirim</button>
@@ -879,14 +907,32 @@
     <iframe id="googleFormFrame" title="Formulir ujian CBT" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
   </section>
 
+  <section id="violationOverlay" class="violation-overlay" role="alertdialog" aria-modal="true" aria-labelledby="violationTitle" aria-describedby="violationDescription">
+    <div class="violation-card">
+      <div class="violation-mark" aria-hidden="true">!</div>
+      <h2 id="violationTitle">PELANGGARAN TERDETEKSI</h2>
+      <p id="violationDescription">Anda meninggalkan halaman ujian atau membuka tab/jendela lain. Peringatan ini tetap terkunci meskipun halaman dimuat ulang.</p>
+      <div class="violation-count" id="violationCount">Pelanggaran 1</div>
+      <form id="adminPinForm">
+        <label for="adminPinInput">Masukkan PIN Admin untuk melanjutkan</label>
+        <input id="adminPinInput" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="PIN Admin" required>
+        <p id="adminPinError" class="violation-error" aria-live="polite"></p>
+        <button class="btn btn-primary" type="submit">Verifikasi PIN Admin</button>
+      </form>
+      <small>Jangan tutup atau muat ulang halaman. Minta bantuan pengawas jika Anda belum memperoleh izin.</small>
+    </div>
+  </section>
+
   <script>
     const CONFIG = {
       APP_NAME: "CBT SMPN 1 MOGA",
       GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbxpt5jhgpFV69cssShSlesrs3mXT-cQ25iqm3lrHGYJ2M-24l8XxKCHh4ov_Ft9KRhN/exec",
-      DEFAULT_GOOGLE_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdwBS3rLkjRjn8fuw-eArPhGHwVI6BuqWM8MuICHZ4kjlacLg/viewform?usp=header"
+      DEFAULT_GOOGLE_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdwBS3rLkjRjn8fuw-eArPhGHwVI6BuqWM8MuICHZ4kjlacLg/viewform?usp=header",
+      ADMIN_PIN: "1212",
+      VIOLATION_STORAGE_KEY: "cbt_exam_violation_v1"
     };
 
-    const state = { sessionId:"", user:null, jadwal:null, googleFormUrl:"" };
+    const state = { sessionId:"", user:null, jadwal:null, googleFormUrl:"", examActive:false, examTimerId:null };
     const $ = id => document.getElementById(id);
 
     function showScreen(id){
@@ -990,16 +1036,16 @@
 
     function saveState(){
       localStorage.setItem("cbt_session_id",state.sessionId);
-      localStorage.setItem("cbt_state",JSON.stringify({user:state.user,jadwal:state.jadwal,googleFormUrl:state.googleFormUrl}));
+      localStorage.setItem("cbt_state",JSON.stringify({user:state.user,jadwal:state.jadwal,googleFormUrl:state.googleFormUrl,examActive:state.examActive}));
     }
     function resetState(){
-      state.sessionId="";state.user=null;state.jadwal=null;state.googleFormUrl="";
+      state.sessionId="";state.user=null;state.jadwal=null;state.googleFormUrl="";state.examActive=false;stopExamTimer();
       localStorage.removeItem("cbt_session_id");localStorage.removeItem("cbt_state");
     }
     function restoreState(){
       const sid=localStorage.getItem("cbt_session_id"); if(!sid)return;
       state.sessionId=sid;
-      try{const x=JSON.parse(localStorage.getItem("cbt_state")||"{}");state.user=x.user||null;state.jadwal=x.jadwal||null;state.googleFormUrl=x.googleFormUrl||"";}catch(e){}
+      try{const x=JSON.parse(localStorage.getItem("cbt_state")||"{}");state.user=x.user||null;state.jadwal=x.jadwal||null;state.googleFormUrl=x.googleFormUrl||"";state.examActive=x.examActive===true;}catch(e){}
       checkExistingSession();
     }
 
@@ -1007,8 +1053,8 @@
       try{
         const data=await api("checkSession",{sessionId:state.sessionId});
         if(data&&data.valid){
-          if(data.status==="submit_form"){showQuestionnaire();}
-          else if(state.user&&state.jadwal){showRunningScreen();}
+          if(data.status==="submit_form"){state.examActive=false;saveState();showQuestionnaire();}
+          else if(state.user&&state.jadwal){state.examActive=data.status==="mengerjakan";saveState();showRunningScreen();}
           else resetState();
         }else resetState();
       }catch(e){/* tetap di login */}
@@ -1031,6 +1077,42 @@
       $("runningStart").textContent=formatValue(state.jadwal?.mulai);
       $("runningEnd").textContent=formatValue(state.jadwal?.selesai);
       showScreen("runningScreen");
+      if(state.examActive)startExamTimer();
+    }
+    function getJakartaParts(date){
+      const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Jakarta",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(date);
+      return Object.fromEntries(parts.filter(p=>p.type!=="literal").map(p=>[p.type,p.value]));
+    }
+    function getExamDeadline(){
+      const dateValue=String(state.jadwal?.tanggal||"");
+      let dateParts;
+      const dateOnly=dateValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if(dateOnly)dateParts={year:dateOnly[1],month:dateOnly[2],day:dateOnly[3]};
+      else if(dateValue){const parsedDate=new Date(dateValue);if(!Number.isNaN(parsedDate.getTime()))dateParts=getJakartaParts(parsedDate);}
+      const timeValue=state.jadwal?.selesai;
+      let hour,minute;
+      const directTime=String(timeValue||"").match(/^(\d{1,2}):(\d{2})/);
+      if(directTime){hour=Number(directTime[1]);minute=Number(directTime[2]);}
+      else if(timeValue){const parsedTime=new Date(timeValue);if(!Number.isNaN(parsedTime.getTime())){const timeParts=getJakartaParts(parsedTime);hour=Number(timeParts.hour);minute=Number(timeParts.minute);}}
+      if(!dateParts||hour===undefined||minute===undefined||hour>23||minute>59)return null;
+      return Date.UTC(Number(dateParts.year),Number(dateParts.month)-1,Number(dateParts.day),hour,minute)-7*60*60*1000;
+    }
+    function updateExamTimer(){
+      const deadline=getExamDeadline();
+      if(deadline===null){$("examTimer").textContent="--:--:--";return;}
+      const remaining=Math.max(0,Math.floor((deadline-Date.now())/1000));
+      const hours=String(Math.floor(remaining/3600)).padStart(2,"0");
+      const minutes=String(Math.floor((remaining%3600)/60)).padStart(2,"0");
+      const seconds=String(remaining%60).padStart(2,"0");
+      $("examTimer").textContent=hours+":"+minutes+":"+seconds;
+    }
+    function startExamTimer(){
+      stopExamTimer();updateExamTimer();
+      state.examTimerId=setInterval(updateExamTimer,1000);
+    }
+    function stopExamTimer(){
+      if(state.examTimerId){clearInterval(state.examTimerId);state.examTimerId=null;}
+      const timer=$("examTimer");if(timer)timer.textContent="--:--:--";
     }
     function showQuestionnaire(){
       $("questionMessage").textContent="Berikan penilaian setelah menyelesaikan CBT.";
@@ -1048,6 +1130,7 @@
       const url=state.googleFormUrl||CONFIG.DEFAULT_GOOGLE_FORM_URL;
       if(!url){alert("Link Google Form belum tersedia.");return;}
       $("embeddedFormTitle").textContent="Ujian CBT • "+formatValue(state.jadwal?.mapel);
+      $("embeddedStudentName").textContent=formatValue(state.user?.nama)+" • Kelas "+formatValue(state.user?.kelas);
       $("googleFormFrame").src=makeEmbeddedFormUrl(url);
       $("googleFormOverlay").classList.add("active");
       $("googleFormOverlay").setAttribute("aria-hidden","false");
@@ -1056,11 +1139,42 @@
       $("googleFormOverlay").classList.remove("active");
       $("googleFormOverlay").setAttribute("aria-hidden","true");
     }
+    function getSavedViolation(){
+      try{return JSON.parse(localStorage.getItem(CONFIG.VIOLATION_STORAGE_KEY)||"null");}catch(e){return null;}
+    }
+    function showViolationLock(record){
+      const count=Math.max(1,Number(record?.count)||1);
+      $("violationCount").textContent="Pelanggaran "+count;
+      $("adminPinError").textContent="";
+      $("violationOverlay").classList.add("active");
+      $("adminPinInput").value="";
+    }
+    function recordExamViolation(reason){
+      if(!state.examActive)return;
+      const existing=getSavedViolation();
+      const record={locked:true,count:(Number(existing?.count)||0)+1,reason:reason||"Meninggalkan halaman ujian",time:new Date().toISOString()};
+      try{localStorage.setItem(CONFIG.VIOLATION_STORAGE_KEY,JSON.stringify(record));}catch(e){}
+      showViolationLock(record);
+    }
+    function restoreViolationLock(){
+      const record=getSavedViolation();
+      if(record&&record.locked)showViolationLock(record);
+    }
+    $("adminPinForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      const pin=$("adminPinInput").value.trim();
+      if(pin!==CONFIG.ADMIN_PIN){$("adminPinError").textContent="PIN Admin salah. Peringatan tetap terkunci.";$("adminPinInput").select();return;}
+      localStorage.removeItem(CONFIG.VIOLATION_STORAGE_KEY);
+      $("violationOverlay").classList.remove("active");
+      $("adminPinError").textContent="";
+      if(state.examActive)updateExamTimer();
+    });
     async function recordFormSubmission(button){
       setButtonLoading(button,true,"Mencatat...");
       try{
         const data=await api("submitForm",{sessionId:state.sessionId,ip:"",device:getDevice()});
         if(!data.success){alert(data.message||"Pengerjaan belum dapat dicatat.");return;}
+        state.examActive=false;saveState();stopExamTimer();
         closeGoogleForm();
         showQuestionnaire();
       }catch(err){alert(err.message||"Gagal mencatat pengerjaan.");}
@@ -1097,6 +1211,7 @@
         const data=await api("startExam",{sessionId:state.sessionId,ip:"",device:getDevice()});
         if(!data.success){alert(data.message||"Ujian belum dapat dimulai.");return;}
         state.googleFormUrl=data.googleFormUrl||state.googleFormUrl||CONFIG.DEFAULT_GOOGLE_FORM_URL;
+        state.examActive=true;
         saveState();showRunningScreen();openGoogleForm();
       }catch(err){alert(err.message||"Gagal memulai ujian.");}
       finally{setButtonLoading(button,false,"Mulai Ujian");}
@@ -1134,7 +1249,18 @@
     $("finishButton").addEventListener("click",()=>{resetState();location.reload();});
     $("scheduleButton").addEventListener("click",()=>alert("Jadwal dan token mengikuti data pada sheet JADWAL. Masukkan token yang diberikan pengawas."));
 
+    document.addEventListener("visibilitychange",()=>{
+      if(document.hidden&&state.examActive)recordExamViolation("Membuka tab/jendela lain atau meninggalkan halaman ujian");
+      else if(state.examActive)updateExamTimer();
+    });
+    window.addEventListener("storage",e=>{
+      if(e.key!==CONFIG.VIOLATION_STORAGE_KEY)return;
+      if(e.newValue){try{const record=JSON.parse(e.newValue);if(record&&record.locked)showViolationLock(record);}catch(err){}}
+      else $("violationOverlay").classList.remove("active");
+    });
+
     loadClasses();
+    restoreViolationLock();
     restoreState();
   </script>
 </body>
