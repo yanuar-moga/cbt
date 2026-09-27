@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#102b8f">
-  <title>CBT SMPN 1 MOGA</title>
+  <title>CBT Integrated GForm</title>
 
   <style>
     :root{
@@ -369,18 +369,14 @@
       color:#1f50f5;
       font-weight:900;
     }
-    .about-trigger{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;gap:10px;max-width:min(100%,360px);padding:7px 13px 7px 8px;border:1px solid rgba(31,80,245,.15);border-radius:999px;background:linear-gradient(135deg,#fff 0%,#f4f7ff 55%,#eef3ff 100%);box-shadow:0 5px 16px rgba(16,43,143,.08);color:#173b9b;font:inherit;text-align:left;cursor:pointer;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}
+    .about-trigger{position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;gap:9px;max-width:min(100%,360px);padding:7px 15px 7px 8px;border:1px solid rgba(31,80,245,.15);border-radius:999px;background:linear-gradient(135deg,#fff 0%,#f4f7ff 55%,#eef3ff 100%);box-shadow:0 5px 16px rgba(16,43,143,.08);color:#173b9b;font:inherit;text-align:left;cursor:pointer;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease,background .22s ease}
     .about-trigger:focus-visible{outline:3px solid rgba(31,80,245,.28);outline-offset:3px}
     .about-trigger::after{content:"";position:absolute;z-index:-1;inset:-40% auto -40% -45%;width:35%;transform:skewX(-24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);opacity:0}
     .about-trigger:hover,.about-trigger:focus-visible{transform:translateY(-2px);border-color:rgba(31,80,245,.38);background:linear-gradient(135deg,#fff 0%,#f3f7ff 55%,#e8efff 100%);box-shadow:0 10px 24px rgba(16,43,143,.17)}
     .about-trigger:hover::after,.about-trigger:focus-visible::after{animation:aboutShine .8s ease forwards;opacity:1}
     .about-trigger:hover .about-footer-logo,.about-trigger:focus-visible .about-footer-logo{transform:rotate(-7deg) scale(1.08);box-shadow:0 5px 12px rgba(16,43,143,.2)}
-    .about-trigger:hover .about-footer-info,.about-trigger:focus-visible .about-footer-info{transform:translateX(2px);background:#c8ff00;color:#102b8f}
     .about-footer-logo{width:31px;height:31px;flex:0 0 31px;object-fit:contain;border-radius:50%;background:#fff;box-shadow:0 2px 7px rgba(16,43,143,.12);transition:transform .22s ease,box-shadow .22s ease}
-    .about-footer-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
-    .about-footer-title{font-size:11px;font-weight:900;line-height:1.15;white-space:nowrap}
-    .about-footer-caption{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7a8499;line-height:1.2}
-    .about-footer-info{width:21px;height:21px;flex:0 0 21px;margin-left:2px;border-radius:50%;display:grid;place-items:center;background:#e8efff;color:#1f50f5;font-size:12px;font-weight:1000;transition:transform .22s ease,background .22s ease,color .22s ease}
+    .about-footer-title{font-size:11px;font-weight:900;line-height:1.15;white-space:nowrap;letter-spacing:.01em}
     @keyframes aboutShine{0%{left:-45%;opacity:0}20%{opacity:1}100%{left:125%;opacity:0}}
     .app-footer{display:flex;justify-content:center;padding:14px 12px 8px;text-align:center}
 
@@ -453,17 +449,15 @@
       .exam-timer strong{font-size:12px}
       .google-form-toolbar .btn{min-width:0;padding:0 8px;font-size:9px}
       .google-form-footer{min-height:51px;flex-basis:51px;padding:3px 8px}
-      .about-trigger{gap:7px;padding:6px 10px 6px 7px}
+      .about-trigger{gap:7px;padding:6px 12px 6px 7px}
       .about-footer-logo{width:27px;height:27px;flex-basis:27px}
       .about-footer-title{font-size:10px}
-      .about-footer-caption{font-size:7px}
-      .about-footer-info{width:19px;height:19px;flex-basis:19px}
       .violation-card{padding:23px 18px}
       .violation-card h2{font-size:22px}
     }
 
     @media (prefers-reduced-motion:reduce){
-      .about-trigger,.about-footer-logo,.about-footer-info{transition:none}
+      .about-trigger,.about-footer-logo{transition:none}
       .about-trigger:hover::after,.about-trigger:focus-visible::after{animation:none}
     }
 
@@ -726,19 +720,19 @@
     <!-- BRAND -->
     <section class="brand">
       <div class="brand-top">
-        <div class="mini-mark"><img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga"></div>
+        <div class="mini-mark"><img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo CBT Integrated GForm"></div>
         <div class="brand-school">ASESMEN DIGITAL • 2026</div>
       </div>
 
-      <div class="logo" aria-label="Logo SMPN 1 Moga">
-        <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
+      <div class="logo" aria-label="Logo CBT Integrated GForm">
+        <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo CBT Integrated GForm">
       </div>
 
       <div class="brand-bottom">
         <p class="eyebrow">ASESMEN DIGITAL</p>
         <h1>Computer Based Test</h1>
         <p>Platform asesmen digital untuk pelaksanaan ujian yang terstruktur, aman, dan mudah digunakan.</p>
-        <div class="version">CBT SMPN 1 MOGA • v1.0</div>
+        <div class="version">CBT Integrated GForm • v1.0</div>
       </div>
     </section>
 
@@ -824,7 +818,7 @@
             <button class="btn btn-secondary" id="backLoginButton">Kembali ke Login</button>
           </div>
 
-          <div class="footer"><strong>CBT SMPN 1 MOGA</strong></div>
+          <div class="footer"><strong>CBT Integrated GForm</strong></div>
         </section>
 
         <!-- RUNNING EXAM -->
@@ -919,15 +913,14 @@
 
           <button class="btn btn-primary" id="finishButton">Kembali ke Login</button>
 
-          <div class="footer"><strong>CBT SMPN 1 MOGA</strong><br>Silakan mengikuti instruksi pengawas berikutnya.</div>
+          <div class="footer"><strong>CBT Integrated GForm</strong><br>Silakan mengikuti instruksi berikutnya.</div>
         </section>
 
       </div>
       <footer class="app-footer">
-        <button class="about-trigger" type="button" data-open-about aria-label="Buka informasi tentang CBT Integrated GForm by MB">
+        <button class="about-trigger" type="button" data-open-about aria-label="Tentang CBT Integrated GForm">
           <img class="about-footer-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="">
-          <span class="about-footer-copy"><span class="about-footer-title">CBT Integrated GForm by MB</span><span class="about-footer-caption">Tentang aplikasi</span></span>
-          <span class="about-footer-info" aria-hidden="true">i</span>
+          <span class="about-footer-title">CBT Integrated GForm</span>
         </button>
       </footer>
     </section>
@@ -937,7 +930,7 @@
     <div class="google-form-toolbar">
       <div class="exam-hud-wrap">
         <div class="exam-hud-brand">
-          <img class="exam-hud-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo SMPN 1 Moga">
+          <img class="exam-hud-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo CBT Integrated GForm">
           <span id="embeddedStudentName" class="exam-hud-student">-</span>
         </div>
         <div class="exam-hud">
@@ -952,10 +945,9 @@
     </div>
     <iframe id="googleFormFrame" title="Formulir ujian CBT" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen"></iframe>
     <footer class="google-form-footer">
-      <button class="about-trigger" type="button" data-open-about aria-label="Buka informasi tentang CBT Integrated GForm by MB">
+      <button class="about-trigger" type="button" data-open-about aria-label="Tentang CBT Integrated GForm">
         <img class="about-footer-logo" src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="">
-        <span class="about-footer-copy"><span class="about-footer-title">CBT Integrated GForm by MB</span><span class="about-footer-caption">Tentang aplikasi</span></span>
-        <span class="about-footer-info" aria-hidden="true">i</span>
+        <span class="about-footer-title">CBT Integrated GForm</span>
       </button>
     </footer>
   </section>
@@ -970,6 +962,8 @@
       <button id="closeAboutButton" class="btn btn-primary about-close" type="button">Tutup</button>
     </div>
   </dialog>
+
+  <audio id="warningAudio" src="https://yanuar-moga.github.io/cbt/assets/warning.mp3" preload="auto"></audio>
 
   <section id="violationOverlay" class="violation-overlay" role="alertdialog" aria-modal="true" aria-labelledby="violationTitle" aria-describedby="violationDescription">
     <div class="violation-card">
@@ -989,7 +983,7 @@
 
   <script>
     const CONFIG = {
-      APP_NAME: "CBT SMPN 1 MOGA",
+      APP_NAME: "CBT Integrated GForm",
       GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbxpt5jhgpFV69cssShSlesrs3mXT-cQ25iqm3lrHGYJ2M-24l8XxKCHh4ov_Ft9KRhN/exec",
       DEFAULT_GOOGLE_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSdwBS3rLkjRjn8fuw-eArPhGHwVI6BuqWM8MuICHZ4kjlacLg/viewform?usp=header",
       ADMIN_PIN: "1212",
@@ -997,7 +991,29 @@
     };
 
     const state = { sessionId:"", user:null, jadwal:null, googleFormUrl:"", examActive:false, examTimerId:null };
+    let warningAudioUnlocked=false;
+    let warningSoundPending=false;
     const $ = id => document.getElementById(id);
+
+    function unlockWarningAudio(){
+      const audio=$("warningAudio");
+      if(!audio||warningAudioUnlocked)return;
+      audio.muted=true;
+      const attempt=audio.play();
+      if(attempt&&typeof attempt.then==="function"){
+        attempt.then(()=>{audio.pause();audio.currentTime=0;audio.muted=false;warningAudioUnlocked=true;}).catch(()=>{audio.muted=false;});
+      }else{audio.pause();audio.currentTime=0;audio.muted=false;warningAudioUnlocked=true;}
+    }
+    function playWarningSound(){
+      const audio=$("warningAudio");
+      if(!audio)return;
+      audio.pause();audio.currentTime=0;audio.muted=false;audio.volume=1;
+      const attempt=audio.play();
+      if(attempt&&typeof attempt.then==="function")attempt.then(()=>{warningSoundPending=false;}).catch(()=>{warningSoundPending=true;});
+    }
+
+    document.addEventListener("pointerdown",unlockWarningAudio,{capture:true});
+    document.addEventListener("keydown",unlockWarningAudio,{capture:true});
 
     function showScreen(id){
       document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
@@ -1227,6 +1243,7 @@
       const existing=getSavedViolation();
       const record={locked:true,count:(Number(existing?.count)||0)+1,reason:reason||"Meninggalkan halaman ujian",time:new Date().toISOString()};
       try{localStorage.setItem(CONFIG.VIOLATION_STORAGE_KEY,JSON.stringify(record));}catch(e){}
+      playWarningSound();
       showViolationLock(record);
     }
     function restoreViolationLock(){
@@ -1324,13 +1341,19 @@
     $("finishButton").addEventListener("click",()=>{resetState();location.reload();});
     $("scheduleButton").addEventListener("click",()=>alert("Jadwal dan token mengikuti data pada sheet JADWAL. Masukkan token yang diberikan pengawas."));
 
+    document.addEventListener("contextmenu",e=>{
+      if(!state.examActive)return;
+      e.preventDefault();
+      recordExamViolation("Klik kanan saat ujian berlangsung");
+    });
+
     document.addEventListener("visibilitychange",()=>{
       if(document.hidden&&state.examActive)recordExamViolation("Membuka tab/jendela lain atau meninggalkan halaman ujian");
-      else if(state.examActive)updateExamTimer();
+      else if(state.examActive){if(warningSoundPending)playWarningSound();updateExamTimer();}
     });
     window.addEventListener("storage",e=>{
       if(e.key!==CONFIG.VIOLATION_STORAGE_KEY)return;
-      if(e.newValue){try{const record=JSON.parse(e.newValue);if(record&&record.locked)showViolationLock(record);}catch(err){}}
+      if(e.newValue){try{const record=JSON.parse(e.newValue);if(record&&record.locked){playWarningSound();showViolationLock(record);}}catch(err){}}
       else $("violationOverlay").classList.remove("active");
     });
 
