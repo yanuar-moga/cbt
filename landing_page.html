@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Datang - ZCBT Computer Based Test</title>
+    <title>ZCBT - Ultra-Secure High-End Computer Based Test</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Plus Jakarta Sans -->
@@ -13,136 +13,135 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Gradasi latar belakang luar (dark navy immersive background) */
-        .page-bg {
-            background: linear-gradient(135deg, #091436 0%, #060e24 100%);
+        /* Luxurious Dark Navy Ambient Background with radial glow */
+        .luxury-bg {
+            background: radial-gradient(circle at 50% 20%, #1e3a8a 0%, #0d1b3e 45%, #050b18 100%);
         }
 
-        /* Panel utama dengan gradasi dari Biru Dongker Elegan ke Putih Bersih */
-        .main-gradient-card {
-            background: linear-gradient(145deg, #091a4a 0%, #17378f 45%, #f8fafc 45.1%, #ffffff 100%);
+        /* Premium Frosted Glassmorphism Card */
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
-        @media (max-width: 1024px) {
-            .main-gradient-card {
-                background: linear-gradient(180deg, #091a4a 0%, #122d73 35%, #ffffff 35.1%, #ffffff 100%);
-            }
+        /* High-End Feature Gem Cards */
+        .gem-card {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(13, 27, 62, 0.7) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(204, 255, 0, 0.2);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gem-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(204, 255, 0, 0.6);
+            box-shadow: 0 20px 40px rgba(204, 255, 0, 0.15);
         }
 
-        /* Warna Lemon Green Khas (#ccff00 / #b8ff00) */
+        /* Lemon Green Luxurious Accent (#ccff00) */
         .accent-lime {
-            background-color: #ccff00;
-        }
-        .accent-lime-text {
-            color: #8fa800;
-        }
-        .accent-lime-badge {
-            background-color: rgba(204, 255, 0, 0.15);
-            color: #6d8200;
-            border: 1px solid rgba(204, 255, 0, 0.4);
-        }
-        .accent-lime-border {
-            border-color: #ccff00;
-        }
-
-        /* Tombol & Glow Efek */
-        .btn-lime {
-            background: linear-gradient(135deg, #ccff00 0%, #b2e600 100%);
-            box-shadow: 0 4px 20px rgba(204, 255, 0, 0.4);
+            background: linear-gradient(135deg, #ccff00 0%, #99e600 100%);
+            box-shadow: 0 10px 30px rgba(204, 255, 0, 0.35);
             transition: all 0.3s ease;
         }
-        .btn-lime:hover {
+        .accent-lime:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(204, 255, 0, 0.6);
+            box-shadow: 0 15px 35px rgba(204, 255, 0, 0.55);
         }
 
-        /* Card Statistik Modern */
-        .stat-card {
-            background: rgba(241, 245, 249, 0.8);
-            border: 1px solid rgba(203, 213, 225, 0.6);
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
+        .text-lime-glow {
+            color: #ccff00;
+            text-shadow: 0 0 20px rgba(204, 255, 0, 0.4);
         }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-            border-color: #94a3b8;
+
+        /* Subtle Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .floating-logo {
+            animation: float 5s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="page-bg min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-10 relative overflow-x-hidden">
+<body class="luxury-bg min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-10 text-slate-100 relative overflow-x-hidden selection:bg-[#ccff00] selection:text-slate-950">
 
-    <!-- Efek Cahaya Ambient Latar Belakang -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <!-- Ambient Glowing Orbs for Luxury Depth -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-blue-600/15 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[350px] h-[350px] bg-[#ccff00]/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-    <!-- Kontainer Utama Berukuran Besar dengan Sudut Rounded & Border Bawah Lemon Green -->
-    <div class="w-full max-w-5xl main-gradient-card rounded-[36px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden relative border-b-4 accent-lime-border flex flex-col justify-between min-h-[640px]">
+    <!-- Main Opulent Container -->
+    <div class="w-full max-w-5xl glass-card rounded-[40px] overflow-hidden relative z-10 flex flex-col justify-between p-8 sm:p-14 min-h-[660px]">
         
-        <!-- Header / Logo di Atas -->
-        <div class="p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center relative z-10">
-            <div class="flex items-center space-x-3 mb-4 sm:mb-0">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 p-1 backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center">
-                    <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo ZCBT" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100x100/004085/ffffff?text=ZCBT'">
+        <!-- Header / Top Navigation Branding -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-white/10 pb-6">
+            <div class="flex items-center space-x-4">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-white/15 to-white/5 p-1 backdrop-blur-xl border border-white/20 shadow-2xl flex items-center justify-center floating-logo">
+                    <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="ZCBT Logo" class="w-full h-full object-cover rounded-xl" onerror="this.src='https://placehold.co/100x100/091a4a/ccff00?text=ZCBT'">
                 </div>
                 <div>
-                    <span class="text-[11px] font-bold tracking-[0.2em] text-[#ccff00] uppercase">Asesmen Digital</span>
-                    <h2 class="text-lg font-extrabold text-white tracking-tight">ZCBT Platform</h2>
+                    <span class="text-[10px] font-extrabold tracking-[0.25em] text-[#ccff00] uppercase">Asesmen Digital • 2026</span>
+                    <h2 class="text-xl font-extrabold tracking-tight text-white">ZCBT Platform</h2>
                 </div>
             </div>
-            <div class="accent-lime-badge px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase">
-                Secure Exam v1.0
+            
+            <div class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-[#ccff00] animate-pulse"></span>
+                <span class="text-slate-300">Secure Protocol Active</span>
             </div>
         </div>
 
-        <!-- Konten Utama di Tengah -->
-        <div class="px-6 sm:px-16 py-4 flex flex-col items-center text-center relative z-10 my-auto">
+        <!-- Central Hero Section -->
+        <div class="py-8 sm:py-10 flex flex-col items-center text-center my-auto">
             
-            <!-- Judul Utama -->
-            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 drop-shadow-md">
-                Selamat Datang di <span class="text-[#ccff00] drop-shadow-[0_2px_12px_rgba(204,255,0,0.4)]">ZCBT</span>
+            <!-- Main Title with Glowing Accent -->
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-5 leading-tight">
+                Selamat Datang di <br/><span class="text-lime-glow">ZCBT Platform</span>
             </h1>
 
-            <!-- Deskripsi -->
-            <p class="text-slate-200 text-sm sm:text-base max-w-2xl leading-relaxed mb-8 font-normal">
-                Aplikasi Computer Based Test yang aman, andal, dan mudah digunakan. Dirancang khusus untuk ujian online dengan sistem keamanan berlapis dan deteksi pelanggaran otomatis.
+            <!-- Sophisticated Description -->
+            <p class="text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl leading-relaxed mb-10 font-light">
+                Platform asesmen digital berstandar tinggi yang dirancang eksklusif untuk ujian online dengan enkripsi data berlapis, proteksi anti-kecurangan mutakhir, dan performa tanpa kompromi.
             </p>
 
-            <!-- Tombol Mulai Interaktif -->
-            <div class="mb-10 w-full flex flex-col items-center">
-                <a href="cbt_login.html" class="btn-lime text-slate-950 font-extrabold py-4 px-12 rounded-2xl flex items-center justify-center space-x-3 text-base sm:text-lg tracking-wide">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-slate-950" viewBox="0 0 24 24">
+            <!-- Gorgeous Primary Action Button -->
+            <div class="mb-12">
+                <a href="cbt_login.html" class="accent-lime text-slate-950 font-extrabold py-4 px-14 rounded-2xl inline-flex items-center space-x-3 text-base sm:text-lg tracking-wide group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-slate-950 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
                         <path d="M8 5.14v13.72a1 1 0 001.5.86l11-6.86a1 1 0 000-1.72l-11-6.86a1 1 0 00-1.5.86z"/>
                     </svg>
                     <span>Mulai Ujian</span>
                 </a>
-                <span class="text-xs text-slate-300 mt-3 font-medium">Klik "Mulai Ujian" untuk melanjutkan ke halaman login peserta</span>
+                <p class="text-[11px] text-slate-400 mt-3 font-medium tracking-wide">Klik untuk melanjutkan ke halaman otentikasi peserta</p>
             </div>
 
-            <!-- Grid Kartu Statistik / Keunggulan (Warna Kontras di Bagian Putih Bawah) -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl pt-6">
-                <!-- Statistik 1 -->
-                <div class="stat-card rounded-2xl p-5 text-center shadow-sm">
-                    <div class="text-2xl sm:text-3xl font-extrabold text-blue-900 mb-1 tracking-tight">100%</div>
-                    <div class="text-xs font-bold text-slate-600 tracking-wider uppercase">Keamanan Sistem</div>
+            <!-- Premium Feature Gems Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-3xl">
+                <!-- Gem 1 -->
+                <div class="gem-card rounded-2xl p-5 text-center">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#ccff00] mb-1 tracking-tight">100%</div>
+                    <div class="text-[11px] font-bold text-slate-300 tracking-widest uppercase">Keamanan Sistem</div>
                 </div>
-                <!-- Statistik 2 -->
-                <div class="stat-card rounded-2xl p-5 text-center shadow-sm">
-                    <div class="text-2xl sm:text-3xl font-extrabold text-blue-900 mb-1 tracking-tight">Multi Sesi</div>
-                    <div class="text-xs font-bold text-slate-600 tracking-wider uppercase">Fleksibel</div>
+                <!-- Gem 2 -->
+                <div class="gem-card rounded-2xl p-5 text-center">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#ccff00] mb-1 tracking-tight">Multi Sesi</div>
+                    <div class="text-[11px] font-bold text-slate-300 tracking-widest uppercase">Fleksibilitas Ujian</div>
                 </div>
-                <!-- Statistik 3 -->
-                <div class="stat-card rounded-2xl p-5 text-center shadow-sm">
-                    <div class="text-2xl sm:text-3xl font-extrabold text-blue-900 mb-1 tracking-tight">Auto</div>
-                    <div class="text-xs font-bold text-slate-600 tracking-wider uppercase">Proteksi Blokir</div>
+                <!-- Gem 3 -->
+                <div class="gem-card rounded-2xl p-5 text-center">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-[#ccff00] mb-1 tracking-tight">Auto-Block</div>
+                    <div class="text-[11px] font-bold text-slate-300 tracking-widest uppercase">Proteksi Pelanggaran</div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Footer Bawah -->
-        <footer class="p-6 text-center relative z-10 border-t border-slate-200/60 bg-white/50 backdrop-blur-sm mt-8">
-            <p class="text-xs sm:text-sm font-bold text-slate-700 tracking-wide">ZCBT • Computer Based Test Platform</p>
-            <p class="text-[11px] text-slate-500 mt-0.5 font-medium">ZCBT Integrated System • v1.0 | Developed by MB</p>
+        <!-- Luxurious Footer -->
+        <footer class="pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400">
+            <p class="font-medium">ZCBT • Computer Based Test Platform</p>
+            <p class="mt-1 sm:mt-0 font-light">ZCBT Integrated System • v1.0 | Developed by MB</p>
         </footer>
 
     </div>
