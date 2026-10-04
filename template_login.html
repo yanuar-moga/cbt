@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Computer Based Test</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom shape untuk panel kiri biru berlekuk */
+        .left-panel {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+            clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
+        @media (max-width: 1024px) {
+            .left-panel {
+                clip-path: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4 md:p-8">
+
+    <!-- Container Utama -->
+    <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row min-h-[600px] relative">
+        
+        <!-- Sisi Kiri (Panel Biru dengan Logo & Branding) -->
+        <div class="lg:w-5/12 left-panel text-white p-8 lg:p-12 flex flex-col justify-between relative z-10">
+            <div>
+                <span class="text-xs font-semibold tracking-widest text-lime-400 uppercase">Asesmen Digital</span>
+                <h1 class="text-2xl lg:text-3xl font-bold mt-2">Computer Based Test</h1>
+            </div>
+
+            <!-- Bagian Logo Aplikasi & Ilustrasi -->
+            <div class="my-auto py-8 flex flex-col items-center text-center">
+                <div class="w-32 h-32 lg:w-40 lg:h-40 rounded-2xl shadow-xl overflow-hidden bg-white/10 backdrop-blur-md p-2 border border-white/25 flex items-center justify-center mb-6">
+                    <!-- Logo Aplikasi sesuai permintaan -->
+                    <img src="https://yanuar-moga.github.io/assets/logo.jpg" alt="Logo Aplikasi" class="w-full h-full object-cover rounded-xl">
+                </div>
+                <h2 class="text-xl font-bold">CBT Digital</h2>
+            </div>
+
+            <div>
+                <p class="text-xs text-slate-200 leading-relaxed">
+                    Platform asesmen digital untuk pelaksanaan ujian yang terstruktur, aman, dan mudah digunakan.
+                </p>
+                <div class="w-24 h-1 bg-lime-400 mt-4 rounded-full"></div>
+            </div>
+        </div>
+
+        <!-- Sisi Kanan (Form Login: Username, Password, Tombol Masuk) -->
+        <div class="lg:w-7/12 p-8 lg:p-14 flex flex-col justify-center bg-white relative">
+            <div class="max-w-md w-full mx-auto">
+                
+                <!-- Header Form -->
+                <div class="mb-8">
+                    <span class="text-xs font-semibold text-slate-400 tracking-wider">ASESMEN DIGITAL • 2026</span>
+                    <h2 class="text-2xl font-bold text-slate-800 mt-1">Computer Based Test</h2>
+                    <div class="w-12 h-1 bg-lime-400 mt-2 rounded-full"></div>
+                </div>
+
+                <!-- Form Login -->
+                <form action="#" method="POST" class="space-y-5">
+                    
+                    <!-- Input Username -->
+                    <div>
+                        <label for="username" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Username</label>
+                        <input type="text" id="username" name="username" required 
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all"
+                            placeholder="Masukkan username Anda">
+                    </div>
+
+                    <!-- Input Password -->
+                    <div>
+                        <label for="password" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Password</label>
+                        <input type="password" id="password" name="password" required 
+                            class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-white transition-all"
+                            placeholder="Masukkan password">
+                    </div>
+
+                    <!-- Tombol Masuk -->
+                    <div class="pt-2">
+                        <button type="submit" 
+                            class="w-full py-3.5 px-4 bg-lime-300 hover:bg-lime-400 font-bold text-slate-900 rounded-xl shadow-md transition-all text-center focus:outline-none focus:ring-4 focus:ring-lime-300/50">
+                            Masuk
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Footer Copyright / Versi -->
+                <div class="mt-12 text-center">
+                    <p class="text-xs text-blue-600 font-medium cursor-pointer hover:underline">About CBT Browser v 1.0</p>
+                    <p class="text-[11px] text-slate-400 mt-1">&copy; 2026 All Rights Reserved</p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
